@@ -314,6 +314,11 @@ def download_url (original_url, dest_dir,
 
 def _download_url (url, dest_dir, progress=None):
     progress ('downloading %(url)s -> %(dest_dir)s\n' % locals ())
+    if (url.startswith ('http:')):
+        proxy = urllib2.ProxyHandler({"http": "http://wwwcache.gla.ac.uk:8080"})
+        opener = urllib2.build_opener(proxy)
+        urllib2.install_opener(opener)
+
     if not os.path.isdir (dest_dir):
         raise Exception ('not a dir', dest_dir)
 
