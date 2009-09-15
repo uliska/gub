@@ -149,12 +149,21 @@ def compare_test_info (options):
     current_test_output = ''
     for f in outputs:
         m = re.search ('lilypond-([.0-9]+)-([0-9]+).test-output.tar.bz2', f)
+        ishead = 0
+        if not m:
+            m = re.search ('lilypond-([.0-9]+)-(HEAD).test-output.tar.bz2', f)
+            # ugly hack for "latest version"
+            #m.group(2) = 999    ## doesn't work; can't modify a group
+            ishead = 1
         if not m:
             printf (f)
             assert 0
 
         version = list (map (int, m.group (1).split ('.')))
-        build = int (m.group (2))
+        if ishead:
+            build = 999
+        else:
+            build = int (m.group (2))
         tup = (version, build)
         
         if tup <= current_tuple:
