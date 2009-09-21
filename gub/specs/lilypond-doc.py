@@ -33,7 +33,7 @@ TARGET_PYTHON=/usr/bin/python
         return '%(uploads)s/lilypond-%(version)s-HEAD.webdoc.tar.bz2'
     def compile_command (self):
         return (lilypond.LilyPond_base.compile_command (self)
-                + ' top-doc all doc')
+                + ' top-doc all -j4 CPU_COUNT=4 doc')
 
     def install_flags (self):
         return (self.makeflags ()
