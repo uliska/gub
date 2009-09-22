@@ -161,7 +161,7 @@ def compare_test_info (options):
 
         version = list (map (int, m.group (1).split ('.')))
         if ishead:
-            build = 999
+            build = 1
         else:
             build = int (m.group (2))
         tup = (version, build)
