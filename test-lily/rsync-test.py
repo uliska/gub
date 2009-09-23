@@ -182,7 +182,7 @@ def upload (options):
     system ('chmod -R g+w .')
     system ('chgrp -R lilypond .' )
     system ('chmod 2775 `find -type d ` .')
-    system ('rsync --hard-links --delay-updates --delete --delete-after --stats --progress -pgorltvu -e ssh . %s/%s/' % (options.destination, target))
+    system ('rsync --hard-links --delay-updates --delete --delete-after --stats --progress -pgorlvu -e ssh . %s/%s/' % (options.destination, target))
     
     
 def main ():
