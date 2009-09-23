@@ -28,12 +28,17 @@ import optparse
 import os
 import sys
 import misc
+import urllib2
 #
 from gub.syntax import printf
 
 def get_url_versions (url):
     printf (url)
-    opener = urllib.URLopener ()
+    # HACK for glasgow http proxy
+    proxy = urllib2.ProxyHandler({"http": "http://wwwcache.gla.ac.uk:8080"})
+    opener = urllib2.build_opener(proxy)
+    urllib2.install_opener(opener)
+    #url_stream = urllib2.urlopen (url)
     index = opener.open (url).read ()
 
     versions = []
