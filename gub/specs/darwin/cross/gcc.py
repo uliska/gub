@@ -2,6 +2,7 @@ import os
 #
 from gub.specs.cross import gcc as cross_gcc
 from gub import loggedos
+from gub import cross
 
 class Gcc__darwin (cross_gcc.Gcc):
     source = 'ftp://ftp.fu-berlin.de/unix/languages/gcc/releases/gcc-4.1.1/gcc-4.1.1.tar.bz2'
@@ -15,6 +16,7 @@ class Gcc__darwin (cross_gcc.Gcc):
 
         self.file_sub ([('--strip-underscores', '--strip-underscore')],
                        '%(srcdir)s/libstdc++-v3/scripts/make_exports.pl')
+        cross.AutoBuild.patch (self)
     def languages (self):
         # objective-c is used for quartz's Carbon/Carbon.h in pango, gtk+
         return cross_gcc.Gcc.languages (self) + ['objc', 'obj-c++']
@@ -51,6 +53,7 @@ class Gcc__darwin (cross_gcc.Gcc):
     
 class Gcc__darwin__x86 (Gcc__darwin):
     source = 'ftp://ftp.fu-berlin.de/unix/languages/gcc/releases/gcc-4.3.2/gcc-4.3.2.tar.bz2'
+    patches = ['gcc-4.3.2-no-fixed-includes.patch']
     dependencies = Gcc__darwin.dependencies + ['tools::mpfr']
 
 class Not_used__Gcc__darwin (Gcc__darwin):
