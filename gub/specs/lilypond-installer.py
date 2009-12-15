@@ -35,7 +35,7 @@ lilypond
 
 class LilyPond_installer__mingw (LilyPond_installer):
     dependencies = (LilyPond_installer.dependencies
-                    + ['lilypad', 'tools::icoutils', 'tools::nsis'])
+                    + ['mingw::lilypad', 'tools::icoutils', 'tools::nsis'])
     compile_flags = LilyPond_installer.compile_flags + ' lilypad'
     def __init__ (self, settings, source):
         LilyPond_installer.__init__ (self, settings, source)
