@@ -133,10 +133,20 @@ rest: installers test doc doc-export print-success
 test: dist-check test-output test-export
 
 doc:
+ifeq ($(LILYPOND_BRANCH),master)
 	$(call INVOKE_GUB,$(BUILD_PLATFORM) --offline) lilypond-doc
+else
+	$(call INVOKE_GUB,$(BUILD_PLATFORM) --offline) \
+	  'git://git.sv.gnu.org/lilypond-doc.git?branch=$(LILYPOND_BRANCH)'
+endif
 
 test-output:
+ifeq ($(LILYPOND_BRANCH),master)
 	$(call INVOKE_GUB,$(BUILD_PLATFORM) --offline) lilypond-test
+else
+	$(call INVOKE_GUB,$(BUILD_PLATFORM) --offline) \
+	  'git://git.sv.gnu.org/lilypond-test.git?branch=$(LILYPOND_BRANCH)'
+endif
 
 print-success:
 	python test-lily/upload.py --branch=$(LILYPOND_BRANCH) --url $(LILYPOND_REPO_URL)
