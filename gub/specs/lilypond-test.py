@@ -5,6 +5,7 @@ from gub import target
 from gub.specs import lilypond
 
 class LilyPond_test (lilypond.LilyPond_base):
+    parallel_build_broken = True
     @context.subst_method
     def test_ball (self):
         return '%(uploads)s/lilypond-%(version)s-%(build_number)s.test-output.tar.bz2'
