@@ -13,14 +13,13 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::rsync', # ugh, we depend on *rsync* !?
                 #'tools::texlive',
                 ])
-    parallel_build_broken = True
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
 WEB_TARGETS="offline online"
 TARGET_PYTHON=/usr/bin/python
 ''')
-    compile_flags = lilypond.LilyPond_base.compile_flags + ' top-doc all doc'
+    compile_flags = lilypond.LilyPond_base.compile_flags + ' CPU_COUNT=%(cpu_count)s top-doc all doc'
     install_flags = (' install-doc install-help2man'
                      ' prefix='
                      ' infodir=/share/info'
