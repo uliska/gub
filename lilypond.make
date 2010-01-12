@@ -45,8 +45,9 @@ LILYPOND_SOURCE_URL=$(LILYPOND_REPO_URL)?branch=$(LILYPOND_BRANCH)
 LILYPOND_DIRRED_BRANCH=$(shell $(PYTHON) gub/repository.py --branch-dir '$(LILYPOND_SOURCE_URL)')
 LILYPOND_FLATTENED_BRANCH=$(shell $(PYTHON) gub/repository.py --full-branch-name '$(LILYPOND_SOURCE_URL)')
 BUILD_PACKAGE='$(LILYPOND_SOURCE_URL)'
-INSTALL_PACKAGE = lilypond
 
+# these keep the git branch name when making packages
+INSTALL_PACKAGE=$(subst lilypond,lilypond-installer,$(BUILD_PACKAGE))
 DOC_PACKAGE=$(subst lilypond,lilypond-doc,$(BUILD_PACKAGE))
 TEST_PACKAGE=$(subst lilypond,lilypond-test,$(BUILD_PACKAGE))
 
