@@ -115,12 +115,13 @@ def create_local_web_dir (options, source):
     
     printf ('Instrumenting for Google Analytics' )
     for f in ['Documentation/index.html',
-              'Documentation/changes/index.html',
-              'Documentation/notation/index.html',
-              'Documentation/internals/index.html',
+              'Documentation/topdocs/NEWS.html',
+              'Documentation/user/lilypond/index.html',
+              'Documentation/user/lilypond-internals/index.html',
               'examples.html',
-              'Documentation/music-glossary/index.html',
-              'Documentation/learning/index.html',
+              'Documentation/user/music-glossary/index.html',
+              'Documentation/topdocs/NEWS.html',
+              'Documentation/user/lilypond-learning/Tutorial.html',
 #	      'input/test/collated-files.html',
               'input/regression/collated-files.html']:
         do_urchin (f)
