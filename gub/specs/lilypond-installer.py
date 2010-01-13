@@ -12,9 +12,6 @@ from gub.specs import lilypond
 # not really a 'python driver'.
 class LilyPond_installer (lilypond.LilyPond_base):
     install_command = 'true'
-    def __init__ (self, settings, source):
-        lilypond.LilyPond_base.__init__ (self, settings, source)
-        self.dependencies = [self.settings.target_platform + '::lilypond']
     def compile (self):
         # FIXME: ugh, no branches anymore in self.settings.branches['guile'],
         # let's hope/assume the user did not override guile source or branch...
