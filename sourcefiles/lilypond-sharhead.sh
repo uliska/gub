@@ -61,7 +61,8 @@ done
 cat <<EOF
 
 %(name)s installer for version %(version)s release %(release)s.
-Use --help for help
+For a list of options, abort (^C) then do:
+sh $me --help
 
 EOF
 
