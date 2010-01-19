@@ -114,7 +114,7 @@ def create_local_web_dir (options, source):
         return
     
     printf ('Instrumenting for Google Analytics' )
-    for f in ['Documentation/index.html',
+    for f in ['Documentation/web/index.html',
               'Documentation/changes/index.html',
               'Documentation/notation/index.html',
               'Documentation/internals/index.html',
