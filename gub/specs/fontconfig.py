@@ -21,7 +21,7 @@ does not depend on the X Window System.  It is designed to locate
 fonts within the system and select them according to requirements
 specified by applications.'''
 
-    source = 'http://fontconfig.org/release/fontconfig-2.7.3.tar.gz'
+    source = 'http://fontconfig.org/release/fontconfig-2.8.0.tar.gz'
     #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
     dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config']
         # FIXME: system dir vs packaging install
@@ -140,7 +140,7 @@ class Fontconfig__freebsd (Fontconfig__linux):
 class Fontconfig__tools (tools.AutoBuild):
     # FIXME: use mi to get to source?
     #source = 'git://anongit.freedesktop.org/git/fontconfig?revision=' + version
-    source = 'http://fontconfig.org/release/fontconfig-2.7.3.tar.gz'
+    source = 'http://fontconfig.org/release/fontconfig-2.8.0.tar.gz'
     def patch (self):
         self.dump ('\nAC_SUBST(LT_AGE)', '%(srcdir)s/configure.in', mode='a', permissions=octal.o755)
         tools.AutoBuild.patch (self)
