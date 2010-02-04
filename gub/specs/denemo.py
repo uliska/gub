@@ -13,9 +13,7 @@ from gub import target
 
 class Denemo (target.AutoBuild):
     source = 'git://git.savannah.gnu.org/denemo.git'
-    patches = [
-        'denemo-no-have-sys-soundcard-h.patch',
-        ]
+    patches = [ ]
     subpackage_names = ['']
     dependencies = [
         'cross/gcc-c++-runtime',
