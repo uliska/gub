@@ -257,7 +257,7 @@ class LilyPond_base (target.AutoBuild):
         source.is_downloaded = misc.bind_method (lambda x: True, source)
         source.update_workdir = misc.bind_method (lambda x: True, source)
         self.dependencies = (self.__class__.dependencies
-                             + [settings.build_platform + '::'
+                             + [self.settings.target_platform + '::'
                                 + source.source + '?branch=' + source.branch])
     subpackage_names = ['']
     def stages (self):
