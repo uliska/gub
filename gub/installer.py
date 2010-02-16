@@ -181,6 +181,8 @@ class Installer (context.RunnableContext):
             'share/guile/*/ice-9/debugger/',
             'share/gettext/intl',
             'share/ghostscript/*/{doc,examples}/',
+            'share/ghostscript/*/Resource/{CMap,ColorSpace,Decoding}/',
+            'share/ghostscript/*/Resource/{Encoding,Font,SubstCID}/',
             'share/gs/*/{doc,examples}/',
             'share/gtk-doc',
             'share/info',
