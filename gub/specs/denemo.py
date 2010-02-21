@@ -33,6 +33,7 @@ class Denemo (target.AutoBuild):
         'libxml2-devel',
         'lilypondcairo',
         'portaudio-devel',
+	'cairo',
         ]
     configure_flags = (target.AutoBuild.configure_flags
                        + ' --enable-binreloc'
