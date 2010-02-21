@@ -18,6 +18,6 @@ See http://www.sqlite.org/copyright.html .
     license_files = ['%(srcdir)s/PUBLIC-DOMAIN']
 
 class Sqlite__mingw (Sqlite):
-    configure_flags = ('config_TARGET_EXEEXT=.exe '
+    configure_flags = (' config_TARGET_EXEEXT=.exe '
                 + Sqlite.configure_flags
                 .replace ('--enable-threadsafe', '--disable-threadsafe'))
