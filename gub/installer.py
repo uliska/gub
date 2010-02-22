@@ -182,7 +182,8 @@ class Installer (context.RunnableContext):
             'share/gettext/intl',
             'share/ghostscript/*/{doc,examples}/',
             'share/ghostscript/*/Resource/{CMap,ColorSpace,Decoding}/',
-            'share/ghostscript/*/Resource/{Encoding,Font,SubstCID}/',
+# keep font, otherwise mingw users have problems.
+            'share/ghostscript/*/Resource/{Encoding,SubstCID}/',
             'share/gs/*/{doc,examples}/',
             'share/gtk-doc',
             'share/info',
