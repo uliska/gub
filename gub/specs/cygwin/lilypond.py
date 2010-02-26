@@ -5,20 +5,26 @@ from gub import target
 from gub.specs import lilypond
 
 class LilyPond (lilypond.LilyPond):
+    '''A program for printing sheet music
+LilyPond lets you create music notation.  It produces beautiful
+sheet music from a high-level description file.'''
     subpackage_names = ['doc', '']
     dependencies = gup.gub_to_distro_deps (lilypond.LilyPond.dependencies,
-                                           cygwin.gub_to_distro_dict)
+                                           cygwin.gub_to_distro_dict)+ [
+            'tools::imagemagick',
+            'tools::icoutils',
+            ]
     configure_flags = (lilypond.LilyPond.configure_flags
                        .replace ('--enable-relocation', '--disable-relocation'))
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
     LDFLAGS = '-L%(system_prefix)s/lib -L%(system_prefix)s/bin -L%(system_prefix)s/lib/w32api'
     make_flags = (lilypond.LilyPond.make_flags
                   + ' LDFLAGS="%(LDFLAGS)s %(python_lib)s"')
+    branch = 'stable/2.12'
     def __init__ (self, settings, source):
         lilypond.LilyPond.__init__ (self, settings, source)
         self.dependencies += [misc.with_platform ('lilypond-doc',
                                                   self.settings.build_platform)]
-                                                  
     def install (self):
         ##lilypond.LilyPond.install (self)
         target.AutoBuild.install (self)
