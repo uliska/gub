@@ -1,3 +1,10 @@
+lilypond (2.12.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Move to Cygwin 1.7.
+
+ -- Jan Nieuwenhuizen janneke@gnu.org>  Tue, 23 Feb 12:08:24 2010 +0100
+
 lilypond (2.12.1-1) unstable; urgency=low
 
   * New major upstream release, see http://lilypond.org/news .

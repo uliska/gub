@@ -20,11 +20,17 @@ def libpng12_fixup (self):
 mirror = 'http://mirrors.kernel.org/sourceware/cygwin'
 
 def get_cross_build_dependencies (settings):
-    return ['cross/gcc', 'freetype-config', 'python-config']
+    return ['cross/gcc', 'freetype-config', 'guile-config', 'python-config']
 
 def change_target_package (package):
     cross.change_target_package (package)
     w32.change_target_package (package)
+
+    # Hmm, why not in mingw? -> w32.py?
+    @context.subst_method
+    def rpath (foo):
+        return ''
+    package.rpath = misc.MethodOverrider (package.nop, rpath)
 
     package.get_build_dependencies \
             = misc.MethodOverrider (package.get_build_dependencies,
@@ -117,6 +123,9 @@ def get_cygwin_package (settings, name, cygwin_spec, skip):
         'gcc-runtime', 'gcc-core-runtime',
         ]
     cycle = ['base-passwd']
+    obsolete = [
+        'libfreetype26',
+        ]
     # FIXME: These packages are not needed for [cross] building,
     # but most should stay as distro's final install dependency.
     unneeded = [
@@ -136,7 +145,7 @@ def get_cygwin_package (settings, name, cygwin_spec, skip):
         'xorg-x11-fnts',
         'xorg-x11-libs-data',
         ]
-    blacklist = cross + cycle + skip + unneeded
+    blacklist = cross + cycle + skip + obsolete + unneeded
     if name in blacklist:
         name += '::blacklisted'
     cls = package_class (name, cygwin_spec, blacklist)
@@ -168,7 +177,7 @@ def get_cygwin_packages (settings, package_file, skip=[]):
         records = {
             'sdesc': name,
             'version': '0-0',
-            'install': 'urg 0 0',
+            'install': 'urg-no-install-key-for-%(name)s 0 0' % locals (),
             }
         j = 1
         while j < len (lines) and lines[j].strip ():
@@ -188,8 +197,8 @@ def get_cygwin_packages (settings, package_file, skip=[]):
             except:
                 printf (lines[j], package_file)
                 raise Exception ('URG')
-            if (value.startswith ('"')
-              and value.find ('"', 1) == -1):
+            p = value.find ('"') + 1
+            if p and value.find ('"', p) == -1:
                 while 1:
                     j = j + 1
                     value += '\n' + lines[j]
@@ -226,6 +235,7 @@ fontconfig_source = [
 freetype_source = [
     'freetype2',
     'libfreetype26',
+    'libfreetype6',
     'libfreetype2-devel',
     ]
 libtool_source = [
@@ -294,11 +304,14 @@ gub_to_distro_dict = {
     'fontconfig-runtime' : ['libfontconfig1'],
     'fontconfig-devel' : ['libfontconfig-devel'],
     'freetype' : ['freetype2'],
-    'freetype-devel' : ['libfreetype2-devel'],
-    'freetype-runtime' : ['libfreetype26'],
-    'freetype2-devel' : ['libfreetype2-devel'],
-    'freetype2-runtime' : ['libfreetype26'],
+    'freetype-devel' : ['libfreetype-devel'],
+    'freetype-runtime' : ['libfreetype6'],
+    'freetype2-devel' : ['libfreetype-devel'],
+    'libfreetype26': ['libfreetype6'],
+    'freetype2-runtime' : ['libfreetype6'],
     'gettext' : ['libintl8', 'libintl3'],
+    'mpfr-devel': ['libmpfr-devel'],
+    'mpfr': ['libmpfr-devel'],
     'gmp-devel': ['gmp'],
     'guile-runtime' : ['libguile17', 'libguile12'],
 #    'libtool': ['libtool1.5'],
