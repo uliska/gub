@@ -2,7 +2,7 @@ from gub import build
 from gub import octal
 
 class Guile_config (build.SdkBuild):
-    source = 'url://host/guile-config-1.8.0.tar.gz'
+    source = 'url://host/guile-config-1.8.7.tar.gz'
     def install (self):
         build.SdkBuild.install (self)
         self.system ('mkdir -p %(cross_prefix)s%(prefix_dir)s/bin')
@@ -21,7 +21,7 @@ exit 0
                    permissions=octal.o755)
 
 class Guile_config__debian (build.SdkBuild):
-    source = 'url://host/guile-config-1.8.0.tar.gz'
+    source = 'url://host/guile-config-1.8.7.tar.gz'
     def install (self):
         build.SdkBuild.install (self)
         self.system ('mkdir -p %(cross_prefix)s%(prefix_dir)s/bin')
