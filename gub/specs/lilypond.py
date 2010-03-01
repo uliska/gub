@@ -17,8 +17,8 @@ def url (version=VERSION):
 
 class LilyPond__simple (target.AutoBuild):
     '''A program for printing sheet music
-    LilyPond lets you create music notation.  It produces beautiful
-    sheet music from a high-level description file.'''
+LilyPond lets you create music notation.  It produces beautiful
+sheet music from a high-level description file.'''
 
     source = 'git://git.sv.gnu.org/lilypond.git'
     branch = 'master'
