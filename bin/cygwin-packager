@@ -284,7 +284,7 @@ cd %(dir)s && tar -C %(dir)s%(_v)s -zxf %(ball)s''', e)
     def _tar (self, dir, ball, content, env={}):
         ball_dir = os.path.dirname (ball)
         if not misc.locate_files (dir, content):
-            content = '.'
+            content = '*'
         e = env.copy ()
         e.update (locals ())
         self.system ('''
