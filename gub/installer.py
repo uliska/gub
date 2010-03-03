@@ -310,10 +310,10 @@ class DarwinRoot (Installer):
 class DarwinBundle (DarwinRoot):
     def __init__ (self, *args):
         DarwinRoot.__init__ (self, *args)
-        self.darwin_bundle_dir = '%(installerdir)s/LilyPond.app'
+        self.darwin_bundle_dir = '%(installerdir)s/%(pretty_name)s.app'
         
     def installer_file (self):
-        return self.expand ('%(uploads)s/lilypond-%(installer_version)s-%(installer_build)s.%(platform)s.tar.bz2')
+        return self.expand ('%(uploads)s/%(name)s-%(installer_version)s-%(installer_build)s.%(platform)s.tar.bz2')
 
     def create (self):
         DarwinRoot.create (self)
@@ -331,6 +331,9 @@ rm -f %(bundle_zip)s
 rm -rf %(darwin_bundle_dir)s
 # FIXME: ask TarBall where source lives
 tar -C %(installerdir)s -zxf %(downloads)s/osx-lilypad/osx-lilypad-universal-%(osx_lilypad_version)s.tar.gz
+mkdir -p %(darwin_bundle_dir)s/Contents/Resources
+touch %(darwin_bundle_dir)s/Contents/Info.plist # FIXME - this may need content
+touch %(darwin_bundle_dir)s/Contents/Resources/Credits.html # FIXME - this may need content
 cp -pR --link %(installer_prefix)s/* %(darwin_bundle_dir)s/Contents/Resources/
 mkdir -p %(darwin_bundle_dir)s/Contents/Resources/license
 cp -pR --link %(installer_root)s/license*/* %(darwin_bundle_dir)s/Contents/Resources/license/
@@ -356,14 +359,15 @@ MY_PATCH_LEVEL=
             '%(darwin_bundle_dir)s/Contents/Resources/Credits.html',
             env=locals ())
         
-        self.file_sub (
-            [('2.12.0', installer_version),
-            ],
-            '%(darwin_bundle_dir)s/Contents/Resources/Welcome-to-LilyPond-MacOS.ly',
+        if 'lilypond' in self.name.lower ():
+            self.file_sub (
+                [('2.12.0', installer_version),
+                 ],
+                '%(darwin_bundle_dir)s/Contents/Resources/Welcome-to-LilyPond-MacOS.ly',
             env=locals ())
-        self.system ('cd %(darwin_bundle_dir)s/../ && find LilyPond.app | xargs touch', locals ())
+        self.system ('cd %(darwin_bundle_dir)s/../ && find %(pretty_name)s.app -print0 | xargs -0 touch', locals ())
         
-        self.system ('cd %(darwin_bundle_dir)s/../ && tar cjf %(bundle_zip)s LilyPond.app',
+        self.system ('cd %(darwin_bundle_dir)s/../ && tar cjf %(bundle_zip)s %(pretty_name)s.app',
                      locals ())
         
         
@@ -448,7 +452,7 @@ class Shar (Linux_installer):
         release = self.expand ('%(installer_build)s')
         shar_file = self.installer_file ()
         shar_head = self.expand ('%(sourcefiledir)s/sharhead.sh')
-        if self.name == 'lilypond':
+        if 'lilypond' in self.name.lower ():
             shar_head = self.expand ('%(sourcefiledir)s/lilypond-sharhead.sh')
         tarball = self.expand (self.bundle_tarball)
         version = self.expand ('%(installer_version)s')
