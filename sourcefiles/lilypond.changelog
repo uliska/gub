@@ -1,4 +1,17 @@
-lilypond (2.12.3-1) unstable; urgency=low
+lilypond (2.13.14-1) unstable; urgency=low
+
+  * New upstream 2.14-prerelease.
+
+ -- Jan Nieuwenhuizen janneke@gnu.org>  Tue,  2 Mar 14:50:25 2010 +0100
+
+lilypond (2.12.4-2) unstable; urgency=low
+
+  * Reluctantly, use '*' globbing instead of '.' to build cygwin GUB
+    packages.
+
+ -- Jan Nieuwenhuizen janneke@gnu.org>  Tue,  2 Mar 14:45:11 2010 +0100
+
+lilypond (2.12.4-1) unstable; urgency=low
 
   * New upstream release.
   * Move to Cygwin 1.7.
