@@ -98,6 +98,7 @@ typedef int CGEventSuppressionState;
             'DiskArbitration',
             'IOKit',
 #            'OSServices',
+            'libkern', # darwin-ppc only
             ]:
             self.system ('''
 #ln -sf ../../System/Library/Frameworks/Kernel.framework/Headers/%(framework)s %(srcdir)s/usr/include/%(framework)s
@@ -167,3 +168,8 @@ ln -sf %(system_root)s/System/Library/Frameworks/%(framework)s.framework/Headers
 #include <kernel/IOKit/IOTypes.h>
 ''')],
                        '%(builddir)s/include/IOKit/IOKitLib.h')
+
+class Portaudio__darwin__ppc (Portaudio__darwin):
+    patches = Portaudio__darwin.patches + [
+        'portaudio-darwin-ppc-pthread-cancelled.patch',
+        ]
