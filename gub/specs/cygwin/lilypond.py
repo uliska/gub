@@ -20,7 +20,7 @@ sheet music from a high-level description file.'''
     LDFLAGS = '-L%(system_prefix)s/lib -L%(system_prefix)s/bin -L%(system_prefix)s/lib/w32api'
     make_flags = (lilypond.LilyPond.make_flags
                   + ' LDFLAGS="%(LDFLAGS)s %(python_lib)s"')
-    branch = 'stable/2.12'
+#    branch = 'stable/2.12'
     def __init__ (self, settings, source):
         lilypond.LilyPond.__init__ (self, settings, source)
         self.dependencies += [misc.with_platform ('lilypond-doc',
@@ -43,6 +43,6 @@ cd %(install_prefix)s && LIBRESTRICT_ALLOW=/ tar -C %(install_prefix)s -jxf %(do
 ''',
                   locals ())
     def category_dict (self):
-        return {'': 'Publishing'}
+        return {'': 'Interpreters'}
 
 Lilypond = LilyPond
