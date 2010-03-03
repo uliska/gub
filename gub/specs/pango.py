@@ -11,6 +11,7 @@ pango_module_version_regexes = [
     (r'^1\.22', '1.6.0'),
     (r'^1\.24', '1.6.0'),
     (r'^1\.26', '1.6.0'),
+    (r'^1\.27', '1.6.0'),
     ]
 
 class Pango (target.AutoBuild):
