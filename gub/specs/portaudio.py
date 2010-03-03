@@ -80,6 +80,11 @@ class Portaudio__darwin (Portaudio):
                            + ''' CFLAGS='-DMACH_KERNEL=1 -Wno-multichar' ''')
     def patch (self):
         Portaudio.patch (self)
+        for i in ['%(srcdir)s/configure.in',
+                  '%(srcdir)s/configure']:
+            self.file_sub ([(' -Werror', ''),
+                            ('mac_sysroot=".*"', 'mac_sysroot=""')
+                            ], i)
         # FIXME: this can't be right.  Move to darwin-sdk?
         self.system ('mkdir -p %(builddir)s/include')
         self.dump ('''
@@ -156,3 +161,9 @@ ln -sf %(system_root)s/System/Library/Frameworks/%(framework)s.framework/Headers
         for i in ['%(srcdir)s/configure.in',
                   '%(srcdir)s/configure']:
             self.file_sub ([('-arch i386 -arch ppc', '-I%(system_prefix)s/include -I%(builddir)s/include -I%(builddir)s/include/kernel'),], i)
+        self.file_sub ([
+                ('^(typedef.*)',
+'''/* \1 */
+#include <kernel/IOKit/IOTypes.h>
+''')],
+                       '%(builddir)s/include/IOKit/IOKitLib.h')
