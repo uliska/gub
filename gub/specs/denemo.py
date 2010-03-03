@@ -99,4 +99,5 @@ class Denemo__darwin (Denemo):
         'osx-lilypad',
         ]
     configure_flags = (Denemo.configure_flags
-                       .replace ('--enable-jack', '--disable-jack'))
+                       .replace ('--enable-jack', '--disable-jack')
+                       + ' CPPFLAGS=-I%(system_prefix)s/include/sys')
