@@ -42,3 +42,8 @@ class Cairo__mingw (Cairo_without_X11):
 
 class Cairo__darwin (Cairo_without_X11):
     pass
+
+class Cairo__darwin__ppc (Cairo__darwin):
+    patches = Cairo__darwin.patches + [
+        'cairo-1.8.8-darwin-ppc.patch',
+        ]

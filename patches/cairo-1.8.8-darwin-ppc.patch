@@ -1,0 +1,35 @@
+--- cairo-1.8.8/src/cairo-quartz-private.h~	2008-12-12 13:48:05.000000000 +0100
++++ cairo-1.8.8/src/cairo-quartz-private.h	2010-03-04 13:04:20.517280718 +0100
+@@ -43,6 +43,11 @@
+ #if CAIRO_HAS_QUARTZ_SURFACE
+ #include "cairo-quartz.h"
+ 
++typedef void (*CGDataProviderReleaseDataCallback)(void *info, const void *data, size_t size);
++
++CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform t); /*AVAILABLE_MAC_OS_X_VERSION_10_4_AND_LATER; */
++void CGContextClipToMask(CGContextRef c, CGRect rect, CGImageRef mask);
++
+ typedef struct cairo_quartz_surface {
+     cairo_surface_t base;
+ 
+--- cairo-1.8.8/src/cairo-quartz-font.c~	2009-06-16 12:48:54.000000000 +0200
++++ cairo-1.8.8/src/cairo-quartz-font.c	2010-03-04 13:05:26.897283224 +0100
+@@ -41,6 +41,18 @@
+ #include "cairo-quartz.h"
+ #include "cairo-quartz-private.h"
+ 
++/* not in 10.4 */
++CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform t) /*AVAILABLE_MAC_OS_X_VERSION_10_4_AND_LATER; */
++{
++  CGRect r;
++  return r;
++}
++
++/* not in 10.4 */
++void CGContextClipToMask(CGContextRef c, CGRect rect, CGImageRef mask)
++{
++}
++
+ /* CreateWithFontName exists in 10.5, but not in 10.4; CreateWithName isn't public in 10.4 */
+ static CGFontRef (*CGFontCreateWithFontNamePtr) (CFStringRef) = NULL;
+ static CGFontRef (*CGFontCreateWithNamePtr) (const char *) = NULL;
