@@ -56,6 +56,9 @@ class Gcc__darwin__x86 (Gcc__darwin):
     patches = ['gcc-4.3.2-no-fixed-includes.patch']
     dependencies = Gcc__darwin.dependencies + ['tools::mpfr']
 
+class Version_bump_builds_but_needs_a_test_Gcc__darwin__ppc (Gcc__darwin__x86):
+    pass
+
 class Not_used__Gcc__darwin (Gcc__darwin):
     def configure (self):
         cross_gcc.Gcc.configure (self)
