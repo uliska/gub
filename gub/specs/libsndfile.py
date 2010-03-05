@@ -9,8 +9,8 @@ class Libsndfile (target.AutoBuild):
         'sqlite'
         ]
 
-class Libsndfile__darwin (Libsndfile):
+class Libsndfile__darwin__x86 (Libsndfile):
     dependencies = [x for x in Libsndfile.dependencies
                 if x.replace ('-devel', '') not in [
-                'sqlite', # Included in darwin-sdk, hmm?
+                'sqlite', # Included in darwin-x86 SDK, hmm?
                 ]]
