@@ -100,4 +100,13 @@ class Denemo__darwin (Denemo):
         ]
     configure_flags = (Denemo.configure_flags
                        .replace ('--enable-jack', '--disable-jack')
-                       + ' CPPFLAGS=-I%(system_prefix)s/include/sys')
+                       + ' "CPPFLAGS=-I%(system_prefix)s/include -I%(system_prefix)s/include/sys"')
+
+class Denemo__darwin__ppc (Denemo__darwin):
+    # make sure that PREFIX/include/unistd.h gets included
+    def patch (self):
+        Denemo__darwin.patch (self)
+        self.system ('''
+mkdir -p %(builddir)s/src
+cp -pv %(system_prefix)s/include/unistd.h %(builddir)s/src
+''')
