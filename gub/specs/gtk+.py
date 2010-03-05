@@ -60,3 +60,9 @@ class Gtk_x___darwin (Gtk_x_without_X11):
     configure_flags = (Gtk_x_without_X11.configure_flags
                 + ' --with-gdktarget=quartz'
                 )
+
+class Gtk_x___darwin__ppc (Gtk_x___darwin):
+#    source = 'http://ftp.gnome.org/pub/GNOME/platform/2.28/2.28.2/sources/gtk+-2.18.5.tar.gz'
+    patches = Gtk_x___darwin.patches + [
+        'gtk+-2.16-darwin-ppc.patch',
+        ]
