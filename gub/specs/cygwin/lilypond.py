@@ -10,10 +10,14 @@ LilyPond lets you create music notation.  It produces beautiful
 sheet music from a high-level description file.'''
     subpackage_names = ['doc', '']
     dependencies = gup.gub_to_distro_deps (lilypond.LilyPond.dependencies,
-                                           cygwin.gub_to_distro_dict)+ [
-            'tools::imagemagick',
-            'tools::icoutils',
-            ]
+                                           cygwin.gub_to_distro_dict) + [
+        'tools::imagemagick',
+        'tools::icoutils',
+        ] + [
+                                               'bash',
+                                               'coreutils',
+                                               'findutils',
+                                               ]
     configure_flags = (lilypond.LilyPond.configure_flags
                        .replace ('--enable-relocation', '--disable-relocation'))
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
@@ -40,6 +44,7 @@ sheet music from a high-level description file.'''
         self.system ('''
 mkdir -p %(install_prefix)s/share/doc/lilypond
 cd %(install_prefix)s && LIBRESTRICT_ALLOW=/ tar -C %(install_prefix)s -jxf %(docball)s
+cd %(install_prefix)s && rm -rf license
 ''',
                   locals ())
     def category_dict (self):
