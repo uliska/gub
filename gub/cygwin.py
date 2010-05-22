@@ -117,11 +117,19 @@ def package_class (name, cygwin_spec, blacklist):
 
 def get_cygwin_package (settings, name, cygwin_spec, skip):
     cross = [
-        'base-passwd', 'bintutils',
-        'gcc', 'gcc-core', 'gcc-g++',
-        'gcc-mingw', 'gcc-mingw-core', 'gcc-mingw-g++',
-        'gcc-runtime', 'gcc-core-runtime',
+        'base-passwd',
+        'bintutils',
+        'gcc',
+        'gcc-c++-runtime',
+        'gcc-core',
+        'gcc-core-runtime',
+        'gcc-g++',
+        'gcc-mingw',
+        'gcc-mingw-core',
+        'gcc-mingw-g++',
+        'gcc-runtime',
         ]
+    cross = cross + ['cygwin::cross/' + x for x in cross]
     cycle = ['base-passwd']
     obsolete = [
         'libfreetype26',
@@ -239,9 +247,9 @@ freetype_source = [
     'libfreetype2-devel',
     ]
 libtool_source = [
-    'libltdl3',
+    'libltdl7',
     'libtool',
-    'libtool1.5',
+    'libtool-devel',
     ]
 
 # FIXME: c&p debian.py
@@ -300,27 +308,36 @@ gub_to_distro_dict = {
     'cross/binutils': [],
     'cross/gcc': [],
     'cross/gcc-c++-runtime': [],
+    'cygwin': [],
+#    'cygwin::cross/binutils': [],
+#    'cygwin::cross/gcc': [],
+#    'cygwin::cross/gcc-c++-runtime': [],
     'expat-devel': ['expat'],
-    'fontconfig-runtime' : ['libfontconfig1'],
+    'flex': [],
+    'fontconfig' : ['libfontconfig-devel'],
     'fontconfig-devel' : ['libfontconfig-devel'],
-    'freetype' : ['freetype2'],
-    'freetype-devel' : ['libfreetype-devel'],
-    'freetype-runtime' : ['libfreetype6'],
-    'freetype2-devel' : ['libfreetype-devel'],
-    'libfreetype26': ['libfreetype6'],
-    'freetype2-runtime' : ['libfreetype6'],
+    'freetype' : ['libfreetype-devel'],
     'gettext' : ['libintl8', 'libintl3'],
-    'mpfr-devel': ['libmpfr-devel'],
-    'mpfr': ['libmpfr-devel'],
     'gmp-devel': ['gmp'],
+    'guile' : ['libguile17', 'libguile12'], # ugh '-devel' gets stripped
     'guile-runtime' : ['libguile17', 'libguile12'],
-#    'libtool': ['libtool1.5'],
-    'libtool-runtime': ['libltdl3'],
+    'libfontconfig': ['libfontconfig-devel'],
+    'libfreetype': ['libfreetype-devel'],
+    'libgd': ['libgd-devel'],
+    'libglib': ['libglib2.0_0'],
     'libiconv-devel': ['libiconv2'],
-    'pango': ['pango-runtime'],
+    'libjpeg': ['libjpeg62'],
+    'libt1': ['t1lib-devel'],
+    'libtiff': ['libtiff-devel'],
+    'libtool-devel': ['libtool'],
+    'libtool-runtime': ['libltdl7'],
+    'mpfr': ['libmpfr-devel'],
+    'mpfr-devel': ['libmpfr-devel'],
+    'pango': ['libpango1.0_0'],
     'python-devel': ['python'],
     'python-runtime': ['python'],
     'texlive-devel': ['libkpathsea-devel'],
     'texlive-runtime': ['libkpathsea4'],
 #    'libx11-6': ['libX11_6'],
+    'urw-fonts': [],
     }
