@@ -7,12 +7,7 @@ from gub import repository
 from gub import target
 from gub import tools
 
-# FIXME: static for now
-#  - shell_rpath hack does not work anymore
-#  - mingw untested
-#  - obj/soobj
-shared = False
-dynamic = False
+shared = True
 
 class Ghostscript (target.AutoBuild):
     '''The GPL Ghostscript PostScript interpreter
@@ -48,7 +43,7 @@ models.'''
 --without-jasper
 --disable-compile-inits
 '''))
-    if dynamic:
+    if shared:
         configure_flags = (configure_flags
                            .replace ('--disable-static', '--enable-dynamic'))
     compile_flags = (' INCLUDE=%(system_prefix)s/include'
@@ -230,7 +225,7 @@ ac_cv_lib_pthread_pthread_create=no
         Ghostscript.patch (self)
     def configure (self):
         Ghostscript.configure (self)
-        if dynamic: # Dynamic is a configure cross-compile disaster area,
+        if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1'),
                             ('^(EXTRALIBS *=.*)(-rdynamic )', r'\1')],
