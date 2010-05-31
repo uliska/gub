@@ -10,7 +10,7 @@ from gub import tools
 # FIXME: static for now
 #  - shell_rpath hack does not work anymore
 #  - mingw untested
-#  - obj/sobj
+#  - obj/soobj
 shared = False
 dynamic = False
 
@@ -24,9 +24,13 @@ models.'''
 
     #source = 'svn:http://svn.ghostscript.com:8080/ghostscript&branch=trunk/gs&revision=7881'
     # HEAD - need to load TTF fonts on fedora without crashing.
+    exe = ''
     revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
     source = 'http://mirror2.cs.wisc.edu/pub/mirrors/ghost/GPL/gs870/ghostscript-8.70.tar.gz'
+    patches = [
+        'ghostscript-8.70-make.patch',
+        ]
     parallel_build_broken = True
     # For --enable-compile-inits, see comment in compile()
     configure_flags = (target.AutoBuild.configure_flags
@@ -61,7 +65,7 @@ models.'''
         return misc.version_from_url (Ghostscript.source)
     obj = 'obj'
     if shared:
-        obj = 'sobj'
+        obj = 'soobj'
         compile_flags = compile_flags + ' so'
         install_flags = (target.AutoBuild.install_flags
                          .replace (' install', ' soinstall'))
@@ -187,14 +191,14 @@ models.'''
         # obj/mkromfs is needed for --enable-compile-inits but depends on native -liconv.
         self.system ('''
 cd %(builddir)s && mkdir -p %(obj)s
-cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o %(obj)s/genconf %(obj)s/echogs %(obj)s/genarch %(obj)s/arch.h 
+cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/genconf %(obj)s/echogs %(obj)s/genarch %(obj)s/arch.h 
 ''')
         self.fixup_arch ()
         target.AutoBuild.compile (self)
 
     def install (self):
         target.AutoBuild.install (self)
-        self.system ('mkdir -p %(install_prefix)s/etc/relocate/')
+        self.system ('mkdir -p %(install_prefix)s/etc/relocate')
         self.dump ('''
 prependdir GS_FONTPATH=$INSTALLER_PREFIX/share/ghostscript/%(version)s/fonts
 prependdir GS_FONTPATH=$INSTALLER_PREFIX/share/gs/fonts
@@ -202,15 +206,15 @@ prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource
 prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource/Init
 ''', '%(install_prefix)s/etc/relocate/gs.reloc')
         if shared:
-            self.system ('mv %(install_prefix)s/bin/gsc %(install_prefix)s/bin/gs')
+            self.system ('mv %(install_prefix)s/bin/gs%(exe)sc %(install_prefix)s/bin/gs%(exe)s')
+            self.system ('rm -f %(install_prefix)s/bin/gs%(exe)sx')
 
 class Ghostscript__mingw (Ghostscript):
-    # source = 'ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs860/ghostscript-8.60.tar.bz2'
-    patches = [
-#        'ghostscript-8.65-mingw.patch',
+    exe = '.exe'
+    patches = Ghostscript.patches + [
         'ghostscript-8.70-cygwin.patch',
         'ghostscript-8.70-windows-wb.patch',
-        'ghostscript-8.70-make.patch',
+        'ghostscript-8.70-windows-make.patch',
         'ghostscript-8.70-gs_dll.patch',
         ]
     def __init__ (self, settings, source):
