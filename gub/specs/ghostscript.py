@@ -206,7 +206,13 @@ prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource/Init
 
 class Ghostscript__mingw (Ghostscript):
     # source = 'ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs860/ghostscript-8.60.tar.bz2'
-    patches = ['ghostscript-8.65-mingw.patch']
+    patches = [
+#        'ghostscript-8.65-mingw.patch',
+        'ghostscript-8.70-cygwin.patch',
+        'ghostscript-8.70-windows-wb.patch',
+        'ghostscript-8.70-make.patch',
+        'ghostscript-8.70-gs_dll.patch',
+        ]
     def __init__ (self, settings, source):
         Ghostscript.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
@@ -240,7 +246,10 @@ $(GLOBJ)gp_upapr.$(OBJ)
 GLCCWIN=$(CC) $(CFLAGS) -I$(GLOBJDIR)
 PSCCWIN=$(CC) $(CFLAGS) -I$(GLOBJDIR)
 
+include $(GLSRCDIR)/w32.mak
+include $(GLSRCDIR)/gsdll.mak
 include $(GLSRCDIR)/winplat.mak
+include $(GLSRCDIR)/pcwin.mak
 ''',
              '%(builddir)s/Makefile',
              mode='a')
