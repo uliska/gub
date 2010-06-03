@@ -4,7 +4,7 @@ from gub import misc
 from gub import target
 
 class Inkscape (target.AutoBuild):
-    source = 'svn:https://inkscape.svn.sourceforge.net/svnroot/inkscape&module=inkscape&branch=trunk&revision=20605'
+    source = 'svn:https://inkscape.svn.sourceforge.net/svnroot/inkscape&module=inkscape&branch=trunk&revision=22714'
     branch = 'trunk'
     dependencies = [
         'cross/gcc-c++-runtime',
@@ -46,7 +46,12 @@ class Inkscape (target.AutoBuild):
                        '%(srcdir)s/configure.ac')
 
 class Inkscape__mingw (Inkscape):
-    patches = ['inkscape-mingw-DATADIR.h.patch']
+    parallel_build_broken = True # linking breaks: two simultaneous
+                                 # inkscape.exe linking processes!?
+    patches = [
+        'inkscape-mingw.patch',
+        'inkscape-mingw-DATADIR.h.patch',
+        ]
     dependencies = [x for x in Inkscape.dependencies
                     if 'poppler' not in x]
     configure_flags = (Inkscape.configure_flags
@@ -59,10 +64,12 @@ class Inkscape__freebsd (Inkscape):
     dependencies = Inkscape.dependencies + ['cross/gcc-runtime']
 
 class Inkscape__freebsd__x86 (Inkscape__freebsd):
-    patches = ['inkscape-isfinite.patch', 'inkscape-wstring.patch',
-               #'inkscape-round.patch',
-               'inkscape-round-2.patch',
-               ]
+    patches = [
+        'inkscape-isfinite.patch',
+        'inkscape-wstring.patch',
+        #'inkscape-round.patch',
+        'inkscape-round-2.patch',
+        ]
     def patch (self):
         Inkscape__freebsd.patch (self)
         self.file_sub ([
