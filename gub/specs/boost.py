@@ -160,6 +160,11 @@ class Boost_v1 (BjamBuild_v1):
                 + ' -sNO_BZIP2=1'
                 + ' -sNO_ZLIB=1'
                 + ' --with-'.join ([''] + boost_modules))
+    install_command = (BjamBuild_v1.install_command
+                .replace ('bjam ', '%(builddir)s/bjam ')
+                + ' -sNO_BZIP2=1'
+                + ' -sNO_ZLIB=1'
+                + ' --with-'.join ([''] + boost_modules))
     def install (self):
         BjamBuild_v1.install (self)
         # Bjam `installs' header files by using symlinks to the source dir?
