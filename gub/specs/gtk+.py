@@ -4,7 +4,11 @@ from gub import target
 
 class Gtk_x_ (target.AutoBuild):
     source = 'http://ftp.gnome.org/pub/GNOME/platform/2.26/2.26.3/sources/gtk+-2.16.4.tar.gz'
-    patches = ['gtk+-2.15.3-substitute-env.patch']
+    #source = 'http://ftp.gnome.org/pub/GNOME/platform/2.31/2.31.2/sources/gtk+-2.21.0.tar.gz'
+    patches = [
+        'gtk+-2.15.3-substitute-env.patch'
+        # 'gtk+-2.21.0-substitute-env.patch',
+        ]
     dependencies = ['libtool',
                 'atk-devel',
                 'cairo-devel',
