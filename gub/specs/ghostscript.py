@@ -256,6 +256,20 @@ include $(GLSRCDIR)/pcwin.mak
 class Ghostscript__freebsd (Ghostscript):
     dependencies = Ghostscript.dependencies + ['libiconv-devel']
 
+class Ghostscript__darwin (Ghostscript):
+    patches = [
+        'ghostscript-8.70-darwin-make.patch',
+        ]
+    def configure (self):
+        Ghostscript.configure (self)
+        if shared: # Shared is a configure cross-compile disaster area,
+            # it uses BUILD's uname to determine HOST libraries.
+            self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1'),
+                            ('^(EXTRALIBS *=.*)(-shared )', r'\1 -dynamic'),
+                            ('^(CC_SHARED *=.*)( -shared)', r'\1 -dynamic')],
+                           '%(builddir)s/Makefile')
+    make_flags = Ghostscript.make_flags + ' DARWIN=yes'
+
 class Ghostscript__tools (tools.AutoBuild, Ghostscript):
     parallel_build_broken = True
     dependencies = ['libjpeg', 'libpng']
