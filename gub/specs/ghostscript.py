@@ -255,6 +255,12 @@ include $(GLSRCDIR)/pcwin.mak
 
 class Ghostscript__freebsd (Ghostscript):
     dependencies = Ghostscript.dependencies + ['libiconv-devel']
+    def configure (self):
+        Ghostscript.configure (self)
+        if shared: # Shared is a configure cross-compile disaster area,
+            # it uses BUILD's uname to determine HOST libraries.
+            self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1')]
+                           '%(builddir)s/Makefile')
 
 class Ghostscript__darwin (Ghostscript):
     patches = [
