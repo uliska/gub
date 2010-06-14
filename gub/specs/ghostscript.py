@@ -9,7 +9,7 @@ from gub import tools
 
 shared = True
 
-class Ghostscript (target.AutoBuild):
+class Ghostscript_static (target.AutoBuild):
     '''The GPL Ghostscript PostScript interpreter
 Ghostscript is used for PostScript preview and printing.  It can
 display PostScript documents in an X11 environment.  It can render
@@ -43,9 +43,6 @@ models.'''
 --without-jasper
 --disable-compile-inits
 '''))
-    if shared:
-        configure_flags = (configure_flags
-                           .replace ('--disable-static', '--enable-dynamic'))
     compile_flags = (' INCLUDE=%(system_prefix)s/include'
                      + ' PSDOCDIR=%(prefix_dir)s/share/doc'
                      + ' PSMANDIR=%(prefix_dir)s/share/man'
@@ -55,15 +52,10 @@ models.'''
                 + ' mandir=%(prefix_dir)s/share/man/ '
                 + ' docdir=%(prefix_dir)s/share/doc/ghostscript/doc '
                 + ' exdir=%(prefix_dir)s/share/doc/ghostscript/examples ')
+    obj = 'obj'
     @staticmethod
     def static_version ():
         return misc.version_from_url (Ghostscript.source)
-    obj = 'obj'
-    if shared:
-        obj = 'soobj'
-        compile_flags = compile_flags + ' so'
-        install_flags = (target.AutoBuild.install_flags
-                         .replace (' install', ' soinstall'))
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)
         if (isinstance (source, repository.Repository)
@@ -200,10 +192,24 @@ prependdir GS_FONTPATH=$INSTALLER_PREFIX/share/gs/fonts
 prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource
 prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource/Init
 ''', '%(install_prefix)s/etc/relocate/gs.reloc')
-        if shared:
-            self.system ('mv %(install_prefix)s/bin/gs%(exe)sc %(install_prefix)s/bin/gs%(exe)s')
-            self.system ('rm -f %(install_prefix)s/bin/gs%(exe)sx')
 
+class Ghostscript_shared (Ghostscript_static):
+    configure_flags = (Ghostscript_static.configure_flags
+                       .replace ('--disable-static', '--enable-dynamic'))
+    obj = 'soobj'
+    compile_flags = Ghostscript_static.compile_flags + ' so'
+    install_flags = (Ghostscript_static.install_flags
+                     .replace (' install', ' soinstall'))
+    def install (self):
+        Ghostscript_static.install (self)
+        self.system ('mv %(install_prefix)s/bin/gs%(exe)sc %(install_prefix)s/bin/gs%(exe)s')
+        self.system ('rm -f %(install_prefix)s/bin/gs%(exe)sx')
+
+if shared:
+    Ghostscript = Ghostscript_shared
+else:
+    Ghostscript = Ghostscript_static
+    
 class Ghostscript__mingw (Ghostscript):
     exe = '.exe'
     patches = Ghostscript.patches + [
@@ -259,7 +265,7 @@ class Ghostscript__freebsd (Ghostscript):
         Ghostscript.configure (self)
         if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
-            self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1')]
+            self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1')],
                            '%(builddir)s/Makefile')
 
 class Ghostscript__darwin (Ghostscript):
@@ -276,12 +282,12 @@ class Ghostscript__darwin (Ghostscript):
                            '%(builddir)s/Makefile')
     make_flags = Ghostscript.make_flags + ' DARWIN=yes'
 
-class Ghostscript__tools (tools.AutoBuild, Ghostscript):
+class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
     dependencies = ['libjpeg', 'libpng']
     configure_flags = (tools.AutoBuild.configure_flags
-                       + Ghostscript.configure_flags)
-    make_flags = Ghostscript.make_flags
+                       + Ghostscript_static.configure_flags)
+    make_flags = Ghostscript_static.make_flags
     def configure (self):
         tools.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
