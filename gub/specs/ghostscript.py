@@ -52,6 +52,7 @@ models.'''
                 + ' mandir=%(prefix_dir)s/share/man/ '
                 + ' docdir=%(prefix_dir)s/share/doc/ghostscript/doc '
                 + ' exdir=%(prefix_dir)s/share/doc/ghostscript/examples ')
+    make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s'
     obj = 'obj'
     @staticmethod
     def static_version ():
@@ -254,6 +255,10 @@ include $(GLSRCDIR)/pcwin.mak
 ''',
              '%(builddir)s/Makefile',
              mode='a')
+    def install (self):
+        Ghostscript.install (self)
+        if shared:
+            self.system ('mv %(install_prefix)s/lib/*dll %(install_prefix)s/bin')
 
 class Ghostscript__freebsd (Ghostscript):
     dependencies = Ghostscript.dependencies + ['libiconv-devel']
@@ -265,18 +270,15 @@ class Ghostscript__freebsd (Ghostscript):
                            '%(builddir)s/Makefile')
 
 class Ghostscript__darwin (Ghostscript):
-    patches = [
-        'ghostscript-8.70-darwin-make.patch',
-        ]
     def configure (self):
         Ghostscript.configure (self)
         if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1'),
+                            ('^(EXTRALIBS *=.*)(-rdynamic )', r'\1 -dynamic'),
                             ('^(EXTRALIBS *=.*)(-shared )', r'\1 -dynamic'),
                             ('^(CC_SHARED *=.*)( -shared)', r'\1 -dynamic')],
                            '%(builddir)s/Makefile')
-    make_flags = Ghostscript.make_flags + ' DARWIN=yes'
 
 class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
