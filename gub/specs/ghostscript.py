@@ -46,7 +46,7 @@ models.'''
     compile_flags = (' INCLUDE=%(system_prefix)s/include'
                      + ' PSDOCDIR=%(prefix_dir)s/share/doc'
                      + ' PSMANDIR=%(prefix_dir)s/share/man'
-                     + r''' XLDFLAGS='%(shell_rpath)s' ''')
+                     + r''' XLDFLAGS='%(rpath)s' ''')
     install_command = (target.AutoBuild.install_command
                 + ' install_prefix=%(install_root)s'
                 + ' mandir=%(prefix_dir)s/share/man/ '
@@ -169,10 +169,6 @@ models.'''
             (r'\$\${ORIGIN}', '\\$${ORIGIN}'),
             ],
                file)
-
-    @context.subst_method
-    def shell_rpath (self):
-        return self.rpath ().replace (r'\$', r'\\\$')
 
     def compile (self):
         # obj/mkromfs is needed for --enable-compile-inits but depends on native -liconv.
