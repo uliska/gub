@@ -2,8 +2,10 @@ from gub import context
 from gub import tools 
 
 class Fontforge__tools (tools.AutoBuild):
-    source = 'http://surfnet.dl.sourceforge.net/sourceforge/fontforge/fontforge-source/fontforge_full-20100501.tar.bz2'
-    #patches = ['fontforge-20080927-noxml2.patch']
+    # 20100501 breaks flags
+    #source = 'http://surfnet.dl.sourceforge.net/sourceforge/fontforge/fontforge-source/fontforge_full-20100501.tar.bz2'
+    #source = ':pserver:anonymous@fontforge.cvs.sourceforge.net:/cvsroot/fontforge&module=fontforge&tag=HEAD'
+    source = 'git://git.debian.org/pkg-fonts/fontforge.git&revision=4ab4fe9a81a8e15c1c7d479dc710c54335083042'
     parallel_build_broken = True
     srcdir_build_broken = True
     dependencies = ['freetype', 'libpng', 'libjpeg', 'libxml2']
