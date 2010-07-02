@@ -13,7 +13,8 @@ class Guile (target.AutoBuild):
     source = 'http://ftp.gnu.org/pub/gnu/guile/guile-1.8.7.tar.gz'
     patches = ['guile-reloc-1.8.6.patch',
                'guile-cexp.patch',
-               'guile-1.8.6-test-use-srfi.patch']
+               'guile-1.8.6-test-use-srfi.patch',
+               'guile-1.8.7-doc-snarfing.patch']
     dependencies = ['gettext-devel', 'gmp-devel', 'libtool', 'tools::guile']
     guile_configure_flags = misc.join_lines ('''
 --without-threads
