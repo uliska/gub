@@ -113,31 +113,29 @@ Function un.install_installed_files
  Push $R2
  SetFileAttributes "$INSTDIR\${UninstLog}" NORMAL
  FileOpen $UninstLog "$INSTDIR\${UninstLog}" r
- StrCpy $R1 0
+ StrCpy $R1 -1
 
  GetLineCount:
   ClearErrors
-   FileRead $UninstLog $R0
-   IntOp $R1 $R1 + 1
-   IfErrors 0 GetLineCount
+  FileRead $UninstLog $R0
+  IntOp $R1 $R1 + 1
+  StrCpy $R0 "$INSTDIR\$R0" -2
+  Push $R0
+  IfErrors 0 GetLineCount
+
+ Pop $R0
 
  LoopRead:
-  FileSeek $UninstLog 0 SET
-  StrCpy $R2 0
-  FindLine:
-   FileRead $UninstLog $R0
-   IntOp $R2 $R2 + 1
-   StrCmp $R1 $R2 0 FindLine
+  StrCmp $R1 0 LoopDone
+  Pop $R0
 
-   StrCpy $R0 "$INSTDIR\$R0" -2
-   IfFileExists "$R0\*.*" 0 +3
-    RMDir $R0  #is dir
-   Goto +3
-   IfFileExists "$R0" 0 +2
-    Delete "$R0" #is file
+  IfFileExists "$R0\*.*" 0 +3
+   RMDir $R0  #is dir
+  Goto +3
+  IfFileExists "$R0" 0 +2
+   Delete "$R0" #is file
 
   IntOp $R1 $R1 - 1
-  StrCmp $R1 0 LoopDone
   Goto LoopRead
  LoopDone:
  FileClose $UninstLog
