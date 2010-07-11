@@ -93,14 +93,22 @@ FunctionEnd
 
 
 Function postinstall_lilypad
-	StrCpy $0 "$INSTDIR\usr\bin\lilypad"
-	CopyFiles /silent "$0.exe" "$0-unicode.exe"
 	ClearErrors
 	ReadRegStr $R0 HKLM \
 		"SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 	IfErrors dos exit
 dos:
-	CopyFiles /silent "$0-ascii.exe" "$0.exe"
+	# In this case, the underlying OS does not support Unicode,
+	# so the ASCII LilyPad should be the default.
+	StrCpy $0 "$INSTDIR\usr\bin\lilypad"
+	Rename "$0.exe" "$0-unicode.exe"
+	Rename "$0-ascii.exe" "$0.exe"
+	# Add lilypad-unicode.exe to files.txt to ensure complete uninstall.
+	SetFileAttributes "$INSTDIR\${UninstLog}" NORMAL
+	FileOpen $UninstLog "$INSTDIR\${UninstLog}" a
+	FileSeek $UninstLog 0 END
+	FileWrite $UninstLog "\usr\bin\lilypad-unicode.exe$\r$\n"
+	FileClose $UninstLog
 exit:	
 FunctionEnd
 
