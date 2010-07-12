@@ -191,7 +191,7 @@ class PythonBuild (AutoBuild):
         return [s for s in AutoBuild.stages (self) if s not in ['autoupdate', 'configure']]
     def compile (self):
         self.system ('mkdir -p %(builddir)s')
-    install_command = 'python %(srcdir)s/setup.py install --prefix=%(tools_prefix)s --root=%(install_root)s'
+    install_command = 'python %(srcdir)s/setup.py install --prefix=%(install_prefix)s --root=%(install_root)s'
 
 class SConsBuild (AutoBuild):
     scons_flags = ''
