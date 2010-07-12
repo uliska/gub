@@ -151,13 +151,17 @@ chmod 755 %(install_prefix)s/bin/*
         self.generate_dll_a_and_la ('python2.4', '-lpthread')
 
 class Python__tools (tools.AutoBuild, Python):
-#    patches = ['python-2.4.2-fno-stack-protector.patch']
-    patches = []
-    dependencies = ['autoconf', 'libtool']
+    patches = [
+#        'python-2.4.2-fno-stack-protector.patch',
+        'python-2.4.5-readline.patch', # Stop python from reading ~/.inputrc
+        'python-2.4.5-db4.7.patch',
+        ]
+    dependencies = [
+        'autoconf',
+        'db', # _bsddb
+        'libtool',
+        ]
     force_autoupdate = True
     make_flags = Python.make_flags
     def patch (self):
-        tools.AutoBuild.patch (self)
         Python.patch (self)
-        # Stop python from reading ~/.inputrc
-        self.apply_patch ('python-2.4.5-readline.patch')
