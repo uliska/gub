@@ -1,0 +1,37 @@
+--- pygobject-2.16.1/configure.ac.orig	2010-07-12 23:00:46.864809062 +0200
++++ pygobject-2.16.1/configure.ac	2010-07-12 23:02:21.444939424 +0200
+@@ -73,7 +73,9 @@ AM_PROG_CC_C_O
+ 
+ JD_PATH_PYTHON(2.3.5)
+ 
+-JD_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
++# JD_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
++PYTHON_INCLUDES=${PYTHON_INCLUDES-}
++AC_SUBST(PYTHON_INCLUDES)
+ 
+ AC_MSG_CHECKING([for PySignal_SetWakeupFd in Python.h])
+ py_prefix=`$PYTHON -c "import sys; sys.stdout.write(sys.prefix)"`
+@@ -79,11 +79,13 @@ AC_SUBST(PYTHON_INCLUDES)
+ 
+ AC_MSG_CHECKING([for PySignal_SetWakeupFd in Python.h])
+ py_prefix=`$PYTHON -c "import sys; sys.stdout.write(sys.prefix)"`
++if test -z "$PYTHON_INCLUDES"; then
+ if test -x "$PYTHON-config"; then
+ PYTHON_INCLUDES=`$PYTHON-config --includes 2>/dev/null`
+ else
+ PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
+ fi
++fi
+ old_CPPFLAGS=$CPPFLAGS
+ CPPFLAGS="-Wall -Werror $PYTHON_INCLUDES"
+ AC_TRY_COMPILE([#include <Python.h>],
+@@ -87,7 +87,8 @@ CPPFLAGS="-Wall -Werror $PYTHON_INCLUDES
+ AC_TRY_COMPILE([#include <Python.h>],
+   [PySignal_SetWakeupFd(0);],
+   setwakeupfd_ok=yes,
+-  setwakeupfd_ok=no)
++  setwakeupfd_ok=no,
++  setwakeupfd_ok=$ac_cv_setwakeupfd_ok)
+ AC_MSG_RESULT($setwakeupfd_ok)
+ if test "x$setwakeupfd_ok" != xno; then
+   AC_DEFINE(HAVE_PYSIGNAL_SETWAKEUPFD, 1,

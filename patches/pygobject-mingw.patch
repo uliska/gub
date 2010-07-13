@@ -1,0 +1,20 @@
+--- pygobject-2.16.1/glib/pygiochannel.c~	2009-02-18 00:20:52.000000000 +0100
++++ pygobject-2.16.1/glib/pygiochannel.c	2010-07-13 17:15:54.434807094 +0200
+@@ -503,7 +503,7 @@ py_io_channel_add_watch(PyObject *self, 
+ }
+ 
+ 
+-#ifdef G_OS_WIN32
++#if defined (G_OS_WIN32) && !defined (__MINGW32__)
+ 
+ static PyObject *
+ py_io_channel_win32_poll(PyObject *self, PyObject *args, PyObject *kwargs)
+@@ -705,7 +705,7 @@ static PyMethodDef py_io_channel_methods
+     { "get_close_on_unref", (PyCFunction)py_io_channel_get_close_on_unref, METH_KEYWORDS },
+     { "add_watch", (PyCFunction)py_io_channel_add_watch, METH_KEYWORDS },
+     { "seek", (PyCFunction)py_io_channel_seek, METH_KEYWORDS },
+-#ifdef G_OS_WIN32
++#if defined (G_OS_WIN32) && !defined (__MINGW32__)
+     { "win32_make_pollfd", (PyCFunction)py_io_channel_win32_make_pollfd, METH_KEYWORDS },
+     { "win32_poll", (PyCFunction)py_io_channel_win32_poll, METH_KEYWORDS|METH_STATIC },
+ #endif
