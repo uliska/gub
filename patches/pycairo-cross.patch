@@ -1,0 +1,13 @@
+--- pycairo-1.8.8/configure.ac~	2009-08-26 12:59:35.000000000 +0200
++++ pycairo-1.8.8/configure.ac	2010-07-13 21:44:36.174804747 +0200
+@@ -46,7 +46,9 @@ if test -n "$export_dynamic"; then
+ fi
+ 
+ # Checks for header files ---
+-AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
++# AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
++PYTHON_INCLUDES=${PYTHON_INCLUDES-}
++AC_SUBST(PYTHON_INCLUDES)
+ 
+ # checks for types and compilers ---
+ AC_C_CONST
