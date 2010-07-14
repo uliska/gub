@@ -1,0 +1,23 @@
+--- pygtk-2.16.0/configure.ac.orig	2010-07-12 22:43:31.926058323 +0200
++++ pygtk-2.16.0/configure.ac	2010-07-12 22:44:59.864805948 +0200
+@@ -77,7 +77,9 @@ m4_ifdef([LT_OUTPUT], [LT_OUTPUT])
+ 
+ AM_PATH_PYTHON(2.3.5)
+ 
+-AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
++#AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
++PYTHON_INCLUDES=${PYTHON_INCLUDES-}
++AC_SUBST(PYTHON_INCLUDES)
+ 
+ AC_MSG_CHECKING([for PySignal_SetWakeupFd in Python.h])
+ py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
+@@ -86,7 +88,8 @@ CPPFLAGS="-Wall -Werror $PYTHON_INCLUDES
+ AC_TRY_COMPILE([#include <Python.h>],
+   [PySignal_SetWakeupFd(0);],
+   setwakeupfd_ok=yes,
+-  setwakeupfd_ok=no)
++  setwakeupfd_ok=no,
++  setwakeupfd_ok=$ac_cv_setwakeupfd_ok)
+ AC_MSG_RESULT($setwakeupfd_ok)
+ if test "x$setwakeupfd_ok" != xno; then
+   AC_DEFINE(HAVE_PYSIGNAL_SETWAKEUPFD, 1,

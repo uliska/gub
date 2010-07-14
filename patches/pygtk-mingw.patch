@@ -1,0 +1,91 @@
+--- pygtk-2.16.0/atk.defs~	2009-07-17 04:15:55.000000000 +0200
++++ pygtk-2.16.0/atk.defs	2010-07-14 08:53:21.394805018 +0200
+@@ -832,16 +832,16 @@
+ 
+ ;; From atkhyperlinkimpl.h
+ 
+-(define-function atk_hyperlink_impl_get_type
+-  (c-name "atk_hyperlink_impl_get_type")
+-  (return-type "GType")
+-)
+-
+-(define-method get_hyperlink
+-  (of-object "AtkHyperlinkImpl")
+-  (c-name "atk_hyperlink_impl_get_hyperlink")
+-  (return-type "AtkHyperlink*")
+-)
++;; (define-function atk_hyperlink_impl_get_type
++;;   (c-name "atk_hyperlink_impl_get_type")
++;;   (return-type "GType")
++;; )
++;;
++;; (define-method get_hyperlink
++;;   (of-object "AtkHyperlinkImpl")
++;;   (c-name "atk_hyperlink_impl_get_hyperlink")
++;;   (return-type "AtkHyperlink*")
++;; )
+ 
+ (define-virtual get_hyperlink
+   (of-object "AtkHyperlinkImpl")
+@@ -1894,14 +1894,14 @@
+   )
+ )
+ 
+-(define-method get_uri
+-  (of-object "AtkStreamableContent")
+-  (c-name "atk_streamable_content_get_uri")
+-  (return-type "gchar*")
+-  (parameters
+-    '("const-gchar*" "mime_type")
+-  )
+-)
++;; (define-method get_uri
++;;   (of-object "AtkStreamableContent")
++;;   (c-name "atk_streamable_content_get_uri")
++;;   (return-type "gchar*")
++;;   (parameters
++;;     '("const-gchar*" "mime_type")
++;;   )
++;; )
+ 
+ (define-virtual get_n_mime_types
+   (of-object "AtkStreamableContent")
+--- pygtk-2.16.0/atk-types.defs~	2009-07-17 04:15:55.000000000 +0200
++++ pygtk-2.16.0/atk-types.defs	2010-07-14 08:52:07.699425430 +0200
+@@ -101,11 +101,11 @@
+   (gtype-id "ATK_TYPE_EDITABLE_TEXT")
+ )
+ 
+-(define-interface HyperlinkImpl
+-  (in-module "Atk")
+-  (c-name "AtkHyperlinkImpl")
+-  (gtype-id "ATK_TYPE_HYPERLINK_IMPL")
+-)
++;; (define-interface HyperlinkImpl
++;;   (in-module "Atk")
++;;   (c-name "AtkHyperlinkImpl")
++;;   (gtype-id "ATK_TYPE_HYPERLINK_IMPL")
++;; )
+ 
+ (define-interface Hypertext
+   (in-module "Atk")
+--- pygtk-2.16.0/gtk/gdk-base-types.defs~	2009-07-17 04:15:55.000000000 +0200
++++ pygtk-2.16.0/gtk/gdk-base-types.defs	2010-07-14 08:54:18.774806746 +0200
+@@ -1,11 +1,11 @@
+ ;; -*- scheme -*-
+ ; object definitions ...
+-(define-object AppLaunchContext
+-  (in-module "Gdk")
+-  (parent "GAppLaunchContext")
+-  (c-name "GdkAppLaunchContext")
+-  (gtype-id "GDK_TYPE_APP_LAUNCH_CONTEXT")
+-)
++;; (define-object AppLaunchContext
++;;   (in-module "Gdk")
++;;   (parent "GAppLaunchContext")
++;;   (c-name "GdkAppLaunchContext")
++;;   (gtype-id "GDK_TYPE_APP_LAUNCH_CONTEXT")
++;; )
+ 
+ (define-object Colormap
+   (in-module "Gdk")
