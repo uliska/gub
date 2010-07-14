@@ -1,0 +1,30 @@
+--- python-2.4.5/setup.py~	2010-07-14 14:26:51.364813114 +0200
++++ python-2.4.5/setup.py	2010-07-14 14:50:54.824804838 +0200
+@@ -504,8 +504,11 @@ class PyBuildExt(build_ext):
+         exts.append( Extension('_csv', ['_csv.c']) )
+ 
+         # socket(2)
+-        exts.append( Extension('_socket', ['socketmodule.c'],
+-                               depends = ['socketmodule.h']) )
++        socket = Extension('_socket', ['socketmodule.c'],
++                               depends = ['socketmodule.h']) 
++        if platform in ['mingw']:
++            socket.libraries += ['wsock32']
++        exts.append(socket)
+         # Detect SSL support for the socket module (via _ssl)
+         ssl_incs = find_file('openssl/ssl.h', inc_dirs,
+                              ['/usr/local/ssl/include',
+--- python-2.4.5/Modules/socketmodule.c~	2010-07-14 14:57:32.044811383 +0200
++++ python-2.4.5/Modules/socketmodule.c	2010-07-14 15:09:50.584807689 +0200
+@@ -265,6 +265,11 @@ int h_errno; /* not used */
+ 
+ #endif
+ 
++#ifdef __MINGW32__
++#define EAFNOSUPPORT WSAEAFNOSUPPORT
++#  define HAVE_GETPEERNAME
++#endif
++
+ #include <stddef.h>
+ 
+ #ifndef offsetof
