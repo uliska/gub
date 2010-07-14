@@ -1,0 +1,14 @@
+--- python-gtkmvc-1.99.0/setup.py~	2009-03-30 16:43:30.000000000 +0200
++++ python-gtkmvc-1.99.0/setup.py	2010-07-14 10:31:26.086020955 +0200
+@@ -6,7 +6,10 @@
+ # ----------------------------------------------------------------------
+ 
+ from distutils.core import setup
+-from gtkmvc import get_version
++
++def get_version ():
++    import re
++    return re.search ('\n__version *= *\(([^)]*)\)', open ('gtkmvc/__init__.py').read ()).group (1).split (',')
+ 
+ setup(name="python-gtkmvc",
+       version=".".join(map(str, get_version())), 
