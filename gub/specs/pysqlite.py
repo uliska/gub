@@ -28,3 +28,8 @@ build_ext.build_ext.get_libraries = get_libraries
         'sqlite',
         'tools::setuptools',
         ]
+
+class Pysqlite__mingw (Pysqlite):
+    def install (self):
+        Pysqlite.install (self)
+        self.system ('cd %(install_prefix)s/lib/python2.4/site-packages/pysqlite2 && mv _sqlite.so _sqlite.dll')
