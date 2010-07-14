@@ -19,6 +19,8 @@ ac_cv_setwakeupfd_ok=yes
         'python',
         'pygobject',
         'gtk+',
+#        'glade',
+        'libglade',
         'pycairo',
         ]
 
@@ -29,5 +31,7 @@ class Pygtk__mingw (Pygtk):
     config_cache_overrides = target.AutoBuild.config_cache_overrides + '''
 ac_cv_setwakeupfd_ok=no
 '''
+    python_lib = '%(system_prefix)s/bin/libpython*.dll'
     configure_variables = (Pygtk.configure_variables
-                  + ' LDFLAGS="-lpython2.4"'  % locals ())
+#                  + ' LDFLAGS="-L%(python_lib)s"'  % locals ())
+                  + ' LDFLAGS="-L%(system_prefix)s/bin -lpython2.4"')

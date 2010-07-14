@@ -28,7 +28,7 @@ class Pygobject__mingw (Pygobject):
         'pygobject-mingw.patch',
         ]
     configure_variables = (Pygobject.configure_variables
-                  + ' LDFLAGS="-lpython2.4"'  % locals ())
+                  + ' LDFLAGS="-L%(system_prefix)s/bin -lpython2.4"')
     config_cache_overrides = target.AutoBuild.config_cache_overrides + '''
 ac_cv_setwakeupfd_ok=no
 '''
