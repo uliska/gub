@@ -649,10 +649,12 @@ mkdir -p %(install_prefix)s/share/doc/%(name)s
     # fixing the gcc linking command?
     def generate_dll_a_and_la (self, libname, depend=''):
         # ugh, atexit, _onexit mutliply defined in crt2.o
+        symbols = 'ABbCDdGgiNpRrSsTtUuVvWw-?'
+        defined_symbols = 'ABbCDdGgiNpRrSsTtuVvWw'
         self.system (misc.join_lines ('''
 cd %(install_prefix)s
 && echo EXPORTS > lib/lib%(libname)s.a.def
-&& %(toolchain_prefix)snm bin/lib%(libname)s.dll | grep ' [bBdDtT] _' | sed -e 's/.* [bBdDtT] _//' | grep -Ev '^(atexit|_onexit)$' >> lib/lib%(libname)s.a.def
+&& %(toolchain_prefix)snm bin/lib%(libname)s.dll | grep ' [%(defined_symbols)s] _' | sed -e 's/.* [%(defined_symbols)s] _//' | grep -Ev '^(atexit|_onexit)$' >> lib/lib%(libname)s.a.def
 && (grep '@' lib/lib%(libname)s.a.def | sed -e 's/@.*//' >> lib/lib%(libname)s.a.def || :)
 && %(toolchain_prefix)sdlltool --def lib/lib%(libname)s.a.def --dllname bin/lib%(libname)s.dll --output-lib lib/lib%(libname)s.dll.a
 '''), locals ())
