@@ -1,0 +1,11 @@
+--- libglade-2.6.4/configure.in~	2009-03-17 15:19:01.000000000 +0100
++++ libglade-2.6.4/configure.in	2010-07-14 21:02:18.805915678 +0200
+@@ -40,7 +40,7 @@ AC_CHECK_FUNC(gtk_plug_get_type,
+   AC_DEFINE(HAVE_GTK_PLUG,1,[gtk has GtkPlug/GtkSocket implementation]))
+ LIBS=$save_LIBS
+ 
+-PKG_PROG_PKG_CONFIG
++#PKG_PROG_PKG_CONFIG
+ 
+ PKG_CHECK_MODULES(LIBGLADE, [dnl
+   libxml-2.0 >= required_libxml_version dnl
