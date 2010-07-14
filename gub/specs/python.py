@@ -107,6 +107,7 @@ class Python__mingw (Python):
         'python-2.4.2-setup.py-selectmodule.patch',
         'python-2.4.5-disable-pwd-mingw.patch',
         'python-2.4.5-mingw-site.patch',
+        'python-2.4.5-socketmodule.patch',
         ]
     config_cache_overrides = (Python.config_cache_overrides
                               #FIXME: promoteme? see Gettext/Python
