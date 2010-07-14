@@ -195,19 +195,14 @@ class Installer (context.RunnableContext):
             'share/libtool/',
 
             # prune harder
-            'lib/python*/bsddb',
             'lib/python*/compiler',
             'lib/python*/curses',
-            'lib/python*/distutils',
             'lib/python*/email',
             'lib/python*/hotshot',
             'lib/python*/idlelib',
             'lib/python*/lib-old',
             'lib/python*/lib-tk',
-            'lib/python*/logging',
             'lib/python*/test',
-# xml2ly needs xml.dom
-#                        'lib/python*/xml',
             'share/lilypond/*/make',
             'share/gettext',
             'usr/share/aclocal',
