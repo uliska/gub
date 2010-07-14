@@ -6,6 +6,6 @@ class Elixir (target.PythonBuild):
     install_command = 'cd %(srcdir)s && python %(srcdir)s/setup.py install --prefix=%(tools_prefix)s --root=%(install_root)s'
 
     dependencies = [
-        'python',
+        'sqlalchemy',
         'tools::setuptools',
         ]
