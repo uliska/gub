@@ -16,6 +16,7 @@ from gub import commands
 # UGH -  we don't have the package dicts yet.
 # barf, this should be in config file, not in code
 pretty_names = {
+    'arbora': 'ArborA',
     'denemo': 'GNU_Denemo',
     'git': 'Git',
     'lilypond': 'LilyPond',
