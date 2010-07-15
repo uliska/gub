@@ -650,11 +650,13 @@ mkdir -p %(install_prefix)s/share/doc/%(name)s
     def generate_dll_a_and_la (self, libname, depend=''):
         # ugh, atexit, _onexit mutliply defined in crt2.o
         symbols = 'ABbCDdGgiNpRrSsTtUuVvWw-?'
-        defined_symbols = 'ABbCDdGgiNpRrSsTtuVvWw'
+        #defined_symbols = 'tT'
+        #defined_symbols = 'ACGgiNpSsTtuVvWw'
+        defined_symbols = 'ABCDGgIiNpSsTtuRVvWw'
         self.system (misc.join_lines ('''
 cd %(install_prefix)s
 && echo EXPORTS > lib/lib%(libname)s.a.def
-&& %(toolchain_prefix)snm bin/lib%(libname)s.dll | grep ' [%(defined_symbols)s] _' | sed -e 's/.* [%(defined_symbols)s] _//' | grep -Ev '^(atexit|_onexit)$' >> lib/lib%(libname)s.a.def
+&& %(toolchain_prefix)snm bin/lib%(libname)s.dll | grep ' [%(defined_symbols)s] _' | sed -e 's/.* [%(defined_symbols)s] _//' | grep -Ev '^(atexit|__main|_onexit|_pei386_runtime_relocator|DllMain|DllMainCRTStartup)(@|$)' | sed -e 's/_imp__//' | sort | uniq -c | grep '^ *1 ' | sed -e 's/^ *1 //' >> lib/lib%(libname)s.a.def
 && (grep '@' lib/lib%(libname)s.a.def | sed -e 's/@.*//' >> lib/lib%(libname)s.a.def || :)
 && %(toolchain_prefix)sdlltool --def lib/lib%(libname)s.a.def --dllname bin/lib%(libname)s.dll --output-lib lib/lib%(libname)s.dll.a
 '''), locals ())
