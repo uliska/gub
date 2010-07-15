@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 #
 from gub import build
 from gub import config_cache
@@ -190,6 +191,16 @@ class PythonBuild (AutoBuild):
     def stages (self):
         return [s for s in AutoBuild.stages (self) if s not in ['autoupdate', 'configure']]
     def compile (self):
+        def defer (logger):
+            if not sys.executable.endswith ('tools/root/usr/bin/python'):
+                # FIXME: only check version? sys.
+                raise Exception (self.expand ('''Not using python from tools; any site-packages will likely fail
+
+Try something like
+
+    PATH=$(pwd)/target/tools/root/usr/bin:bin:$(pwd)/bin:$PATH python bin/gub --fresh --keep %(platform)s::%(name)s
+'''))
+        self.func (defer)
         self.system ('mkdir -p %(builddir)s')
     install_command = 'python %(srcdir)s/setup.py install --prefix=%(install_prefix)s --root=%(install_root)s'
 
