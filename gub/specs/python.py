@@ -150,7 +150,10 @@ cp %(install_prefix)s/lib/python%(python_version)s/lib-dynload/* %(install_prefi
         self.system ('''
 chmod 755 %(install_prefix)s/bin/*
 ''')
-        self.generate_dll_a_and_la ('python2.4', '-lpthread')
+        # This builds and runs in wine, but produces DLLs that
+        # do not load in Windows Vista
+        if 0:
+            self.generate_dll_a_and_la ('python2.4', '-lpthread')
 
 class Python__tools (tools.AutoBuild, Python):
     patches = [

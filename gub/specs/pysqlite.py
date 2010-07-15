@@ -23,7 +23,7 @@ build_ext.build_ext.get_libraries = get_libraries
             s = open (setup).read ()
             open (setup, 'w').write (self.expand (dist_fix) + s)
         self.func (defer)
-    install_command = 'cd %(srcdir)s && SO=%(so_extension)s LDSHARED="$CC -shared" LDFLAGS="-lpython2.4" CFLAGS="--verbose" python %(srcdir)s/setup.py install --prefix=%(prefix_dir)s --root=%(install_root)s'
+    install_command = 'cd %(srcdir)s && SO=%(so_extension)s LDSHARED="$CC -shared" LDFLAGS="-L%(system_prefix)s/bin -lpython2.4" CFLAGS="--verbose" python %(srcdir)s/setup.py install --prefix=%(prefix_dir)s --root=%(install_root)s'
     dependencies = [
         'sqlite',
         'tools::setuptools',

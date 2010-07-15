@@ -20,4 +20,4 @@ class Pycairo (target.AutoBuild):
 
 class Pycairo__mingw (Pycairo):
     configure_variables = (Pycairo.configure_variables
-                  + ' LDFLAGS="-lpython2.4"')
+                  + ' LDFLAGS="-L%(system_prefix)s/bin -lpython2.4"')

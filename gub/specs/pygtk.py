@@ -32,4 +32,4 @@ class Pygtk__mingw (Pygtk):
 ac_cv_setwakeupfd_ok=no
 '''
     configure_variables = (Pygtk.configure_variables
-                  + ' LDFLAGS="-lpython2.4"')
+                  + ' LDFLAGS="-L%(system_prefix)s/bin -lpython2.4"')
