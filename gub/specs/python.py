@@ -130,9 +130,22 @@ ac_cv_sizeof_pthread_t=12
                 ("import fcntl", ""),
                 ], "%(srcdir)s/Lib/subprocess.py",
                must_succeed=True)
-##$(eval echo $((echo $ac_cv_sizeof_int + $ac_cv_sizeof_void_p)))
+    def compile (self):
+        self.system ('''
+cd %(builddir)s && rm -f python.exe
+''')
+        Python.compile (self)
+        self.system ('''
+cd %(builddir)s && mv python.exe python-console.exe
+cd %(builddir)s && make LINKFORSHARED='-mwindows'
+cd %(builddir)s && mv python.exe python-windows.exe
+cd %(builddir)s && cp -p python-console.exe python.exe
+''')
     def install (self):
         Python.install (self)
+        self.system ('''
+cd %(builddir)s && cp -p python-windows.exe python-console.exe %(install_prefix)s/bin
+''')
         self.file_sub ([('extra = ""', 'extra = "-L%(system_prefix)s/bin -L%(system_prefix)s/lib -lpython2.4 -lpthread"')],
                        '%(install_prefix)s%(cross_dir)s/bin/python-config')
 
