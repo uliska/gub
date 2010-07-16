@@ -20,7 +20,10 @@ ac_cv_setwakeupfd_ok=yes
         'glib',
         ]
     def compile (self):
-        self.system ('''cd %(builddir)s/gobject && make generate_constants_LINK='gcc -o$@' CC=gcc constants.py''')
+        cflags = '-std=c9x'
+        if self.settings.target_bits == '32':
+            cflags += ' -m32'
+        self.system ('''cd %(builddir)s/gobject && make generate_constants_LINK='gcc -o$@ %(cflags)s' CC=gcc CFLAGS="%(cflags)s" constants.py''', env=locals ())
         target.AutoBuild.compile (self)
 
 class Pygobject__mingw (Pygobject):
