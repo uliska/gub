@@ -113,31 +113,29 @@ Function un.install_installed_files
  Push $R2
  SetFileAttributes "$INSTDIR\${UninstLog}" NORMAL
  FileOpen $UninstLog "$INSTDIR\${UninstLog}" r
- StrCpy $R1 0
+ StrCpy $R1 -1
 
  GetLineCount:
   ClearErrors
-   FileRead $UninstLog $R0
-   IntOp $R1 $R1 + 1
-   IfErrors 0 GetLineCount
+  FileRead $UninstLog $R0
+  IntOp $R1 $R1 + 1
+  StrCpy $R0 "$INSTDIR\$R0" -2
+  Push $R0
+  IfErrors 0 GetLineCount
+
+ Pop $R0
 
  LoopRead:
-  FileSeek $UninstLog 0 SET
-  StrCpy $R2 0
-  FindLine:
-   FileRead $UninstLog $R0
-   IntOp $R2 $R2 + 1
-   StrCmp $R1 $R2 0 FindLine
+  StrCmp $R1 0 LoopDone
+  Pop $R0
 
-   StrCpy $R0 "$INSTDIR\$R0" -2
-   IfFileExists "$R0\*.*" 0 +3
-    RMDir $R0  #is dir
-   Goto +3
-   IfFileExists "$R0" 0 +2
-    Delete "$R0" #is file
+  IfFileExists "$R0\*.*" 0 +3
+   RMDir $R0  #is dir
+  Goto +3
+  IfFileExists "$R0" 0 +2
+   Delete "$R0" #is file
 
   IntOp $R1 $R1 - 1
-  StrCmp $R1 0 LoopDone
   Goto LoopRead
  LoopDone:
  FileClose $UninstLog
@@ -166,6 +164,9 @@ Section "Start Menu Shortcuts"
 	;; but that string is not expanded.
 
 	;; Let's see what happens when outputting to the shared desktop.
+	;; Let's not--
+ 	;; Goto current_user
+
 	SetOutPath "$DESKTOP"
 	Call create_shortcuts
 
@@ -261,8 +262,8 @@ Function create_shortcuts
 	;; Start menu
 	CreateDirectory "$SMPROGRAMS\Arbora"
 	CreateShortCut "$SMPROGRAMS\Arbora\Arbora.lnk" \
-		"$INSTDIR\usr\bin\python.exe" "$INSTDIR\usr\bin\arbora" \
-		"$INSTDIR\usr\lib\python2.4\site-packages\arbora\images\arbora.ico" 0 SW_SHOWMINIMIZED
+		"$INSTDIR\usr\bin\python-windows.exe" '"$INSTDIR\usr\bin\arbora"' SW_SHOWNORMAL\
+		"$INSTDIR\usr\lib\python2.4\site-packages\arbora\images\arbora.ico" 0
 	CreateShortCut "$SMPROGRAMS\Arbora\Arbora Website.lnk" \
 		"http://arbora.org/" "" \
 		"firefox.exe" 0
@@ -271,11 +272,16 @@ Function create_shortcuts
 
 	;; Desktop
 	ClearErrors
+
+	;; Desktop link always on current user's desktop
+	SetShellVarContext current
+ 	SetOutPath "$DESKTOP"
+
 	ReadRegStr $R0 HKLM \
 		"SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 	CreateShortCut "$DESKTOP\Arbora.lnk" \
-		"$INSTDIR\usr\bin\python.exe" "$INSTDIR\usr\bin\arbora" \
-		"$INSTDIR\usr\lib\python2.4\site-packages\arbora\images\arbora.ico" 0 SW_SHOWMINIMIZED
+		"$INSTDIR\usr\bin\python-windows.exe" '"$INSTDIR\usr\bin\arbora"' \
+		"$INSTDIR\usr\lib\python2.4\site-packages\arbora\images\arbora.ico" 0 SW_SHOWNORMAL
 FunctionEnd
 
 Function registry_python
@@ -294,13 +300,13 @@ py_done:
 	;;StrCmp $R0 "" 0 py_auto_file
 	WriteRegStr HKCR "Python\shell" "" "open"
 	# %1 is the PYTHON command, so must be quoted bo the space
-	WriteRegExpandStr HKCR "Python\shell\open\command" "" '"$INSTDIR\usr\bin\python.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	WriteRegExpandStr HKCR "Python\shell\open\command" "" '"$INSTDIR\usr\bin\python-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 
 ;;py_auto_file:
 	ReadRegStr $R0 HKCR "py_auto_file\shell\open\command" ""
 	;;StrCmp $R0 "" 0 py_end
 	WriteRegStr HKCR "py_auto_file\shell" "" "open"
 	# %1 is the PYTHON command, so must be quoted bo the space
-	WriteRegExpandStr HKCR "py_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\python.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	WriteRegExpandStr HKCR "py_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\python-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 ;;py_end:	
 FunctionEnd
