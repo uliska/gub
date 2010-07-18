@@ -10,6 +10,7 @@ PYTHON_VERSION=2.4
 PYTHON_GTK_DIR=%(system_prefix)s/lib/python2.4/site-packages
 PYTHON_INCLUDES=-I%(system_prefix)s/include/python2.4
 PYTHON_LIBS="-L%(system_prefix)s/bin -lpython2.4"
+PYTHON_PKG_DIR=%(prefix_dir)s/lib/python2.4/site-packages
 ''')
                          + target.AutoBuild.configure_command)
     dependencies = [
