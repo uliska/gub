@@ -14,6 +14,5 @@ PYTHON_LIBS="-L%(system_prefix)s/bin -lpython2.4"
                          + target.AutoBuild.configure_command)
     dependencies = [
         'gtksourceview',
-        'python',
+        'pygtk',
         ]
-    
