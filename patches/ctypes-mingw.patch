@@ -1,0 +1,36 @@
+--- ctypes-1.0.2/source/callproc.c~	2007-05-15 19:53:25.000000000 +0200
++++ ctypes-1.0.2/source/callproc.c	2010-07-18 16:40:54.434806219 +0200
+@@ -663,8 +663,10 @@ static int _call_function_pointer(int fl
+ #ifndef DONT_USE_SEH
+ 	__try {
+ #endif
++#if 0
+ 		delta =
+ #endif
++#endif
+ 			ffi_call(&cif, (void *)pProc, resmem, avalues);
+ #ifdef MS_WIN32
+ #ifndef DONT_USE_SEH
+--- ctypes-1.0.2/ctypes/__init__.py~	2007-05-15 19:53:30.000000000 +0200
++++ ctypes-1.0.2/ctypes/__init__.py	2010-07-18 18:51:50.246026428 +0200
+@@ -141,6 +142,8 @@
+         # Most _type_ codes are the same as used in struct
+         typecode = typ._type_
+     actual, required = sizeof(typ), calcsize(typecode)
++    print 'typ', typ, actual, required
++    return
+     if actual != required:
+         raise SystemError("sizeof(%s) wrong: %d instead of %d" % \
+                           (typ, actual, required))
+@@ -425,9 +430,9 @@
+ cdll = LibraryLoader(CDLL)
+ pydll = LibraryLoader(PyDLL)
+ 
+-if _os.name in ("nt", "ce"):
++if _sys.__dict__.get ('dllhandle'):
+     pythonapi = PyDLL("python dll", None, _sys.dllhandle)
+-elif _sys.platform == "cygwin":
++elif _sys.platform == "cygwin" or _sys.platform == 'mingw32':
+     pythonapi = PyDLL("libpython%d.%d.dll" % _sys.version_info[:2])
+ else:
+     pythonapi = PyDLL(None)
