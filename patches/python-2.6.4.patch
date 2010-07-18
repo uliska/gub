@@ -496,12 +496,13 @@
                     (sys.hexversion >> 24, (sys.hexversion >> 16) & 0xff))
 --- python-2.4.5/Modules/posixmodule.c.orig	2008-11-08 16:59:06.000000000 +0100
 +++ python-2.4.5/Modules/posixmodule.c	2008-11-08 16:59:59.000000000 +0100
-@@ -118,6 +118,10 @@ corresponding Unix manual entries for mo
+@@ -118,6 +118,11 @@ corresponding Unix manual entries for mo
  #define HAVE_FSYNC	1
  #define fsync _commit
  #else
 +#ifdef __MINGW32__             /* MINGW32 (cross-)compiler*/
 +#define HAVE_FSYNC	1
++#define HAVE_PIPE	1
 +#define fsync _commit
 +#else
  #if defined(PYOS_OS2) && defined(PYCC_GCC) || defined(__VMS)

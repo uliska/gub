@@ -42,6 +42,8 @@ class Python_2_6__mingw (python.Python__mingw):
         'python-2.4.2-winsock2.patch',
         'python-2.4.2-setup.py-selectmodule.patch',
         'python-2.4.5-disable-pwd-mingw.patch',
+        'python-2.4.5-mingw-site.patch',
+        'python-2.4.5-mingw-socketmodule.patch',
         ]
     dependencies = [
         'db-devel',

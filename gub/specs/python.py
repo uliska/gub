@@ -125,11 +125,18 @@ ac_cv_sizeof_pthread_t=12
     # 2.4.2 and combined in one patch; move to cross-Python?
     def patch (self):
         Python.patch (self)
-        ## to make subprocess.py work.
         self.file_sub ([
-                ("import fcntl", ""),
+                ('(== "win32")', r'in ("win32", "mingw32")'),
                 ], "%(srcdir)s/Lib/subprocess.py",
-               must_succeed=True)
+                       must_succeed=True)
+    def configure (self):
+        Python.configure (self)
+        self.dump ('''
+_subprocess ../PC/_subprocess.c
+msvcrt ../PC/msvcrtmodule.c
+''',
+                   '%(builddir)s/Modules/Setup',
+                   mode='a')
     def compile (self):
         self.system ('''
 cd %(builddir)s && rm -f python.exe
