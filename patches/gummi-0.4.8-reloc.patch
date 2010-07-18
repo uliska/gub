@@ -1,0 +1,51 @@
+--- gummi-0.4.8/gummi/gummi	2010-07-18 15:15:48.262024198 +0200
++++ gummi-0.4.8-lily/gummi/misc/gummi	2010-07-18 15:14:53.937023404 +0200
+@@ -20,9 +20,8 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ # THE SOFTWARE.
+ 
+-try:
+-    from gummi import Core
+-except ImportError as e:
+-    print "A required module could not be found!", e
+-
+-
++import sys
++if not sys.prefix.startswith ('/usr'):
++    import gummi.relocate
++    gummi.relocate.reloc ()
++from gummi import Core
+--- /dev/null	2010-07-09 22:32:21.614352235 +0200
++++ gummi-0.4.8-lily/gummi/relocate.py	2010-07-18 22:06:59.681502794 +0200
+@@ -0,0 +1,31 @@
++# Copyright (c) 2010 Jan Nieuwenhuizen <janneke@gnu.org>
++# Licence: GNU GPL version 3 or any later version
++import os
++import re
++import sys
++
++def reloc (prefix=sys.prefix):
++    def reloc_file (f):
++        for line in open (f).readlines ():
++            m = re.match ('^([^ ]+) ([^=]+)=(.*?) *$', line)
++            if m:
++                command = m.group (1)
++                var = m.group (2)
++                value = m.group (3)
++                value = value.replace ('$INSTALLER_PREFIX', prefix)
++                if (command == 'set'
++                    or (command == 'setfile' and os.path.isfile (value))
++                    or (command == 'setdir' and os.path.isdir (value))):
++                    print 'setting:', var, value
++                    os.environ[var] = value
++                if command in ('prependdir'):
++                    print 'prepending:', var, value
++                    os.environ[var] = value + os.pathsep + os.environ.get (var, '-')
++    dir = prefix + '/etc/relocate'
++    files = map (lambda x: '/'.join ([dir, x]), os.listdir (dir))
++    os.environ['PATH'] = prefix + '/bin' + os.pathsep + os.environ['PATH']
++    os.environ['HOME'] = os.environ.get ('HOME', 'c:\\users\\' + os.environ.get ('USER', ''))
++    os.environ['PATH'] = os.environ['PATH'] + os.pathsep + r'c:\Program Files\LilyPond\usr\bin'
++    print 'path:', os.environ['PATH']
++    for f in files:
++        reloc_file (f)

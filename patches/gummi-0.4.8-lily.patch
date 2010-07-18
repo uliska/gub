@@ -1,0 +1,84 @@
+diff -purN --exclude='*~' --exclude='*pyc' gummi-0.4.8/gummi/GummiGUI.py gummi-0.4.8-lily/gummi/GummiGUI.py
+--- gummi-0.4.8/gummi/GummiGUI.py	2010-05-16 22:14:53.000000000 +0200
++++ gummi-0.4.8-lily/gummi/GummiGUI.py	2010-07-18 10:30:54.807484687 +0200
+@@ -397,8 +397,8 @@ class MainGUI:
+ 			self.exitinterrupt = True
+ 		if response == gtk.RESPONSE_OK:
+ 			filename = chooser.get_filename()
+-			if not ".tex" in filename[-4:]:
+-				filename = filename + ".tex"
++			if not ".ly" in filename[-3:]:
++				filename = filename + ".ly"
+ 			self.iofunc.make_environment(filename)
+ 		chooser.destroy()
+ 		return filename
+diff -purN --exclude='*~' --exclude='*pyc' gummi-0.4.8/gummi/IOFunctions.py gummi-0.4.8-lily/gummi/IOFunctions.py
+--- gummi-0.4.8/gummi/IOFunctions.py	2010-05-16 22:14:53.000000000 +0200
++++ gummi-0.4.8-lily/gummi/IOFunctions.py	2010-07-18 10:39:32.975484454 +0200
+@@ -60,12 +60,12 @@ class IOFunctions:
+ 		if filename is not None:
+ 			self.filename = filename
+ 			self.texpath = os.path.dirname(self.filename) + "/"
+-			if ".tex" in self.filename:
+-				self.texname = os.path.basename(self.filename)[:-4]
++			if ".ly" in self.filename:
++				self.texname = os.path.basename(self.filename)[:-3]
+ 			else:
+ 				self.texname = os.path.basename(self.filename)
+-		(self.workfd, self.workfile) = tempfile.mkstemp(".tex")
+-		self.pdffile = self.workfile[:-4] + ".pdf"
++		(self.workfd, self.workfile) = tempfile.mkstemp(".ly")
++		self.pdffile = self.workfile[:-3] + ".pdf"
+ 		print ("\nEnvironment created for: \n" + \
+ 				"TEX: " + str(self.filename) + "\n" \
+ 				"TMP: " + self.workfile + "\n" + \
+diff -purN --exclude='*~' --exclude='*pyc' gummi-0.4.8/gummi/Motion.py gummi-0.4.8-lily/gummi/Motion.py
+--- gummi-0.4.8/gummi/Motion.py	2010-05-16 22:14:53.000000000 +0200
++++ gummi-0.4.8-lily/gummi/Motion.py	2010-07-18 10:40:13.080486763 +0200
+@@ -150,12 +150,10 @@ class Motion:
+ 
+ 	def update_pdffile(self):
+ 		try:
+-			pdfmaker = subprocess.Popen(self.texcmd + \
+-					' -interaction=nonstopmode \
+-					-file-line-error \
+-					-halt-on-error \
+-					--output-directory="%s" "%s"' \
+-					% (self.tempdir, self.workfile), 
++			self.lyname = self.workfile[:-3]
++			command = ' %(texcmd)s --output="%(lyname)s" "%(workfile)s"' % self.__dict__
++			print 'running:', command
++			pdfmaker = subprocess.Popen(command,
+ 					shell=True, cwd=self.texpath, close_fds=True, \
+ 					stdin=None, stdout = subprocess.PIPE, stderr=None )
+ 			self.output = pdfmaker.communicate()[0]
+diff -purN --exclude='*~' --exclude='*pyc' gummi-0.4.8/gummi/Preferences.py gummi-0.4.8-lily/gummi/Preferences.py
+--- gummi-0.4.8/gummi/Preferences.py	2010-05-16 22:15:12.000000000 +0200
++++ gummi-0.4.8-lily/gummi/Preferences.py	2010-07-18 10:44:20.811484288 +0200
+@@ -42,24 +42,13 @@ CFGDEFAULTS = {
+ 'font': 'Monospace 10',
+ 'autosaving': False,
+ 'autosave_timer': 600,
+-'typesetter': 'pdflatex',
++'typesetter': 'lilypond',
+ 'compile_timer': 1,
+ 'compile_status': True,
+ 'recent1': '',
+ 'recent2': '',
+ 'recent3': '',
+-'welcome': '''\documentclass{article}
+-\\begin{document}
+-
+-\\begin{center}
+-\Huge{Welcome to Gummi} \\\\\\
+-\\\\
+-\\LARGE{You are using the ''' + VERSION + ''' version.\\\\
+-I welcome your suggestions at\\\\
+-http://gummi.midnightcoding.org}\\\\
+-\\end{center}
+-
+-\\end{document}
++'welcome': r'''\relative c' { a b c }
+ '''
+ }
+ 

@@ -1,0 +1,66 @@
+--- gummi-0.4.5/gummi/Motion.py~	2010-07-18 17:09:54.000000000 +0200
++++ gummi-0.4.5/gummi/Motion.py	2010-07-18 22:09:42.357023706 +0200
+@@ -154,7 +154,7 @@ class Motion:
+ 			command = ' %(texcmd)s --output="%(lyname)s" "%(workfile)s"' % self.__dict__
+ 			print 'running:', command
+ 			pdfmaker = subprocess.Popen(command,
+-					shell=True, cwd=self.texpath, close_fds=True, \
++					shell=True, cwd=self.texpath, close_fds=False, \
+ 					stdin=None, stdout = subprocess.PIPE, stderr=None )
+ 			self.output = pdfmaker.communicate()[0]
+ 			pdfmaker.wait()
+--- gummi-0.4.5/gummi/PreviewPane.py~	2010-05-16 22:14:52.000000000 +0200
++++ gummi-0.4.5/gummi/PreviewPane.py	2010-07-18 19:17:45.589038539 +0200
+@@ -69,7 +69,7 @@ class PreviewPane:
+ 		if self.libgobject is not None:
+ 			try:
+ 				glib = CDLL(self.libgobject)
+-				glib.g_object_unref(hash(object))
++				#glib.g_object_unref(hash(object))
+ 				del object
+ 			except AttributeError: pass
+ 
+@@ -78,7 +78,7 @@ class PreviewPane:
+ 			self.pdffile = pdffile
+ 			self.current_page = 0 #reset to 0 on new pdf load
+ 
+-			uri = 'file://' + pdffile
++			uri = 'file://' + pdffile.replace ('\\', '/').replace (':', '')
+ 			try:
+ 				document = poppler.document_new_from_file(uri, None)		
+ 			except:
+@@ -103,7 +103,7 @@ class PreviewPane:
+ 		if not os.path.exists(self.pdffile):
+ 			print "can't refresh without a pdf file!"
+ 			return
+-		uri = 'file://' + self.pdffile
++		uri = 'file://' + self.pdffile.replace ('\\', '/').replace (':', '')
+ 		document = poppler.document_new_from_file(uri, None)
+ 		self.page_total = document.get_n_pages()
+ 		if self.page_total - 1 > self.current_page:
+@@ -156,7 +156,7 @@ class PreviewPane:
+ 		cr.set_source_rgb(1, 1, 1)
+ 		cr.rectangle(0, 0, self.page_width, self.page_height)
+ 		cr.fill()
+-		uri = 'file://' + self.pdffile
++		uri = 'file://' + self.pdffile.replace ('\\', '/').replace (':', '')
+ 		document = poppler.document_new_from_file(uri, None)
+ 		page = document.get_page(self.current_page)
+ 		page.render(cr)
+@@ -172,7 +172,7 @@ class PreviewPane:
+ 		self.prev.set_sensitive(page > 0)
+ 		self.next.set_sensitive(page < self.page_total - 1)
+ 		self.pageinput.set_text(str(self.current_page + 1))
+-		uri = 'file://' + self.pdffile
++		uri = 'file://' + self.pdffile.replace ('\\', '/').replace (':', '')
+ 		document = poppler.document_new_from_file(uri, None)
+ 		page = document.get_page(self.current_page)
+ 		self.page_width, self.page_height = page.get_size()
+@@ -218,6 +219,7 @@ class PreviewPane:
+ 	def setlibgobject(self):
+ 		# TODO: Write Python/Cython module to use this function directly.. 
+ 		# TODO: Find function to detect system library paths, should exist. 
++		return 'libgobject-2.0-0.dll'
+ 		import commands, re
+ 		status, langs = commands.getstatusoutput('ls /usr/lib/libgobject*.so*')
+ 		if status == 0:
