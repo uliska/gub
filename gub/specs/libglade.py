@@ -9,9 +9,11 @@ class Libglade (target.AutoBuild):
 #    def aclocal_path (self):
 #        return (target.AutoBuild.aclocal_path (self)
 #                + ['%(srcdir)s/m4', '%(srcdir)s'])
-    def patch (self):
+    def autoupdate (self):
+        target.AutoBuild.autoupdate (self)
+        # pkg-config is such a brilliant tool, why do these auto*
+        # people break its cross compiling features?
         self.file_sub ([(r'(^\s*)PKG_CONFIG=', r'\1XPKG_CONFIG=')], '%(srcdir)s/configure')
-        target.AutoBuild.patch (self)
     dependencies = [
         'atk',
         'gtk+',

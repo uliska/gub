@@ -1,0 +1,22 @@
+--- pypoppler-0.12.1/acinclude.m4~	2009-09-26 20:31:23.000000000 +0200
++++ pypoppler-0.12.1/acinclude.m4	2010-07-18 11:15:40.554807025 +0200
+@@ -43,12 +43,19 @@ AC_DEFUN([AM_CHECK_PYTHON_HEADERS],
+ [AC_REQUIRE([AM_PATH_PYTHON])
+ AC_MSG_CHECKING(for headers required to compile python extensions)
+ dnl deduce PYTHON_INCLUDES
++if test "$cross_compiling" = yes; then
++  if test -z "$PYTHON_INCLUDES"; then
++    AC_MSG_ERROR(cross compiling: please set PYTHON_INCLUDES)
++  fi
++else
++dnl not indenting to minimize diff
+ py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
+ py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
+ PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
+ if test "$py_prefix" != "$py_exec_prefix"; then
+   PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
+ fi
++fi
+ AC_SUBST(PYTHON_INCLUDES)
+ dnl check if the headers exist:
+ save_CPPFLAGS="$CPPFLAGS"
