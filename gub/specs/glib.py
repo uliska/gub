@@ -1,4 +1,5 @@
 from gub import gnome
+from gub import loggedos
 from gub import misc
 from gub import tools
 from gub import target
@@ -14,7 +15,7 @@ glib_cv_stack_grows=${glib_cv_stack_grows=no}
     if 'stat' in misc.librestrict (): # stats for /USR/include/glib/...
         install_flags = (target.AutoBuild.install_flags
                          + ' LD_PRELOAD=%(tools_prefix)s/lib/librestrict-open.so')
-    def update_libtool (self): # linux-x86, linux-ppc, freebsd-x86
+    def xxxupdate_libtool (self): # linux-x86, linux-ppc, freebsd-x86
         target.AutoBuild.update_libtool (self)
         self.map_locate (w32.libtool_disable_relink, '%(builddir)s', 'libtool')
         #URGME, 2.19.5: relinking libgio is broken, /usr/lib is inserted
@@ -49,8 +50,11 @@ class Glib__mingw (Glib):
     dependencies = Glib.dependencies + ['libiconv-devel']
     def update_libtool (self): # linux-x86, linux-ppc, freebsd-x86
         target.AutoBuild.update_libtool (self)
-        self.map_locate (w32.libtool_disable_relink, '%(builddir)s', 'libtool')
-
+#        self.map_locate (w32.libtool_disable_relink, '%(builddir)s', 'libtool')
+        def undo_libtool_disable_relink (logger, file):
+            loggedos.file_sub (logger, [('need_relink=no', 'need_relink=yes')], file)
+        self.map_locate (undo_libtool_disable_relink, '%(builddir)s', 'libtool')
+        
 class Glib__freebsd (Glib):
     dependencies = Glib.dependencies + ['libiconv-devel']
     configure_variables = Glib.configure_variables + ' CFLAGS=-pthread'
