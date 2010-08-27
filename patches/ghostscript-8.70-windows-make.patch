@@ -33,16 +33,31 @@ diff -purN ../ghostscript-8.15/base/gsdll.mak ./base/gsdll.mak
 diff -purN ../ghostscript-8.15/base/winint.mak ./base/winint.mak
 --- ../ghostscript-8.15/psi/winint.mak	2005-01-19 05:08:41.000000000 +0100
 +++ ./psi/winint.mak	2005-12-25 08:12:37.000000000 +0100
-@@ -124,6 +124,7 @@ $(PSOBJ)dwnodll.obj: $(PSSRC)dwnodll.c $
+@@ -124,13 +124,7 @@ $(PSOBJ)dwnodll.obj: $(PSSRC)dwnodll.c $
   $(dwdll_h) $(iapi_h)
  	$(PSCCWIN) $(COMPILE_FOR_EXE) $(PSO_)dwnodll.obj $(C_) $(PSSRC)dwnodll.c
  
 +!include $(GLSRCDIR)\gsdll.mak
- # Compile gsdll.c, the main program of the DLL.
+-# Compile gsdll.c, the main program of the DLL.
+-
+-$(PSOBJ)gsdll.obj: $(PSSRC)gsdll.c $(AK) $(iapi_h) $(ghost_h)
+-	$(PSCCWIN) $(COMPILE_FOR_DLL) $(PSO_)gsdll.$(OBJ) $(C_) $(PSSRC)gsdll.c
+-
+-$(GLOBJ)gp_msdll.obj: $(GLSRC)gp_msdll.c $(AK) $(iapi_h)
+-	$(PSCCWIN) $(COMPILE_FOR_DLL) $(GLO_)gp_msdll.$(OBJ) $(C_) $(GLSRC)gp_msdll.c
  
- $(PSOBJ)gsdll.obj: $(PSSRC)gsdll.c $(AK) $(iapi_h) $(ghost_h)
+ # Modules for console mode EXEs
+ 
 --- ghostscript-8.70/base/winlib.mak~	2010-05-31 10:45:09.035498719 +0200
 +++ ghostscript-8.70/base/winlib.mak	2010-05-31 10:52:03.308985395 +0200
+@@ -122,6 +122,7 @@ GLCCWIN=$(CC_WX) $(CCWINFLAGS) $(I_)$(GLI_)$(_I) $(GLF_)
+ 
+ !include $(GLSRCDIR)\winplat.mak
+ !include $(GLSRCDIR)\pcwin.mak
++!include $(GLSRCDIR)\w32.mak
+ 
+ # Define abbreviations for the executable and DLL files.
+ GS_OBJ=$(GLOBJ)$(GS)
 @@ -133,65 +133,4 @@ GSDLL_OBJ=$(GLOBJ)$(GSDLL)
  $(gconfig__h): $(TOP_MAKEFILES)
  	$(ECHOGS_XE) -w $(gconfig__h) -x 2f2a20 This file deliberately left blank. -x 2a2f
