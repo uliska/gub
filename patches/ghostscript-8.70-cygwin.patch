@@ -53,15 +53,6 @@ diff -purN -x CYGWIN-PATCHES -x'*~' -x 'cyg*' -xjpeg -x'*.orig' ../../ghostscrip
  
  # Define the other compilation flags.  Add at most one of the following:
  #	-DBSD4_2 for 4.2bsd systems.
-@@ -245,7 +245,7 @@ CFLAGS=$(CFLAGS_STANDARD) $(GCFLAGS) $(X
- #	-R /usr/local/xxx/lib:/usr/local/lib
- # giving the full path names of the shared library directories.
- # XLDFLAGS can be set from the command line.
--XLDFLAGS=
-+XLDFLAGS=-DUSE_DL_IMPORT
- 
- LDFLAGS=$(XLDFLAGS)
- 
 @@ -278,7 +278,7 @@ STDLIBS=-lm
  # Note that x_.h expects to find the header files in $(XINCLUDE)/X11,
  # not in $(XINCLUDE).
@@ -85,15 +76,6 @@ diff -purN -x CYGWIN-PATCHES -x'*~' -x 'cyg*' -xjpeg -x'*.orig' ../../ghostscrip
  
  # Define whether this platform has floating point hardware:
  #	FPU_TYPE=2 means floating point is faster than fixed point.
-@@ -332,7 +334,7 @@ FEATURE_DEVS_ALL=$(PSD)psl3.dev $(PSD)pd
- # Choose whether to compile the .ps initialization files into the executable.
- # See gs.mak for details.
- 
--COMPILE_INITS=1
-+COMPILE_INITS=1 # make sure default stays 1
- 
- # Choose whether to store band lists on files or in memory.
- # The choices are 'file' or 'memory'.
 @@ -367,7 +369,8 @@ EXTEND_NAMES=0
  # Choose the device(s) to include.  See devs.mak for details,
  # devs.mak and contrib.mak for the list of available devices.
