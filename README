@@ -209,6 +209,14 @@ will be rebuilt.
 This makes that forcing rebuilds can can be tricky: gub refuses to do so if it
 deems rebuilding unnecessary.
 
+SHARING DIRECTORIES
+
+GUB uses an ABI environment variable to work around some build bugs in some
+packages.  This variable is not checked by the environment-changed function,
+so problems will probably occur if you share your GUB build directory between
+a 32-bit and 64-bit OS.  If you change your operating system, delete the
+target/ directory of GUB before trying to build it again.
+
 LIBRESTRICT
 
 A common problem with [making reproducible cross] builds is using files or

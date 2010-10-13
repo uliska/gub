@@ -285,6 +285,8 @@ def environment_sanity (settings):
     differ = []
     for key in list (misc.uniq (sorted (environment.keys ()
                                         + os.environ.keys ()))):
+        if key == 'ABI':
+            continue # we don't care about changes to this
         if environment.get (key, None) != os.environ.get (key, None):
             differ += [key]
     if list (environment.keys ()) and differ:
