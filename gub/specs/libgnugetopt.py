@@ -1,7 +1,7 @@
 from gub import target
 
 class Libgnugetopt (target.MakeBuild):
-    source = 'ftp://ftp.uk.freebsd.org/pub/FreeBSD/ports/local-distfiles/lioux/libgnugetopt-1.3.tar.bz2'
+    source = 'http://distfiles.macports.org/libgnugetopt/libgnugetopt-1.3.tar.bz2'
     def patch (self):
         self.dump ('''
 prefix = %(prefix_dir)s
