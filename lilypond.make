@@ -68,6 +68,7 @@ INSTALLER_BUILDER_OPTIONS =\
 include gub.make
 
 NATIVE_TARGET_DIR=$(CWD)/target/$(BUILD_PLATFORM)
+TOOLS_BIN_DIR=$(CWD)/target/tools/root/usr/bin/
 
 #FIXME: yet another copy of gub/settings.py
 SET_LOCAL_PATH=PATH=$(CWD)/target/local/root/usr/bin:$(PATH)
@@ -252,7 +253,7 @@ unlocked-doc-export:
 unlocked-test-export:
 	mkdir -p uploads/webtest
 	PYTHONPATH=$(NATIVE_LILY_BUILD)/python/out \
-	$(PYTHON) test-lily/rsync-test.py \
+	PATH=$(TOOLS_BIN_DIR):$(PATH) $(PYTHON) test-lily/rsync-test.py \
 		--version-file=$(NATIVE_LILY_BUILD)/out/VERSION \
 		--output-distance=$(NATIVE_LILY_SRC)/$(BUILDSCRIPTS)/output-distance.py \
 		--test-dir=uploads/webtest
