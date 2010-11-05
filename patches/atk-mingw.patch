@@ -1,0 +1,11 @@
+--- atk-1.0/atk/atkhyperlinkimpl.h~	2010-11-05 17:35:07.000000000 +0100
++++ atk-1.0/atk/atkhyperlinkimpl.h	2010-11-05 20:10:16.438346483 +0100
+@@ -46,7 +46,7 @@
+  * a new interface was required.
+  */
+ 
+-#define ATK_TYPE_HYPERLINK_IMPL          (atk_hyperlink_impl_get_type ())
++#define ATK_TYPE_HYPERLINK_IMPL          (0) /* (atk_hyperlink_impl_get_type ()) */
+ #define ATK_IS_HYPERLINK_IMPL(obj)       G_TYPE_CHECK_INSTANCE_TYPE ((obj), ATK_TYPE_HYPERLINK_IMPL)
+ #define ATK_HYPERLINK_IMPL(obj)             G_TYPE_CHECK_INSTANCE_CAST ((obj), ATK_TYPE_HYPERLINK_IMPL, AtkHyperlinkImpl)
+ #define ATK_HYPERLINK_IMPL_GET_IFACE(obj)   G_TYPE_INSTANCE_GET_INTERFACE ((obj), ATK_TYPE_HYPERLINK_IMPL, AtkHyperlinkImplIface)

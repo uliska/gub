@@ -6,5 +6,9 @@ class Atk (target.AutoBuild):
     dependencies = ['tools::libtool', 'glib-devel']
 
 class Atk__mingw (Atk):
+    patches = [
+        'atk-mingw.patch',
+        ]
     def patch (self):
+        target.AutoBuild.patch (self)
         self.file_sub ([('\$\(srcdir\)/atk.def', 'atk.def')], '%(srcdir)s/atk/Makefile.in', must_succeed=True)
