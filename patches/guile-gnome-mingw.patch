@@ -1,0 +1,130 @@
+diff --git a/gnome/gobject/gvalue.c b/gnome/gobject/gvalue.c
+index 2a9fca1..8e08008 100644
+--- a/glib/gnome/gobject/gvalue.c
++++ a/glib/gnome/gobject/gvalue.c
+@@ -416,6 +416,7 @@ scm_c_scm_to_enum_value (GEnumClass *enum_class, SCM value)
+ {
+     guint i;
+ 
++#undef ERROR
+ #define ERROR(x)                                                        \
+     scm_c_gruntime_error                                                \
+         (FUNC_NAME, "Bad enum value for enumerated type `~a': ~a",      \
+diff --git a/glib/gnome/gw/glib-support.c b/gnome/gw/glib-support.c
+index 0776d29..92bbaf8 100644
+--- a/glib/gnome/gw/glib-support.c
++++ b/glib/gnome/gw/glib-support.c
+@@ -123,6 +123,7 @@ _wrap_g_convert_with_fallback (const gchar* str, const gchar* to_codeset,
+ 
+ static SCM iochannel_type = SCM_BOOL_F;
+ 
++#ifndef __MINGW32__
+ static gboolean caught_intr = FALSE;
+ static GMainContext *wakeup_context = NULL;
+ 
+@@ -220,6 +221,7 @@ signal_source_new (GMainLoop *loop)
+ 
+     return source;
+ }
++#endif /*! __MINGW32__ */
+ 
+ void
+ scm_init_glib (void)
+@@ -234,6 +236,7 @@ main_loop_run_without_guile (void *loop)
+     return NULL;
+ }
+ 
++#ifndef __MINGW32__
+ void
+ _wrap_g_main_loop_run (GMainLoop *loop)
+ {
+@@ -255,7 +258,13 @@ _wrap_g_main_loop_run (GMainLoop *loop)
+     
+     scm_dynwind_end();
+ }
+-
++#else /* __MINGW32__ */
++void
++_wrap_g_main_loop_run (GMainLoop *loop)
++{
++    scm_without_guile (main_loop_run_without_guile, loop);
++}
++#endif /* __MINGW32__ */
+ 
+ SCM
+ _wrap_g_string_get_str (GString *str)
+diff --git a/gnome/defs/atk.defs b/gnome/defs/atk.defs
+index fe8ec31..ecc8cc6 100644
+--- a/defs/gnome/defs/atk.defs
++++ b/defs/gnome/defs/atk.defs
+@@ -494,16 +494,16 @@
+ 
+ ;; From /opt/gnome2/include/atk-1.0/atk/atkhyperlinkimpl.h
+ 
+-(define-function atk_hyperlink_impl_get_type
+-  (c-name "atk_hyperlink_impl_get_type")
+-  (return-type "GType")
+-)
++;; (define-function atk_hyperlink_impl_get_type
++;;   (c-name "atk_hyperlink_impl_get_type")
++;;   (return-type "GType")
++;; )
+ 
+-(define-method get_hyperlink
+-  (of-object "AtkHyperlinkImpl")
+-  (c-name "atk_hyperlink_impl_get_hyperlink")
+-  (return-type "AtkHyperlink*")
+-)
++;; (define-method get_hyperlink
++;;   (of-object "AtkHyperlinkImpl")
++;;   (c-name "atk_hyperlink_impl_get_hyperlink")
++;;   (return-type "AtkHyperlink*")
++;; )
+ 
+ 
+ 
+@@ -1268,14 +1268,14 @@
+   )
+ )
+ 
+-(define-method get_uri
+-  (of-object "AtkStreamableContent")
+-  (c-name "atk_streamable_content_get_uri")
+-  (return-type "gchar*")
+-  (parameters
+-    '("const-gchar*" "mime_type")
+-  )
+-)
++;; (define-method get_uri
++;;   (of-object "AtkStreamableContent")
++;;   (c-name "atk_streamable_content_get_uri")
++;;   (return-type "gchar*")
++;;   (parameters
++;;     '("const-gchar*" "mime_type")
++;;   )
++;; )
+ 
+ 
+ 
+@@ -1921,13 +1921,13 @@
+   )
+ )
+ 
+-(define-method get_minimum_increment
+-  (of-object "AtkValue")
+-  (c-name "atk_value_get_minimum_increment")
+-  (return-type "none")
+-  (parameters
+-    '("GValue*" "value")
+-  )
+-)
++;; (define-method get_minimum_increment
++;;   (of-object "AtkValue")
++;;   (c-name "atk_value_get_minimum_increment")
++;;   (return-type "none")
++;;   (parameters
++;;     '("GValue*" "value")
++;;   )
++;; )
+ 
+ 
