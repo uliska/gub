@@ -681,6 +681,8 @@ fatal: The remote end hung up unexpectedly
             self.system ('mkdir -p %(destdir)s' % locals ())
             self.system ('cd %(destdir)s && git init' % locals ())
             open ('%(destdir)s/.git/objects/info/alternates' % locals (), 'w').write (os.path.join (self.dir, 'objects'))
+            dir = self.dir
+            self.system ('cp %(dir)s/packed-refs %(destdir)s/.git/packed-refs' % locals ())
 #            self.system ('cd %(destdir)s && git reset --hard %(HEAD)s' % locals ())
         if self.git_pipe ('diff' % locals (), dir=destdir):
             self.system ('cd %(destdir)s && git reset --hard %(HEAD)s' % locals ())
