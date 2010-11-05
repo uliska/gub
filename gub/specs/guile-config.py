@@ -15,6 +15,7 @@ test "$1" = "--version" && echo "%(target_architecture)s-guile-config - Guile ve
 prefix=%(system_prefix)s
 test "$1" = "compile" && echo "-I$prefix/include"
 test "$1" = "link" && echo "-L$prefix/lib -lguile -lgmp"
+test "$1" = "info" && test "$2" = "guileversion" && echo "%(version)s"
 exit 0
 ''',
              '%(install_prefix)s%(cross_dir)s/bin/guile-config',
