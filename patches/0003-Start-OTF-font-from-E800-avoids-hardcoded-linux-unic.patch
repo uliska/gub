@@ -1,0 +1,98 @@
+From e9be6bf5bc1055122a6b3298fd41327a123625a1 Mon Sep 17 00:00:00 2001
+From: Jan Nieuwenhuizen <janneke@gnu.org>
+Date: Thu, 7 Oct 2010 14:08:58 +0200
+Subject: [PATCH 3/3] Start OTF font from E800 -- avoids hardcoded linux-unicode overrides.
+
+Without this patch, most accidentals do not show on screen, for
+example accidentals.flat (charcode 57626 0xE11A) is overridden by a
+euro symbol.
+
+Starting at E400, we get a rewind icon instead of a black note head.
+(58741 0xE58D).
+---
+ mf/bigcheese.pe.in                      |   45 -------------------------------
+ mf/emmentaler-brace.pe.in               |    2 +-
+ scripts/build/gen-emmentaler-scripts.py |    2 +-
+ 3 files changed, 2 insertions(+), 47 deletions(-)
+ delete mode 100644 mf/bigcheese.pe.in
+
+diff --git a/mf/bigcheese.pe.in b/mf/bigcheese.pe.in
+deleted file mode 100644
+index e1d1843..0000000
+--- a/mf/bigcheese.pe.in
++++ /dev/null
+@@ -1,45 +0,0 @@
+-#!@FONTFORGE@
+-
+-
+-
+-New();
+-
+-# Separate Feta versioning?
+-# Naming: * expose LilyPond20/LilyPond rather than bigcheese
+-#         *  using 20 as Weight works for gnome-font-select widget: gfs
+-SetFontNames("bigcheese20", "LilyPond", "LilyPond BigCheese 20", "20", "GNU GPL", "@TOPLEVEL_VERSION@");
+-
+-MergeFonts("feta20.pfa");
+-MergeFonts("feta-noteheads20.pfa");
+-MergeFonts("parmesan20.pfa");
+-
+-# load nummer/din after setting PUA.
+-i = 0;
+-while (i < CharCnt())
+-  Select(i);
+-# crashes fontforge, use PUA for now -- jcn
+-# SetUnicodeValue(i + 0xF0000, 0);
+-/*
+-PRIVATE AREA
+-       In the BMP, the range 0xe000 to 0xf8ff will never be  assigned  to  any
+-       characters  by  the standard and is reserved for private usage. For the
+-       Linux community, this private area has been subdivided further into the
+-       range  0xe000  to 0xefff which can be used individually by any end-user
+-       and the Linux zone in the range 0xf000 to 0xf8ff where  extensions  are
+-       coordinated  among  all  Linux  users.  The  registry of the characters
+-       assigned to the Linux zone is currently maintained by  H.  Peter  Anvin
+-       <Peter.Anvin@linux.org>.
+-*/
+-  SetUnicodeValue(i + 0xE000, 0);
+-  ++i;
+-endloop
+-
+-
+-MergeFonts("feta-nummer10.pfa");
+-MergeFonts("feta-din14.pfa");
+-MergeKern("feta-din14.tfm");
+-
+-LoadTableFromFile("LILC", "feta20.otf-table")
+-
+-Generate("bigcheese20.otf");
+-Generate("bigcheese20.cff");
+diff --git a/mf/emmentaler-brace.pe.in b/mf/emmentaler-brace.pe.in
+index d5440be..44aaa6e 100644
+--- a/mf/emmentaler-brace.pe.in
++++ b/mf/emmentaler-brace.pe.in
+@@ -72,7 +72,7 @@ PRIVATE AREA
+        assigned to the Linux zone is currently maintained by  H.  Peter  Anvin
+        <Peter.Anvin@linux.org>.
+ */
+-  SetUnicodeValue(i + 0xE000, 0);
++  SetUnicodeValue(i + 0xE800, 0);
+   ++i;
+ endloop
+ 
+diff --git a/scripts/build/gen-emmentaler-scripts.py b/scripts/build/gen-emmentaler-scripts.py
+index 46fb816..137ca4e 100644
+--- a/scripts/build/gen-emmentaler-scripts.py
++++ b/scripts/build/gen-emmentaler-scripts.py
+@@ -61,7 +61,7 @@ PRIVATE AREA
+    assigned to the Linux zone is currently maintained by  H.  Peter  Anvin
+    <Peter.Anvin@linux.org>.
+ */
+- SetUnicodeValue(i + 0xE000, 0);
++ SetUnicodeValue(i + 0xE800, 0);
+  ++i;
+ endloop
+ 
+-- 
+1.7.1
+
