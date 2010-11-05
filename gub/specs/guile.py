@@ -117,6 +117,7 @@ test "$1" = "--version" && echo "%(target_architecture)s-guile-config - Guile ve
 prefix=%(system_prefix)s
 test "$1" = "compile" && echo "-I$prefix/include"
 test "$1" = "link" && echo "-L$prefix/lib -lguile -lgmp"
+test "$1" = "info" && test "$2" = "guileversion" && echo "%(version)s"
 exit 0
 ''',
              '%(install_prefix)s%(cross_dir)s/bin/%(target_architecture)s-guile-config')
@@ -157,6 +158,7 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
         Guile.install (self)
         # dlopen-able .la files go in BIN dir, BIN OR LIB package
         self.system ('''mv %(install_prefix)s/lib/lib*[0-9].la %(install_prefix)s/bin''')
+        self.system ('''cd %(install_prefix)s/bin && cp guile.exe guile-windows.exe''')
 
 class Guile__linux (Guile):
     compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:$LD_LIBRARY_PATH;'
@@ -224,6 +226,7 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
         Guile.autopatch (self)
     def install (self):
         tools.AutoBuild.install (self)
-        # Ugh: remove development stuff from tools
-        # Make sure no tool GUILE headers can interfere with compile.
-        self.system ("rm -rf %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/include/ %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin/guile-config ")
+        self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.8')
+        self.file_sub ([('[(]string-join other-flags[)]', '(string-join (filter (lambda (x) (not (equal? x "-L/usr/lib"))) other-flags))')],
+                       '%(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin/guile-config',
+                       must_succeed=True)
