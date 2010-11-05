@@ -143,7 +143,6 @@ class Installer (context.RunnableContext):
         globs = [
             'bin/autopoint',
             'bin/glib-mkenums',
-            'bin/guile-*',
             'bin/*-config',
             'bin/*gettext*',
             'bin/gs??',
