@@ -3,6 +3,7 @@ from gub import tools
 
 class G_wrap (target.AutoBuild):
     dependencies = [
+        'glib',
         'guile',
         'libffi',
         'tools::g-wrap',
@@ -13,6 +14,14 @@ class G_wrap (target.AutoBuild):
         self.file_sub ([('-std=gnu99', '')], '%(builddir)s/guile/g-wrap/Makefile')
         self.file_sub ([('///', '/')], '%(builddir)s/lib/Makefile', must_succeed=True)
     parallel_build_broken = True
+    def install (self):
+        target.AutoBuild.install (self)
+        self.dump ('''
+(define (get-prefix-dir) (dirname (dirname (car (command-line)))))
+(define *g-wrap-shlib* (string-append (get-prefix-dir) "/lib/g-wrap/modules/"))
+''',
+                   '%(install_prefix)s/share/guile/site/g-wrap/config.scm',
+                   mode='a')
     
 class G_wrap__mingw (G_wrap):
     def configure (self):

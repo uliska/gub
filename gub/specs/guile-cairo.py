@@ -6,3 +6,11 @@ class Guile_cairo (target.AutoBuild):
         'guile',
         ]
     subpackage_names = ['']
+    def install (self):
+        target.AutoBuild.install (self)
+        self.dump ('''
+(define (get-prefix-dir) (dirname (dirname (car (command-line)))))
+(define *cairo-lib-path* (string-append (get-prefix-dir) "/lib/libguile-cairo"))
+''',
+                   '%(install_prefix)s/share/guile/site/cairo/config.scm',
+                   mode='a')

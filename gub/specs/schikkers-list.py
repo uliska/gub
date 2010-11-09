@@ -13,6 +13,7 @@ class Schikkers_list (target.PythonBuild):
     subpackage_names = ['']
     dependencies = [
         'guile-gnome',
+        'guile-library',
         'lilypondcairo',
         ]
     def __init__ (self, settings, source):
@@ -29,6 +30,13 @@ class Schikkers_list (target.PythonBuild):
         self.system ('mkdir -p %(builddir)s')
     def install (self):
         target.PythonBuild.install (self)
+        self.dump ('''
+prependdir GUILE_LOAD_PATH=$INSTALLER_PREFIX/share/guile/site
+prependdir PATH=$INSTALLER_PREFIX/bin
+''',
+                   '%(install_prefix)s/etc/relocate/schikkers-list.reloc',
+                   env=locals ())
+        self.file_sub ([(' guile-gnome-2 ', ' guile ')], '%(install_prefix)s/bin/ikli', must_succeed=True)
         self.system ('cd %(install_prefix)s/bin && cp -pv ikli schikkers-list')
 
 class Schikkers_list__mingw (Schikkers_list):
