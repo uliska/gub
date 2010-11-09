@@ -148,9 +148,17 @@ chmod +x "$binwrapscript"
 ##gtk##$EOF
 ##gtk##
 ##gtk##for file in ${dollar}INSTALLER_PREFIX/etc/relocate/*.reloc; do
-##gtk##    sed -e 's/^[^ ]* /export /' ${dollar}file \\
+##gtk##    cat ${dollar}file \
 ##gtk##	| while read line; do
-##gtk##	echo ${dollar}line >> ${dollar}ENV
+##gtk##	case ${dollar}line in
+##gtk##	    set*)
+##gtk##		echo ${dollar}line | sed -e 's/^[^ ]* /export /'  >> ${dollar}ENV
+##gtk##		;;
+##gtk##	    prepend*)
+##gtk##		var=${dollar}(expr "${dollar}line" : "^[^ ]* \([^ =]*\)=")
+##gtk##		echo ${dollar}line | sed -e 's/^[^ ]* /export /' -e 's/ *([^:])$/\1:$'"${dollar}var/" >> ${dollar}ENV
+##gtk##		;;
+##gtk##	esac
 ##gtk##    done
 ##gtk##done
 ##gtk##

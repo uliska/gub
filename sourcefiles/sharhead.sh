@@ -150,9 +150,17 @@ export LD_LIBRARY_PATH="${dollar}{INSTALLER_PREFIX}/lib"
 $EOF
 
 for file in ${dollar}INSTALLER_PREFIX/etc/relocate/*.reloc; do
-    sed -e 's/^[^ ]* /export /' ${dollar}file \\
+    cat ${dollar}file \
 	| while read line; do
-	echo ${dollar}line >> ${dollar}ENV
+	case ${dollar}line in
+	    set*)
+		echo ${dollar}line | sed -e 's/^[^ ]* /export /'  >> ${dollar}ENV
+		;;
+	    prepend*)
+		var=${dollar}(expr "${dollar}line" : "^[^ ]* \([^ =]*\)=")
+		echo ${dollar}line | sed -e 's/^[^ ]* /export /' -e 's/ *\([^:]\)$/\1:$'"${dollar}var/" >> ${dollar}ENV
+		;;
+	esac
     done
 done
 
