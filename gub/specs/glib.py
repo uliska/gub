@@ -14,6 +14,10 @@ glib_cv_stack_grows=${glib_cv_stack_grows=no}
     if 'stat' in misc.librestrict (): # stats for /USR/include/glib/...
         install_flags = (target.AutoBuild.install_flags
                          + ' LD_PRELOAD=%(tools_prefix)s/lib/librestrict-open.so')
+    def patch (self):
+        target.AutoBuild.patch (self)
+        self.file_sub ([('GIO_MODULE_DIR', 'getenv ("GIO_MODULE_DIR")')],
+                       '%(srcdir)s/gio/giomodule.c', must_succeed=True)
     def update_libtool (self): # linux-x86, linux-ppc, freebsd-x86
         target.AutoBuild.update_libtool (self)
         self.map_locate (w32.libtool_disable_relink, '%(builddir)s', 'libtool')
