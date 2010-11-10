@@ -8,6 +8,7 @@ class Guile_gnome (target.AutoBuild):
         'gtk+',
         'g-wrap',
         'gnomecanvas',
+##        'gvfs', ### No file open without this? -- but heavy: dbus dbus-glib gconf gnome-mime-data libidl orbit
         ]
 #    force_autoupdate = True
     configure_flags = target.AutoBuild.configure_flags + ' --disable-Werror'
@@ -54,4 +55,3 @@ class Guile_gnome__mingw (Guile_gnome):
 
 class Guile_gnome__tools (tools.AutoBuild, Guile_gnome):
     pass
-
