@@ -137,6 +137,7 @@ chmod +x "$binwrapscript"
 ##gtk##cat > ${dollar}ENV <<$EOF
 ##gtk##INSTALLER_PREFIX=${prefix}/usr
 ##gtk##if test -d ${dollar}INSTALLER_PREFIX/lib/gtk-2.0/2.10.0/loaders; then
+##gtk##    export GIO_MODULE_DIR=${dollar}INSTALLER_PREFIX/lib/gio/modules
 ##gtk##    export GDK_PIXBUF_MODULEDIR=${dollar}INSTALLER_PREFIX/lib/gtk-2.0/2.10.0/loaders
 ##gtk##    export GDK_PIXBUF_MODULE_FILE=${dollar}INSTALLER_PREFIX/etc/gtk-2.0/gdk-pixbuf.loaders
 ##gtk##    export GTK_EXE_PREFIX=${dollar}INSTALLER_PREFIX
@@ -218,6 +219,16 @@ cd ${bindir};
     done
 cd - > /dev/null;
 
+
+## fontconfig lily fonts
+mkdir -p ${prefix}/usr/etc/fonts/conf.d
+cat <<EOF > ${prefix}/usr/etc/fonts/conf.d/00-lilypond.conf
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+        <dir>${prefix}/usr/share/lilypond/current/fonts/otf</dir>
+</fontconfig>
+EOF
 
 ###################
 ## uninstall script
