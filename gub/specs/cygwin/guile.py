@@ -4,7 +4,10 @@ from gub import misc
 from gub.specs import guile
 
 class Guile (guile.Guile):
-    patches = guile.Guile.patches + ['guile-1.8.7-no-complex.patch']
+    patches = guile.Guile.patches + [
+        'guile-1.8.7-no-complex.patch',
+        'guile-1.8.5-export-symbols.patch',
+        ]
     config_cache_overrides = guile.Guile.config_cache_overrides + '''
 guile_cv_func_usleep_declared=${guile_cv_func_usleep_declared=yes}
 guile_cv_exeext=${guile_cv_exeext=}
@@ -14,15 +17,11 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
                 + misc.join_lines ('''
 CFLAGS='-DHAVE_CONFIG_H=1 -I%(builddir)s'
 '''))
-    dependencies = gup.gub_to_distro_deps (lilypond.LilyPond.dependencies,
+    dependencies = gup.gub_to_distro_deps (guile.Guile.dependencies,
                                            cygwin.gub_to_distro_dict)
     EXE = '.exe'
     def category_dict (self):
         return {'': 'Interpreters'}
-    def XXXconfigure (self):
-        self.file_sub ([('''^#(LIBOBJS=".*fileblocks.*)''', r'\1')],
-                       '%(srcdir)s/configure')
-        guile.Guile.configure (self)
     # C&P from guile.Guile__mingw
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?

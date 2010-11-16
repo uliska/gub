@@ -320,7 +320,7 @@ gub_to_distro_dict = {
     'freetype-devel' : ['libfreetype-devel'],
     'gettext' : ['libintl8', 'libintl3'],
     'gmp-devel': ['gmp'],
-    'guile' : ['libguile17', 'libguile12'], # ugh '-devel' gets stripped
+#    'guile' : ['libguile17', 'libguile12'], # ugh '-devel' gets stripped
     'guile-runtime' : ['libguile17', 'libguile12'],
     'libfontconfig': ['libfontconfig-devel'],
     'libfontconfig1': ['libfontconfig-devel'],

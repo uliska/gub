@@ -9,6 +9,7 @@ class LilyPond (lilypond.LilyPond):
 LilyPond lets you create music notation.  It produces beautiful
 sheet music from a high-level description file.'''
     subpackage_names = ['doc', '']
+    source = 'http://lilypond.org/download/source/v2.13/lilypond-2.13.39.tar.gz'
     dependencies = gup.gub_to_distro_deps (lilypond.LilyPond.dependencies,
                                            cygwin.gub_to_distro_dict) + [
         'tools::imagemagick',
