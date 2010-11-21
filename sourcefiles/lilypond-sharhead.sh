@@ -5,6 +5,8 @@ root="$HOME"
 doc=no
 extract=no
 interactive=yes
+arch=$(uname -m)
+shopt -s nocasematch
 
 if test `id -u` = "0"; then
     root=/usr/local
@@ -60,17 +62,43 @@ done
 
 cat <<EOF
 
-%(name)s installer for version %(version)s release %(release)s.
+%(name)s installer for version %(version)s release %(release)s,
+%(target_cpu)s build.
 For a list of options, abort (^C) then do:
 sh $me --help
 
 EOF
+
+if test "$arch" != "%(target_cpu)s"; then
+    cat <<EOF
+
+Warning: this build is not optimized for your architecture;
+please install a ${arch} build instead.
+
+Press C to install the program anyway (not recommended),
+E to only extract the program files, or any other key to exit.
+EOF
+    read -sn1 input
+    case "$input" in
+	C)
+	  echo "Ignoring architecture incompatibility."
+	;;
+	E)
+	  extract=yes;
+	;;
+	*)
+	  exit 1
+	;;
+    esac
+fi
+
 
 if test "$extract" = "yes"; then
     echo "extracting %(base_file)s"
     tail -c+%(header_length)012d $0 > %(base_file)s
     exit 0
 fi
+
 
 if test "$interactive" = "yes"; then
     cat <<EOF

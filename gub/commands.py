@@ -456,7 +456,7 @@ class CreateShar (SerializedCommand):
         header_length = 0
         _z = misc.compression_flag (tarball)
         header_length = len (script % locals ()) + 1
-        used_in_sharhead = '%(base_file)s %(name)s %(pretty_name)s %(version)s %(release)s %(header_length)s %(_z)s'
+        used_in_sharhead = '%(base_file)s %(name)s %(pretty_name)s %(version)s %(release)s %(header_length)s %(target_cpu)s %(_z)s'
         used_in_sharhead % locals ()
         loggedos.dump_file (logger, script % locals (), shar_file)
         loggedos.system (logger, 'cat %(tarball)s >> %(shar_file)s' % locals ())
