@@ -249,16 +249,17 @@ class LilyPond_base (target.AutoBuild):
     ghostscript_version = ghostscript.Ghostscript.static_version ()
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)
-        source.source = source.source.replace (self.name (), 'lilypond')
-        source.dir = source.dir.replace (self.name (), 'lilypond')
-        source.url_dir = source.url_dir.replace (self.name (), 'lilypond')
-        source.version = misc.bind_method (LilyPond.version_from_VERSION, source)
-        source.is_tracking = misc.bind_method (lambda x: True, source)
-        source.is_downloaded = misc.bind_method (lambda x: True, source)
-        source.update_workdir = misc.bind_method (lambda x: True, source)
-        self.dependencies = (self.__class__.dependencies
-                             + [self.settings.target_platform + '::'
-                                + source.source + '?branch=' + source.branch])
+        if isinstance (source, repository.Git):
+            source.source = source.source.replace (self.name (), 'lilypond')
+            source.dir = source.dir.replace (self.name (), 'lilypond')
+            source.url_dir = source.url_dir.replace (self.name (), 'lilypond')
+            source.version = misc.bind_method (LilyPond.version_from_VERSION, source)
+            source.is_tracking = misc.bind_method (lambda x: True, source)
+            source.is_downloaded = misc.bind_method (lambda x: True, source)
+            source.update_workdir = misc.bind_method (lambda x: True, source)
+            self.dependencies = (self.__class__.dependencies
+                                 + [self.settings.target_platform + '::'
+                                    + source.source + '?branch=' + source.branch])
     subpackage_names = ['']
     def stages (self):
         return ['compile', 'install', 'package']
