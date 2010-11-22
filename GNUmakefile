@@ -43,7 +43,7 @@ test:
 	bin/gub -p $(BUILD_PLATFORM) --branch=lilypond=master:master lilypond -vvv
 
 README: web/index.html web/basics.html web/lilypond.html web/denemo.html web/inkscape.html web/oo.o.html web/history.html web/links.html
-	w3m -dump $^ > $@
+	w3m -dump $^ | sed 's/website by.*$..//' > $@
 
 web: README
 	scp -p web/*.html web/*.css lilypond.org:/var/www/lilypond/gub

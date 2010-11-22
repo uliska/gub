@@ -153,6 +153,8 @@ Examples
 
     this leaves the Windows installer in uploads/
 
+                           
+
 GUB the Grand Unified Builder
 
   • Home
@@ -212,10 +214,10 @@ deems rebuilding unnecessary.
 SHARING DIRECTORIES
 
 GUB uses an ABI environment variable to work around some build bugs in some
-packages.  This variable is not checked by the environment-changed function,
-so problems will probably occur if you share your GUB build directory between
-a 32-bit and 64-bit OS.  If you change your operating system, delete the
-target/ directory of GUB before trying to build it again.
+packages. This variable is not checked by the environment-changed function, so
+problems will probably occur if you share your GUB build directory between a
+32-bit and 64-bit OS. If you change your operating system, delete the target/
+directory of GUB before trying to build it again.
 
 LIBRESTRICT
 
@@ -474,6 +476,9 @@ Typical variables defined by the build class
 More examples
 
 See gub/specs/*.py for some more examples.
+
+                           
+
 GUB -- LilyPond
 
 INSTALLING
@@ -577,6 +582,8 @@ I have the following in my crontab
                       --smtp smtp.xs4all.nl --repository downloads/lilypond.git"\
       darwin-x86 freebsd-x86 freebsd-64 mingw linux-x86 linux-64 darwin-ppc
 
+                           
+
 GUB -- GNU Denemo
 
 INSTALLING
@@ -617,6 +624,8 @@ More examples
 
       make -f lilypond.make bootstrap
 
+                           
+
 GUB -- Inkscape
 
 INSTALLING
@@ -644,6 +653,8 @@ More examples
 
       bin/gub inkscape
       bin/gib inkscape --branch=inkscape=trunk inkscape
+
+                           
 
 GUB -- OpenOffice.org
 
@@ -713,6 +724,9 @@ See also
 
 http://github.com/janneke/gub/tree/master/patches
 http://lilypond.org/blog/janneke/gub3-ooo-mingw-cross-build
+
+                           
+
 GUB the Grand Unified Builder
 
   • Home
@@ -758,6 +772,8 @@ build, including all essential libraries. Later, Inkscape is added, exploring
 and implementing x.org dependencies. After that, building a windows installer
 for GNU Denemo took only one day, including all dependencies.
 
+                           
+
 GUB the Grand Unified Builder
 
   • Home
@@ -779,3 +795,6 @@ lilypond.org/blog/janneke/gub3-ooo-mingw-cross-build
 openembedded.org
 scratchbox.org
 Scratbox2; sb2 Dan Kegel's crosstool
+
+                           
+
