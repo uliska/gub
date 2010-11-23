@@ -1,9 +1,15 @@
+lilypond (2.13.39-2) unstable; urgency=low
+
+  * New upstream release: first 2.14 beta.
+
+ -- Jan Nieuwenhuizen janneke@gnu.org>  Mon, 22 Nov 10:30:23 2010 +0100
+
 lilypond (2.13.21-1) unstable; urgency=low
 
   * New upstream 2.14-prerelease.
   * Remove usr/licence/lilypond-doc, thanks Volker.
 
- -- Jan Nieuwenhuizen janneke@gnu.org>  Sat, 22 May 10:52:03 2010 +0100
+ -- Jan Nieuwenhuizen janneke@gnu.org>  Sat, 22 May 10:52:03 2010 +0200
 
 lilypond (2.13.14-1) unstable; urgency=low
 
