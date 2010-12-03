@@ -77,6 +77,7 @@ class Cygwin_package (context.RunnableContext):
         p = self.package_manager.get_all_packages ()[0]
         if not self.settings.build:
             self.settings.build = self.build_number (p)
+        self.settings.build = '2'
 
     def build_number (self, package):
         from gub import versiondb

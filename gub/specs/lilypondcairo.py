@@ -11,6 +11,7 @@ class Lilypondcairo (lilypond.Lilypond):
                     for x in lilypond.Lilypond.dependencies]
     patches = [
         '0003-Start-OTF-font-from-E800-avoids-hardcoded-linux-unic.patch',
+        '0001-midi2ly-bump-version-in-output-to-2.7.38-oldest-supp.patch',
         ]
     def get_conflict_dict (self):
         return {'': ['lilypond']}
@@ -21,6 +22,7 @@ class Lilypondcairo__mingw (lilypond.Lilypond__mingw):
                 for x in lilypond.Lilypond__mingw.dependencies]
     patches = [
         '0003-Start-OTF-font-from-E800-avoids-hardcoded-linux-unic.patch',
+        '0001-midi2ly-bump-version-in-output-to-2.7.38-oldest-supp.patch',
         ]
     def get_conflict_dict (self):
         return {'': ['lilypond']}

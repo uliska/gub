@@ -15,11 +15,16 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
 '''
     configure_variables = (guile.Guile.configure_variables
                 + misc.join_lines ('''
-CFLAGS='-DHAVE_CONFIG_H=1 -I%(builddir)s'
+CFLAGS='-O2 -DHAVE_CONFIG_H=1 -I%(builddir)s'
 '''))
     dependencies = gup.gub_to_distro_deps (guile.Guile.dependencies,
                                            cygwin.gub_to_distro_dict)
+    build_number = '2'
     EXE = '.exe'
+    install_command = guile.Guile.install_command + ' install-info'
+    def autopatch (self):
+        # we want info docs in cygwin
+        pass
     def category_dict (self):
         return {'': 'Interpreters'}
     # C&P from guile.Guile__mingw

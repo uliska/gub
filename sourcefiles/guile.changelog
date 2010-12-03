@@ -1,3 +1,10 @@
+guile (1.8.7-2) unstable; urgency=low
+
+  * Do not strip doc from build.
+  * Build using -O2.  Fixes stack overflow with default stack size.
+	
+ -- Jan Nieuwenhuizen <janneke@gnu.org>  Thu, 25 Nov 10:38:25 2010 +0100
+
 guile (1.8.7-1) unstable; urgency=low
 
   * New upstream release.

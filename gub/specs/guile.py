@@ -71,7 +71,7 @@ PATH=/usr/bin:$PATH
         self.dump ('''#!/bin/sh
 exec %(tools_prefix)s/bin/guile "$@"
 ''', "%(srcdir)s/pre-inst-guile.in")
-        self.autopatch ()
+        #self.autopatch ()
         target.AutoBuild.patch (self)
     def autopatch (self):
         self.file_sub ([(r'AC_CONFIG_SUBDIRS\(guile-readline\)', '')],
@@ -135,7 +135,7 @@ class Guile__mingw (Guile):
     configure_variables = (Guile.configure_variables
                            .replace ("':'", "';'")
                 + misc.join_lines ('''
-CFLAGS='-DHAVE_CONFIG_H=1 -I%(builddir)s'
+CFLAGS='-O2 -DHAVE_CONFIG_H=1 -I%(builddir)s'
 '''))
     config_cache_overrides = Guile.config_cache_overrides + '''
 scm_cv_struct_timespec=${scm_cv_struct_timespec=no}
@@ -209,7 +209,7 @@ class Guile__tools (tools.AutoBuild, Guile):
     # Great idea, let's re-check!  You never know... :-)
     compile_flags_native = misc.join_lines ('''
 LD_LIBRARY_PATH=%(system_prefix)s/lib
-CFLAGS='-I%(system_prefix)s/include'
+CFLAGS='-O2 -I%(system_prefix)s/include'
 LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
 ''')
     configure_command = ('LD_LIBRARY_PATH=%(system_prefix)s/lib:${LD_LIBRARY_PATH-/foe} '
@@ -223,7 +223,7 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
                 + Guile.compile_command)
     def patch (self):
         tools.AutoBuild.patch (self)
-        Guile.autopatch (self)
+        #Guile.autopatch (self)
     def install (self):
         tools.AutoBuild.install (self)
         self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.8')
