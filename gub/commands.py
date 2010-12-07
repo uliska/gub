@@ -449,6 +449,7 @@ class CreateShar (SerializedCommand):
         shar_head = self.kwargs['shar_head']
         tarball = self.kwargs['tarball']
         version = self.kwargs['version']
+        target_cpu = self.kwargs['target_cpu']
 
         length = os.stat (tarball)[6]
         base_file = os.path.split (tarball)[1]

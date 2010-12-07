@@ -6,7 +6,6 @@ doc=no
 extract=no
 interactive=yes
 arch=$(uname -m)
-shopt -s nocasematch
 
 if test `id -u` = "0"; then
     root=/usr/local
