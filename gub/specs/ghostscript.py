@@ -219,10 +219,14 @@ class Ghostscript__mingw (Ghostscript):
         Ghostscript.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
         # FIXME: should add to CPPFLAGS...
-        self.target_gcc_flags = '-mms-bitfields -D_Windows -D__WINDOWS__'
+        #self.target_gcc_flags = '-mms-bitfields -D_Windows -D__WINDOWS__'
+        # We certainly do not want gs.exe to open a dos box
+        # We can also compile an gs-console.exe some day
+        self.target_gcc_flags = '-mwindows -mms-bitfields -D_Windows -D__WINDOWS__'
     config_cache_overrides = Ghostscript.config_cache_overrides + '''
 ac_cv_lib_pthread_pthread_create=no
 '''
+    compile_flags = Ghostscript.compile_flags.replace ("XLDFLAGS='", "XLDFLAGS='-mwindows ")
     def patch (self):
         self.symlink('base', self.expand('%(srcdir)s/src'))
         Ghostscript.patch (self)
