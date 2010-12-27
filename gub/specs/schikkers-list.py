@@ -9,6 +9,9 @@ class Schikkers_list (target.PythonBuild):
 '''
     #source = 'git://github.com/janneke/schikkers-list.git'
     source = 'git+file://localhost/home/janneke/vc/schikkers-list'
+    patches = [
+        '0001-Revert-Enable-images-and-toolbar.-Move-patching-out-.patch',
+        ]
     branch = 'master'
     subpackage_names = ['']
     dependencies = [
