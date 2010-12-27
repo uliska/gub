@@ -1,0 +1,81 @@
+From 019e45174e75e114241736a082ad99a25db51634 Mon Sep 17 00:00:00 2001
+From: Jan Nieuwenhuizen <janneke@gnu.org>
+Date: Mon, 27 Dec 2010 11:44:26 +0100
+Subject: [PATCH] Revert "Enable images and toolbar.  Move patching-out to GUB."
+
+This reverts commit 14e9b05d68e37861c99ef2f8956ea76a39b191a3.
+---
+ ikli/edit.scm |   21 ++++++++++++---------
+ ikli/ikli.scm |    3 ++-
+ 2 files changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/ikli/edit.scm b/ikli/edit.scm
+index a4ada36..65ccfd8 100644
+--- a/ikli/edit.scm
++++ b/ikli/edit.scm
+@@ -50,9 +50,10 @@ exec guile-gnome-2 -l $0 -e test "$@"
+ 		  #:modal #t #:destroy-with-parent #t))
+ 	(hbox   (make <gtk-hbox> #:homogeneous #f #:spacing 8))
+ 	(stock  (make <gtk-image> 
+-		  #:stock (gtk-stock-id 'dialog-question)
+-		  #:icon-size (genum->value 
+-			       (make <gtk-icon-size> #:value 'dialog))))
++		;;  #:stock (gtk-stock-id 'dialog-question)
++		;;  #:icon-size (genum->value 
++		;;	       (make <gtk-icon-size> #:value 'dialog))
++		  ))
+ 	(table  (make <gtk-table> #:n-columns 2 #:n-rows 2 #:homogeneous #f))
+ 	(label1 (make <gtk-label> #:label "_Numerator" #:use-underline #t))
+ 	(entry1 (make <gtk-entry>))
+@@ -114,9 +115,10 @@ exec guile-gnome-2 -l $0 -e test "$@"
+ 		  #:modal #t #:destroy-with-parent #t))
+ 	(hbox   (make <gtk-hbox> #:homogeneous #f #:spacing 8))
+ 	(stock  (make <gtk-image>
+-		  #:stock (gtk-stock-id 'dialog-question)
+-		  #:icon-size (genum->value 
+-			       (make <gtk-icon-size> #:value 'dialog))))
++		  ;; #:stock (gtk-stock-id 'dialog-question)
++		  ;; #:icon-size (genum->value 
++		  ;; (make <gtk-icon-size> #:value 'dialog))
++		  ))
+ 	(table  (make <gtk-table> #:n-columns 2 #:n-rows 2 #:homogeneous #f))
+ 	(label1 (make <gtk-label> #:label "_Tonic" #:use-underline #t))
+ 	(entry1 (make <gtk-entry>))
+@@ -220,9 +222,10 @@ exec guile-gnome-2 -l $0 -e test "$@"
+ 		  #:modal #t #:destroy-with-parent #t))
+ 	 (hbox   (make <gtk-hbox> #:homogeneous #f #:spacing 8))
+ 	 (stock  (make <gtk-image>
+-		  #:stock (gtk-stock-id 'dialog-question)
+-		  #:icon-size (genum->value 
+-			       (make <gtk-icon-size> #:value 'dialog))))
++		   ;;#:stock (gtk-stock-id 'dialog-question)
++		   ;; #:icon-size (genum->value 
++		   ;; (make <gtk-icon-size> #:value 'dialog))
++		   ))
+ 	 (table  (make <gtk-table> #:n-columns 2 #:n-rows 2 #:homogeneous #f))
+ 	 (label1 (make <gtk-label> #:label "_indent" #:use-underline #t))
+ 	 (entry1 (make <gtk-entry>))
+diff --git a/ikli/ikli.scm b/ikli/ikli.scm
+index 7c59c41..c420ac3 100644
+--- a/ikli/ikli.scm
++++ b/ikli/ikli.scm
+@@ -72,6 +72,7 @@
+ 		   #:message-type 'info
+ 		   #:buttons 'close
+ 		   )))
++    (set-image dialog (make <gtk-image>))
+     (set-markup dialog text)
+     (connect dialog 'response (lambda (d arg1)
+ 				(gtk-widget-destroy dialog)))
+@@ -276,7 +277,7 @@
+ 
+     (add window vbox)
+     (pack-start vbox (get-widget ui "/MenuBar") #f #f 0)
+-    (pack-start vbox (get-widget ui "/ToolBar") #f #f 0)
++    ;; (pack-start vbox (get-widget ui "/ToolBar") #f #f 0)
+     (if (slot-ref self 'use-cairo)
+ 	(gtk-scrolled-window-add-with-viewport scrolled-window
+ 					       (slot-ref canvas 'widget))
+-- 
+1.7.1
+
