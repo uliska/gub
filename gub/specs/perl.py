@@ -28,7 +28,8 @@ class Perl__tools (tools.AutoBuild):
  -Dlibperl=libperl.so
  -Dcccdlflags=-fPIC
  -Dlocallibpth=/
- -Aldflags='%(rpath)s -lm -lrt -ldl'
+ -Aldflags='%(rpath)s'
+ -Alibs='-lm -lrt -ldl'
 ''')
     def configure (self):
         tools.AutoBuild.configure (self)
