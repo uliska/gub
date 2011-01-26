@@ -49,6 +49,7 @@ prependdir GUILE_LOAD_PATH=$INSTALLER_PREFIX/share/guile-gnome-2
                        '%(install_prefix)s/share/guile/site/gnome-2.scm', must_succeed=True)
 
 class Guile_gnome__mingw (Guile_gnome):
+    make_flags = Guile_gnome.make_flags + 'LDFLAGS=-no-undefined ' + '"CPP=%(toolchain_prefix)sgcc -E "'
     patches = [
         'guile-gnome-mingw.patch',
         ]
