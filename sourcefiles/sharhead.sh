@@ -140,7 +140,7 @@ INSTALLER_PREFIX=${prefix}/usr
 if test -d ${dollar}INSTALLER_PREFIX/lib/gtk-2.0/2.10.0/loaders; then
     export GIO_MODULE_DIR=${dollar}INSTALLER_PREFIX/lib/gio/modules
     export GDK_PIXBUF_MODULEDIR=${dollar}INSTALLER_PREFIX/lib/gtk-2.0/2.10.0/loaders
-    export GDK_PIXBUF_MODULE_FILE=${dollar}INSTALLER_PREFIX/etc/gtk-2.0/gdk-pixbuf.loaders
+##    export GDK_PIXBUF_MODULE_FILE=${dollar}INSTALLER_PREFIX/etc/gtk-2.0/gdk-pixbuf.loaders
     export GTK_DATA_PREFIX=${dollar}INSTALLER_PREFIX/lib/gtk-2.0
     export GTK_EXE_PREFIX=${dollar}INSTALLER_PREFIX
     export GTK_IM_MODULE_FILE=${dollar}INSTALLER_PREFIX/etc/gtk-2.0/gtk.immodules
