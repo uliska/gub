@@ -1,0 +1,22 @@
+--- libunistring-0.9.3/lib/Makefile.am~	2010-05-02 20:38:20.000000000 +0200
++++ libunistring-0.9.3/lib/Makefile.am	2011-01-27 16:37:18.507152710 +0100
+@@ -293,7 +293,7 @@ MOSTLYCLEANFILES += libunistring.res.lo
+ else
+ WOE32_LIBADD =
+ endif
+-libunistring_la_LIBADD       += $(WOE32_LIBADD)
++libunistring_la_LIBADD       += $(WOE32_LIBADD) $(LIBTHREAD)
+ libunistring_la_DEPENDENCIES += $(WOE32_LIBADD)
+ 
+ # Parametrization of the 'relocatable-lib-lgpl' module.
+--- libunistring-0.9.3/lib/Makefile.in~	2010-05-02 23:28:19.000000000 +0200
++++ libunistring-0.9.3/lib/Makefile.in	2011-01-27 16:37:22.867285687 +0100
+@@ -1806,7 +1806,7 @@ libunistring_la_SOURCES = c-ctype.h c-ct
+ 	uniwidth/u32-strwidth.c uniwidth/u32-width.c \
+ 	uniwidth/u8-strwidth.c uniwidth/u8-width.c uniwidth/width.c \
+ 	verify.h xsize.h version.c $(am__append_2)
+-libunistring_la_LIBADD = $(gl_LTLIBOBJS) $(WOE32_LIBADD)
++libunistring_la_LIBADD = $(gl_LTLIBOBJS) $(WOE32_LIBADD) $(LIBTHREAD)
+ libunistring_la_DEPENDENCIES = $(gl_LTLIBOBJS) $(WOE32_LIBADD)
+ EXTRA_libunistring_la_SOURCES = frexp.c frexpl.c iconv_open.c isnan.c \
+ 	isnand.c isnan.c isnanf.c isnan.c isnanl.c malloc.c mbrtowc.c \
