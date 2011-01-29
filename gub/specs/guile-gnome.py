@@ -1,3 +1,6 @@
+import os
+#
+from gub import build
 from gub import target
 from gub import tools
 
@@ -13,6 +16,10 @@ class Guile_gnome (target.AutoBuild):
 #    force_autoupdate = True
     configure_flags = target.AutoBuild.configure_flags + ' --disable-Werror'
     subpackage_names = ['']
+    def __init__ (self, settings, source):
+        target.AutoBuild.__init__ (self, settings, source)
+        build.add_dict (self, {'GUILE_LOAD_COMPILED_PATH': '%(tools_prefix)s/lib/guile/2.0/ccache'})
+        build.add_dict (self, {'LIBRESTRICT_ALLOW': os.environ['HOME'] + '/.cache'})
     def patch (self):
         self.system ('''cd %(srcdir)s && scripts/configure-packages guile-gnome-schikkers''')
         self.dump ('''xgconf-guile-gnome-schikkers: atk cairo defs gconf glib gtk libglade libgnomecanvas pango
@@ -55,4 +62,7 @@ class Guile_gnome__mingw (Guile_gnome):
         ]
 
 class Guile_gnome__tools (tools.AutoBuild, Guile_gnome):
-    pass
+    def __init__ (self, settings, source):
+        tools.AutoBuild.__init__ (self, settings, source)
+        build.add_dict (self, {'GUILE_LOAD_COMPILED_PATH': '%(tools_prefix)s/lib/guile/2.0/ccache'})
+        build.add_dict (self, {'LIBRESTRICT_ALLOW': os.environ['HOME'] + '/.cache'})

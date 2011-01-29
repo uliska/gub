@@ -1,3 +1,6 @@
+import os
+#
+from gub import build
 from gub import target
 from gub import tools
 
@@ -8,7 +11,11 @@ class G_wrap (target.AutoBuild):
         'libffi',
         'tools::g-wrap',
         ]
-    source = 'http://download.savannah.gnu.org/releases/g-wrap/g-wrap-1.9.13.tar.gz'
+    source = 'http://download.savannah.gnu.org/releases/g-wrap/g-wrap-1.9.13.1.tar.gz'
+    def __init__ (self, settings, source):
+        target.AutoBuild.__init__ (self, settings, source)
+        build.add_dict (self, {'GUILE_LOAD_COMPILED_PATH': '%(tools_prefix)s/lib/guile/2.0/ccache'})
+        build.add_dict (self, {'LIBRESTRICT_ALLOW': os.environ['HOME'] + '/.cache'})
     def configure (self):
         target.AutoBuild.configure (self)
         self.file_sub ([('-std=gnu99', '')], '%(builddir)s/guile/g-wrap/Makefile')
@@ -34,6 +41,10 @@ class G_wrap__mingw (G_wrap):
             self.file_sub ([('-Werror', '')], i, must_succeed=True)
 
 class G_wrap__tools (tools.AutoBuild, G_wrap):
+    def __init__ (self, settings, source):
+        tools.AutoBuild.__init__ (self, settings, source)
+        build.add_dict (self, {'GUILE_LOAD_COMPILED_PATH': '%(tools_prefix)s/lib/guile/2.0/ccache'})
+        build.add_dict (self, {'LIBRESTRICT_ALLOW': os.environ['HOME'] + '/.cache'})
     def configure (self):
         tools.AutoBuild.configure (self)
         for i in ('%(builddir)s/guile/g-wrap/Makefile',

@@ -14,8 +14,8 @@ class Guile_config (build.SdkBuild):
 test "$1" = "--version" && echo "%(target_architecture)s-guile-config - Guile version %(version)s"
 #prefix=$(dirname $(dirname $0))
 prefix=%(system_prefix)s
-test "$1" = "compile" && echo "-I$prefix/include"
-test "$1" = "link" && echo "-L$prefix/lib -lguile -lgmp"
+test "$1" = "compile" && echo "-I$prefix/include/guile/2.0"
+test "$1" = "link" && echo "-L$prefix/lib -lguile-2.0 -lgmp"
 test "$1" = "info" && test "$2" = "guileversion" && echo "%(version)s"
 exit 0
 ''',

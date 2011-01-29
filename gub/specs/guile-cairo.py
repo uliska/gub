@@ -3,8 +3,8 @@ from gub import target
 class Guile_cairo (target.AutoBuild):
     source = 'http://download.gna.org/guile-cairo/guile-cairo-1.4.0.tar.gz'
     dependencies = [
-        'cairo',
-        'guile',
+        'cairo-devel',
+        'guile-devel',
         ]
     subpackage_names = ['']
     def install (self):
