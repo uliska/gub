@@ -215,6 +215,7 @@ void initialize (void)
       add_allowed_file ("/dev/null");
       add_allowed_file ("/dev/urandom");
       add_allowed_file ("/proc/self");
+      add_allowed_file ("/proc/stat");
     }
 }
 
