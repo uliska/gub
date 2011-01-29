@@ -70,10 +70,8 @@ PATH=/usr/bin:$PATH
                          + target.AutoBuild.configure_command
                          + guile_configure_flags)
     compile_command = ('export preinstguile=%(tools_prefix)s/bin/guile; '
-                       + 'export LIBRESTRICT_ALLOW=/proc/stat; '
                        + target.AutoBuild.compile_command)
     install_command = ('export preinstguile=%(tools_prefix)s/bin/guile; '
-                       + 'export LIBRESTRICT_ALLOW=/proc/stat; '
                        + target.AutoBuild.install_command)
     subpackage_names = ['doc', 'devel', 'runtime', '']
     @staticmethod
@@ -139,12 +137,9 @@ exec %(tools_prefix)s/bin/guile "$@"
         self.dump ('''\
 #! /bin/sh
 test "$1" = "--version" && echo "%(target_architecture)s-guile-config - Guile version %(version)s"
-#test "$1" = "compile" && echo "-I $%(system_prefix)s/include"
-#test "$1" = "link" && echo "-L%(system_prefix)s/lib -lguile -lgmp"
-#prefix=$(dirname $(dirname $0))
 prefix=%(system_prefix)s
-test "$1" = "compile" && echo "-I$prefix/include"
-test "$1" = "link" && echo "-L$prefix/lib -lguile -lgmp"
+test "$1" = "compile" && echo "-I$prefix/include/guile/2.0"
+test "$1" = "link" && echo "-L$prefix/lib -lguile-2.0 -lgmp"
 test "$1" = "info" && test "$2" = "guileversion" && echo "%(version)s"
 exit 0
 ''',
@@ -189,7 +184,7 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
             self.file_sub ([('-mwindows', '')], libtool)
     def patch (self):
         Guile.patch (self)
-        self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files alignof alloca-opt announce-gen autobuild byteswap canonicalize-lgpl duplocale environ extensions flock fpieee full-read full-write func gendocs getaddrinfo git-version-gen gitlog-to-changelog gnu-web-doc-update gnupload havelib iconv_open-utf inet_ntop inet_pton isinf isnan lib-symbol-versions lib-symbol-visibility libunistring locale maintainer-makefile nproc putenv stat-time stdlib strcase strftime striconveh string sys_stat verify version-etc-fsf vsnprintf warnings     accept bind close connect getpeername getsockname getsockopt listen malloc malloca recv recv recvfrom send sendto setsockopt shutdown socket sockets || :')
+        self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files alignof alloca-opt announce-gen autobuild byteswap canonicalize-lgpl duplocale environ extensions flock fpieee full-read full-write func gendocs getaddrinfo git-version-gen gitlog-to-changelog gnu-web-doc-update gnupload havelib iconv_open-utf inet_ntop inet_pton isinf isnan lib-symbol-versions lib-symbol-visibility libunistring locale maintainer-makefile nproc putenv stat-time stdlib strcase strftime striconveh string sys_stat verify version-etc-fsf vsnprintf warnings     accept bind close connect getpeername getsockname getsockopt listen recv recv recvfrom send sendto setsockopt shutdown socket || :')
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?
         self.system ('''cd %(builddir)s/libguile &&make %(compile_flags_native)sgen-scmconfig guile_filter_doc_snarfage.exe''')
@@ -197,8 +192,6 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
         Guile.compile (self)
     def install (self):
         Guile.install (self)
-        # dlopen-able .la files go in BIN dir, BIN OR LIB package
-        self.system ('''mv %(install_prefix)s/lib/lib*[0-9].la %(install_prefix)s/bin''')
         self.system ('''cd %(install_prefix)s/bin && cp guile.exe guile-windows.exe''')
 
 class Guile__linux (Guile):
