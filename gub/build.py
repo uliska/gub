@@ -337,6 +337,8 @@ class AutoBuild (Build):
         return [
             '%(tools_prefix)s/share/aclocal',
             '%(system_prefix)s/share/aclocal',
+            #'%(srcdir)s/m4', TODO
+            #'%(srcdir)s',
             ]
     @context.subst_method
     def job_spec (self):

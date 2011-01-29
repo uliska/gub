@@ -1,0 +1,23 @@
+--- guile-1.9.14/meta/guile.in~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/meta/guile.in	2011-01-29 13:31:24.227563342 +0100
+@@ -45,7 +45,8 @@ XDG_CACHE_HOME=${top_builddir}/cache
+ export XDG_CACHE_HOME
+ 
+ # do it
+-exec ${top_builddir}/meta/uninstalled-env $GUILE "$@"
++#exec ${top_builddir}/meta/uninstalled-env $GUILE "$@"
++exec @GUILE_FOR_BUILD@ "$@"
+ 
+ # never reached
+ exit 1
+--- guile-1.9.14/Makefile.am~	2010-12-14 19:15:16.000000000 +0100
++++ guile-1.9.14/Makefile.am	2011-01-29 15:36:05.312047266 +0100
+@@ -32,8 +32,6 @@ SUBDIRS =					\
+ 	guile-readline				\
+ 	examples				\
+ 	emacs					\
+-	test-suite				\
+-	benchmark-suite				\
+ 	am					\
+ 	doc
+ 

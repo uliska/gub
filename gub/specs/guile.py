@@ -11,11 +11,25 @@ from gub import tools
 class Guile (target.AutoBuild):
     # source = 'git://git.sv.gnu.org/guile.git&branch=branch_release-1-8&revision=bba579611b3671c7e4c1515b100f01c048a07935'
     source = 'http://ftp.gnu.org/pub/gnu/guile/guile-1.8.7.tar.gz'
-    patches = ['guile-reloc-1.8.6.patch',
-               'guile-cexp.patch',
-               'guile-1.8.6-test-use-srfi.patch',
-               'guile-1.8.7-doc-snarfing.patch']
-    dependencies = ['gettext-devel', 'gmp-devel', 'libtool', 'tools::guile']
+    source = 'http://alpha.gnu.org/gnu/guile/guile-1.9.14.tar.gz'
+    patches = [
+        #'guile-reloc-1.8.6.patch',
+        'guile-1.9.14-reloc.patch',
+        #'guile-cexp.patch',
+        'guile-1.8.6-test-use-srfi.patch',
+        #'guile-1.8.7-doc-snarfing.patch',
+        'guile-1.9.14-configure-cross.patch',
+        'guile-1.9.14-cross.patch',
+        ]
+    force_autoupdate = True
+    dependencies = [
+        'gettext-devel',
+        'gmp-devel',
+        'libtool',
+        'tools::guile',
+        'libunistring',
+        'libgc',
+        ]
     guile_configure_flags = misc.join_lines ('''
 --without-threads
 --with-gnu-ld
@@ -24,6 +38,7 @@ class Guile (target.AutoBuild):
 --disable-error-on-warning
 --enable-relocation
 --enable-rpath
+--with-pic
 ''')
     configure_variables = (target.AutoBuild.configure_variables
                            + misc.join_lines ('''
@@ -45,14 +60,21 @@ PATH=/usr/bin:$PATH
     # without setting the proper LD_LIBRARY_PATH.
     compile_flags_native = (' LD_PRELOAD= '
                             + ' LD_LIBRARY_PATH=%(tools_prefix)s/lib:${LD_LIBRARY_PATH-/foe} '
+                            + ' CFLAGS="-I%(srcdir)s -I%(builddir)s -DHAVE_CONFIG_H=1"'
+                            + ' LIBFFI_CFLAGS='
+                            + ' LDFLAGS='
                             + ' cross_compiling=yes ')
     # FIXME: guile runs gen_scmconfig [when not x-building also guile]
     # without setting the proper LD_LIBRARY_PATH.
     configure_command = ('GUILE_FOR_BUILD=%(tools_prefix)s/bin/guile '
                          + target.AutoBuild.configure_command
                          + guile_configure_flags)
-    compile_command = ('preinstguile=%(tools_prefix)s/bin/guile '
+    compile_command = ('export preinstguile=%(tools_prefix)s/bin/guile; '
+                       + 'export LIBRESTRICT_ALLOW=/proc/stat; '
                        + target.AutoBuild.compile_command)
+    install_command = ('export preinstguile=%(tools_prefix)s/bin/guile; '
+                       + 'export LIBRESTRICT_ALLOW=/proc/stat; '
+                       + target.AutoBuild.install_command)
     subpackage_names = ['doc', 'devel', 'runtime', '']
     @staticmethod
     def version_from_VERSION (self):
@@ -73,6 +95,12 @@ exec %(tools_prefix)s/bin/guile "$@"
 ''', "%(srcdir)s/pre-inst-guile.in")
         #self.autopatch ()
         target.AutoBuild.patch (self)
+        self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
+    def autoupdate (self):
+        self.system ('cd %(srcdir)s && autoreconf')
+        # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
+        # arbiters.c:(.text+0x0): multiple definition of `__gmpz_abs'
+        self.file_sub ([('-std=gnu99', ''),('-std=c99', '')], '%(srcdir)s/configure')
     def autopatch (self):
         self.file_sub ([(r'AC_CONFIG_SUBDIRS\(guile-readline\)', '')],
                        '%(srcdir)s/configure.in')
@@ -129,15 +157,25 @@ class Guile__mingw (Guile):
         Guile.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
         self.target_gcc_flags = '-mms-bitfields'
-    dependencies = Guile.dependencies +  ['regex-devel']
+    patches = Guile.patches + [
+        'guile-1.9.14-mingw.patch',
+        ]
+    dependencies = (Guile.dependencies
+                    + [
+            'regex-devel',
+            'mingw-extras',
+            ])
     configure_flags = (Guile.configure_flags
                        + ' --without-threads')
     configure_variables = (Guile.configure_variables
                            .replace ("':'", "';'")
                 + misc.join_lines ('''
 CFLAGS='-O2 -DHAVE_CONFIG_H=1 -I%(builddir)s'
+LIBS='-lgc -lmingw-extras'
 '''))
     config_cache_overrides = Guile.config_cache_overrides + '''
+gl_cv_socket_ipv6=no
+guile_cv_have_ipv6=no
 scm_cv_struct_timespec=${scm_cv_struct_timespec=no}
 guile_cv_func_usleep_declared=${guile_cv_func_usleep_declared=yes}
 guile_cv_exeext=${guile_cv_exeext=}
@@ -149,6 +187,9 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
         Guile.configure (self)
         for libtool in ['%(builddir)s/libtool']: # readline patched-out: '%(builddir)s/guile-readline/libtool']:
             self.file_sub ([('-mwindows', '')], libtool)
+    def patch (self):
+        Guile.patch (self)
+        self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files alignof alloca-opt announce-gen autobuild byteswap canonicalize-lgpl duplocale environ extensions flock fpieee full-read full-write func gendocs getaddrinfo git-version-gen gitlog-to-changelog gnu-web-doc-update gnupload havelib iconv_open-utf inet_ntop inet_pton isinf isnan lib-symbol-versions lib-symbol-visibility libunistring locale maintainer-makefile nproc putenv stat-time stdlib strcase strftime striconveh string sys_stat verify version-etc-fsf vsnprintf warnings     accept bind close connect getpeername getsockname getsockopt listen malloc malloca recv recv recvfrom send sendto setsockopt shutdown socket sockets || :')
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?
         self.system ('''cd %(builddir)s/libguile &&make %(compile_flags_native)sgen-scmconfig guile_filter_doc_snarfage.exe''')
@@ -199,7 +240,13 @@ class Guile__linux__x86 (Guile):
 
 class Guile__tools (tools.AutoBuild, Guile):
     dependencies = (Guile.dependencies
-                    + ['autoconf', 'automake', 'gettext', 'flex', 'libtool'])
+                    + [
+                'autoconf',
+                'automake',
+                'gettext',
+                'flex',
+                'libtool'
+                ])
     make_flags = Guile.make_flags
     # Doing make gen-scmconfig, guile starts a configure recheck:
     #    cd .. && make  am--refresh
@@ -224,9 +271,15 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
     def patch (self):
         tools.AutoBuild.patch (self)
         #Guile.autopatch (self)
+        self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
+    def autoupdate (self):
+        self.system ('cd %(srcdir)s && autoreconf')
+        # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
+        # arbiters.c:(.text+0x0): multiple definition of `__gmpz_abs'
+        self.file_sub ([('-std=gnu99', ''),('-std=c99', '')], '%(srcdir)s/configure')
     def install (self):
         tools.AutoBuild.install (self)
-        self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.8')
-        self.file_sub ([('[(]string-join other-flags[)]', '(string-join (filter (lambda (x) (not (equal? x "-L/usr/lib"))) other-flags))')],
-                       '%(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin/guile-config',
-                       must_succeed=True)
+        self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.9')
+#        self.file_sub ([('[(]string-join other-flags[)]', '(string-join (filter (lambda (x) (not (equal? x "-L/usr/lib"))) other-flags))')],
+#                       '%(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin/guile-config',
+#                       must_succeed=True)
