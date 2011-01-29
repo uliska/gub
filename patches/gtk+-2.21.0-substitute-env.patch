@@ -8,6 +8,29 @@
  #include <stdlib.h>
  #include <stdio.h>
  #include <string.h>
+@@ -226,6 +227,22 @@
+ 	return !(*p == '\0');
+ }
+   
++static char const*
++slashify (char const *pos)
++{
++#ifdef G_OS_WIN32
++	char *p = (char*)pos;
++	
++	while (*p)
++	{
++		if (*p == '\\')
++			*p = '/';
++		p++;
++	}
++#endif /* G_OS_WIN32 */
++	return pos;
++}
++
+ #ifdef G_OS_WIN32
+ 
+ /* DllMain function needed to tuck away the gdk-pixbuf DLL handle */
 @@ -288,33 +288,87 @@ get_sysconfdir (void)
  #undef GTK_SYSCONFDIR
  #define GTK_SYSCONFDIR get_sysconfdir()

@@ -5,7 +5,7 @@ from gub import target
 from gub import w32
 
 class Glib (target.AutoBuild):
-    source = 'http://ftp.gnome.org/pub/GNOME/platform/2.26/2.26.3/sources/glib-2.20.4.tar.gz'
+    source = 'http://ftp.gnome.org/pub/GNOME/platform/2.27/2.27.91/sources/glib-2.21.5.tar.gz'
     ##source = 'http://ftp.gnome.org/pub/GNOME/platform/2.25/2.25.5/sources/glib-2.19.5.tar.gz'
     dependencies = ['tools::glib', 'tools::libtool', 'gettext-devel']
     config_cache_overrides = target.AutoBuild.config_cache_overrides + '''

@@ -1,7 +1,9 @@
 from gub import misc
 
 #VERSION='2.25.5'
+#VERSION='2.26.3'
 VERSION='2.26.3'
+VERSION='2.27.91'
 
 def platform_url (name, version=VERSION):
     major, minor, micro = version.split ('.')
