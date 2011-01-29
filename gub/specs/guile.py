@@ -27,9 +27,9 @@ class Guile (target.AutoBuild):
         'gettext-devel',
         'gmp-devel',
         'libtool',
-        'tools::guile',
         'libunistring',
         'libgc',
+        'tools::guile',
         ]
     guile_configure_flags = misc.join_lines ('''
 --without-threads
@@ -233,6 +233,7 @@ class Guile__linux__x86 (Guile):
     patches = Guile.patches + ['guile-1.8.6-pthreads-cross.patch']
 
 class Guile__tools (tools.AutoBuild, Guile):
+    patches = []
     dependencies = (Guile.dependencies
                     + [
                 'autoconf',
@@ -261,7 +262,8 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
     # FIXME: when not x-building, guile runs gen_scmconfig, guile without
     # setting the proper LD_LIBRARY_PATH.
     compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib:${LD_LIBRARY_PATH-/foe};'
-                + Guile.compile_command)
+                + tools.AutoBuild.compile_command)
+    install_command = tools.AutoBuild.install_command
     def patch (self):
         tools.AutoBuild.patch (self)
         #Guile.autopatch (self)
