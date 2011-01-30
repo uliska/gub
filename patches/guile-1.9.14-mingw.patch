@@ -80,3 +80,17 @@
  
  #endif
  
+--- guile-1.9.14/libguile/objcodes.c~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/libguile/objcodes.c	2011-01-30 14:54:56.075069344 +0100
+@@ -70,7 +70,11 @@ make_objcode_by_mmap (int fd)
+     scm_misc_error (FUNC_NAME, "object file too small (~a bytes)",
+ 		    scm_list_1 (SCM_I_MAKINUM (st.st_size)));
+ 
++#ifndef __MINGW32__
+   addr = mmap (0, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
++#else
++  addr = mmap (0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
++#endif
+   if (addr == MAP_FAILED)
+     {
+       (void) close (fd);

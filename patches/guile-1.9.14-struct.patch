@@ -1,0 +1,10 @@
+--- guile-1.9.14/libguile/struct.c~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/libguile/struct.c	2011-01-29 23:52:07.561965615 +0100
+@@ -23,6 +23,7 @@
+ 
+ #include <alloca.h>
+ #include <assert.h>
++#include <stdarg.h>
+ 
+ #include "libguile/_scm.h"
+ #include "libguile/async.h"

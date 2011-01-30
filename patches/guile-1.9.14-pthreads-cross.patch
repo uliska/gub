@@ -1,0 +1,11 @@
+--- guile-1.9.14/configure.ac~	2011-01-29 21:52:28.240527802 +0100
++++ guile-1.9.14/configure.ac	2011-01-29 22:43:58.874639272 +0100
+@@ -1427,7 +1427,7 @@ if test "$cross_compiling" = "no"; then
+   [works=yes
+    AC_DEFINE([PTHREAD_ATTR_GETSTACK_WORKS], [1], [Define when pthread_att_get_stack works for the main thread])],
+   [works=no],
+-  [])
++  [works=$ac_cv_pthread_attr_getstack_works])
+ else
+   works="assuming it doesn't"
+ fi

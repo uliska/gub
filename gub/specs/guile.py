@@ -100,6 +100,8 @@ exec %(tools_archmatch_prefix)s/bin/guile "$@"
         # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
         # arbiters.c:(.text+0x0): multiple definition of `__gmpz_abs'
         self.file_sub ([('-std=gnu99', ''),('-std=c99', '')], '%(srcdir)s/configure')
+        self.file_sub ([('cross_compiling=(maybe|no|yes)',
+                         'cross_compiling=yes')], '%(srcdir)s/configure')
     def autopatch (self):
         self.file_sub ([(r'AC_CONFIG_SUBDIRS\(guile-readline\)', '')],
                        '%(srcdir)s/configure.in')
@@ -155,6 +157,7 @@ class Guile__mingw (Guile):
         self.target_gcc_flags = '-mms-bitfields'
     patches = Guile.patches + [
         'guile-1.9.14-mingw.patch',
+        'guile-1.9.14-gnulib-mingw.patch',
         ]
     dependencies = (Guile.dependencies
                     + [
@@ -197,7 +200,7 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
 
 class Guile__linux (Guile):
     compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:$LD_LIBRARY_PATH;'
-                + Guile.compile_command)
+                       + Guile.compile_command)
 
 class Guile__linux__ppc (Guile__linux):
     config_cache_overrides = Guile__linux.config_cache_overrides + '''
@@ -211,7 +214,7 @@ guile_cv_use_csqrt="no"
 '''
 
 class Guile__darwin (Guile):
-    patches = Guile.patches + ['guile-1.8.6-pthreads-cross.patch']
+    patches = Guile.patches + ['guile-1.9.14-pthreads-cross.patch']
     def install (self):
         Guile.install (self)
         def dylib_link (logger, fname):
@@ -230,7 +233,12 @@ class Guile__darwin__x86 (Guile__darwin):
         Guile__darwin.configure (self)
 
 class Guile__linux__x86 (Guile):
-    patches = Guile.patches + ['guile-1.8.6-pthreads-cross.patch']
+    patches = Guile.patches + [
+        'guile-1.9.14-pthreads-cross.patch',
+        'guile-1.9.14-struct.patch',
+        ]
+    compile_flags_native = (Guile.compile_flags_native +
+                            'CPATH="%(srcdir)s:%(builddir)s:%(system_prefix)s/include" ')
 
 class Guile__tools (tools.AutoBuild, Guile):
     patches = []

@@ -1,0 +1,94 @@
+--- guile-1.9.14/lib/canonicalize-lgpl.c~	2011-01-30 15:05:32.398689016 +0100
++++ guile-1.9.14/lib/canonicalize-lgpl.c	2011-01-30 15:06:45.112470403 +0100
+@@ -76,6 +76,9 @@
+ #endif
+ 
+ #if !FUNC_REALPATH_WORKS || defined _LIBC
++
++#ifndef __MINGW32__
++
+ /* Return the canonical absolute name of file NAME.  A canonical name
+    does not contain any `.', `..' components nor any repeated path
+    separators ('/') or symlinks.  All path components must exist.  If
+@@ -334,6 +337,81 @@ error:
+   }
+   return NULL;
+ }
++
++#else /* __MINGW32__ */
++#include <direct.h>
++#include <windows.h>
++
++static char const*
++slashify (char const *str)
++{
++  char *p = (char*)str;
++  
++  while (*p)
++    {
++      if (*p == '\\')
++	*p = '/';
++      p++;
++    }
++  return str;
++}
++
++char *
++__realpath (const char *name, char *resolved)
++{
++  char *rpath = NULL;
++
++  if (name == NULL)
++    {
++      /* As per Single Unix Specification V2 we must return an error if
++         either parameter is a null pointer.  We extend this to allow
++         the RESOLVED parameter to be NULL in case the we are expected to
++         allocate the room for the return value.  */
++      __set_errno (EINVAL);
++      return NULL;
++    }
++
++  if (name[0] == '\0')
++    {
++      /* As per Single Unix Specification V2 we must return an error if
++         the name argument points to an empty string.  */
++      __set_errno (ENOENT);
++      return NULL;
++    }
++
++  if (resolved == NULL)
++    {
++      rpath = malloc (PATH_MAX + 1);
++      if (rpath == NULL)
++        {
++          /* It's easier to set errno to ENOMEM than to rely on the
++             'malloc-posix' gnulib module.  */
++          errno = ENOMEM;
++          return NULL;
++        }
++    }
++  else
++    rpath = resolved;
++
++  strncpy (rpath, name, PATH_MAX);
++  size_t len = strlen (name);
++  if (len > PATH_MAX)
++    len = PATH_MAX;
++  rpath[len] = '\0';
++  
++  slashify (rpath);
++  struct stat st;
++  if (lstat (rpath, &st) < 0)
++    {
++      if (resolved == NULL)
++	free (rpath);
++      return NULL;
++    }
++  return rpath;
++}
++
++#endif /* __MINGW32__ */
++
+ versioned_symbol (libc, __realpath, realpath, GLIBC_2_3);
+ #endif /* !FUNC_REALPATH_WORKS || defined _LIBC */
+ 

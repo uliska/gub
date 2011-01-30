@@ -74,7 +74,7 @@ diff --git a/libguile/load.c b/libguile/load.c
 index 3e702c4..2341daf 100644
 --- a/libguile/load.c
 +++ b/libguile/load.c
-@@ -195,6 +195,59 @@ SCM_DEFINE (scm_parse_path, "parse-path", 1, 1, 0,
+@@ -195,6 +195,72 @@ SCM_DEFINE (scm_parse_path, "parse-path", 1, 1, 0,
  }
  #undef FUNC_NAME
  
@@ -130,17 +130,33 @@ index 3e702c4..2341daf 100644
 +    
 +  return scm_list_1 (datadir);
 +}
++
++SCM
++scm_init_argv0_compiled_relocation (char const* argv0)
++{
++  SCM bindir = scm_dirname (scm_from_locale_string (argv0));
++  SCM prefix = scm_dirname (bindir);
++  SCM pkglibdir = scm_string_append (scm_list_2 (prefix,
++						 scm_from_locale_string ("/lib/guile")));
++  SCM ccachedir = scm_string_append (scm_list_2 (pkglibdir,
++						 scm_from_locale_string ("/" GUILE_EFFECTIVE_VERSION "/ccache")));
++
++  return scm_list_1 (ccachedir);
++}
 +#endif /* ARGV0_RELOCATION */
  
  /* Initialize the global variable %load-path, given the value of the
     SCM_SITE_DIR and SCM_LIBRARY_DIR preprocessor symbols and the
-@@ -215,6 +268,11 @@ scm_init_load_path ()
+@@ -215,6 +268,14 @@ scm_init_load_path ()
    if (env)
      path = scm_parse_path (scm_from_locale_string (env), path);
  
 +#if ARGV0_RELOCATION
 +  if (global_argv0)
-+    path = scm_append (scm_list_2 (path, scm_init_argv0_relocation (global_argv0)));
++    {
++      path = scm_append (scm_list_2 (path, scm_init_argv0_relocation (global_argv0)));
++      cpath = scm_append (scm_list_2 (cpath, scm_init_argv0_compiled_relocation (global_argv0)));
++    }
 +#endif /* __CYGWIN__ || __MINGW32__ */
 +  
    *scm_loc_load_path = path;
@@ -148,13 +164,14 @@ index 3e702c4..2341daf 100644
  
 --- a/libguile/load.h~	2010-12-14 19:15:17.000000000 +0100
 +++ a/libguile/load.h	2011-01-26 17:33:13.797510681 +0100
-@@ -27,6 +27,10 @@
+@@ -27,6 +27,11 @@
  
  
  SCM_API SCM scm_parse_path (SCM path, SCM tail);
 +#if ARGV0_RELOCATION
 +SCM_API void scm_c_argv0_relocation (char const *argv0);
 +SCM_API SCM scm_init_argv0_relocation (char const* argv0);
++SCM_API SCM scm_init_argv0_compiled_relocation (char const* argv0);
 +#endif
  SCM_API SCM scm_primitive_load (SCM filename);
  SCM_API SCM scm_c_primitive_load (const char *filename);
