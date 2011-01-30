@@ -25,7 +25,7 @@ class G_wrap (target.AutoBuild):
         target.AutoBuild.install (self)
         self.dump ('''
 (define (get-prefix-dir) (dirname (dirname (car (command-line)))))
-(define *g-wrap-shlib* (string-append (get-prefix-dir) "/lib/g-wrap/modules/"))
+(define *g-wrap-shlib-dir* (string-append (get-prefix-dir) "/lib/g-wrap/modules/"))
 ''',
                    '%(install_prefix)s/share/guile/site/g-wrap/config.scm',
                    mode='a')
