@@ -162,7 +162,7 @@ class LilyPond__mingw (LilyPond):
             ]
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
     make_flags = (LilyPond.make_flags
-                  + ' LDFLAGS="%(python_lib)s"'  % locals ())
+                  + ' LDFLAGS="%(python_lib)s -lgc"'  % locals ())
     # ugh Python hack: C&P Cygwin
     def compile (self):
         self.system ('''
@@ -171,7 +171,7 @@ cd %(builddir)s/lily && rm -f out/lilypond
         LilyPond.compile (self)
         self.system ('''
 cd %(builddir)s/lily && mv out/lilypond out/lilypond-console
-cd %(builddir)s/lily && make MODULE_LDFLAGS='-mwindows'
+cd %(builddir)s/lily && make MODULE_LDFLAGS='-mwindows' LDFLAGS=-lgc
 cd %(builddir)s/lily && mv out/lilypond out/lilypond-windows
 cd %(builddir)s/lily && touch out/lilypond
 ''')
