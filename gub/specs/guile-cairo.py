@@ -7,6 +7,7 @@ class Guile_cairo (target.AutoBuild):
         'guile-devel',
         ]
     subpackage_names = ['']
+    make_flags = target.AutoBuild.make_flags + '"CPP=%(toolchain_prefix)sgcc -E "'
     def install (self):
         target.AutoBuild.install (self)
         self.dump ('''
@@ -15,7 +16,3 @@ class Guile_cairo (target.AutoBuild):
 ''',
                    '%(install_prefix)s/share/guile/site/cairo/config.scm',
                    mode='a')
-
-class Guile_cairo__mingw (Guile_cairo):
-    make_flags = Guile_cairo.make_flags + '"CPP=%(toolchain_prefix)sgcc -E "'
-
