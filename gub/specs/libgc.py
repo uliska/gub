@@ -3,8 +3,12 @@ from gub import tools
 
 class Libgc (target.AutoBuild):
     source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc-7.1.tar.gz'
-    configure_flags = target.AutoBuild.configure_flags + ' --enable-threads=pthreads'
+    configure_flags = target.AutoBuild.configure_flags + '--enable-threads=pthreads '
     #source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc6.8.tar.gz&version=6.8'
+
+class Libgc__linux (Libgc):
+    configure_flags = (Libgc.configure_flags
+                       + 'CFLAGS=-fno-stack-protector ')
 
 class Libgc__freebsd (Libgc):
     make_flags = 'THREADDLLIBS=-pthread'
