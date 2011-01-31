@@ -43,6 +43,9 @@ prependdir PATH=$INSTALLER_PREFIX/bin
         self.system ('cd %(install_prefix)s/bin && cp -pv ikli schikkers-list')
 
 class Schikkers_list__mingw (Schikkers_list):
+    dependencies = Schikkers_list.dependencies + [
+        'guile-glib-spawn',
+        ]
     def install (self):
         Schikkers_list.install (self)
         self.system ('cd %(install_prefix)s/bin && cp -pv ikli run-ikli.scm')
