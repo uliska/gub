@@ -187,8 +187,8 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
         for libtool in ['%(builddir)s/libtool']: # readline patched-out: '%(builddir)s/guile-readline/libtool']:
             self.file_sub ([('-mwindows', '')], libtool)
     def patch (self):
-        Guile.patch (self)
         self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files alignof alloca-opt announce-gen autobuild byteswap canonicalize-lgpl duplocale environ extensions flock fpieee full-read full-write func gendocs getaddrinfo git-version-gen gitlog-to-changelog gnu-web-doc-update gnupload havelib iconv_open-utf inet_ntop inet_pton isinf isnan lib-symbol-versions lib-symbol-visibility libunistring locale maintainer-makefile nproc putenv stat-time stdlib strcase strftime striconveh string sys_stat verify version-etc-fsf vsnprintf warnings     accept bind close connect getpeername getsockname getsockopt listen recv recv recvfrom send sendto setsockopt shutdown socket || :')
+        Guile.patch (self)
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?
         self.system ('''cd %(builddir)s/libguile &&make %(compile_flags_native)sgen-scmconfig guile_filter_doc_snarfage.exe''')
