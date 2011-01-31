@@ -158,6 +158,7 @@ class Guile__mingw (Guile):
     patches = Guile.patches + [
         'guile-1.9.14-mingw.patch',
         'guile-1.9.14-gnulib-mingw.patch',
+        'guile-1.9.14-mingw-dirent.patch',
         ]
     dependencies = (Guile.dependencies
                     + [
