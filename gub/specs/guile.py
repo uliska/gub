@@ -57,6 +57,9 @@ PATH=/usr/bin:$PATH
 -I.
 -I%(srcdir)s/libguile"
 '''))
+    config_cache_overrides = target.AutoBuild.config_cache_overrides + '''
+gl_cv_func_svid_putenv=yes
+'''
     # FIXME: guile runs gen_scmconfig [when not x-building also guile]
     # without setting the proper LD_LIBRARY_PATH.
     compile_flags_native = (' LD_PRELOAD= '
