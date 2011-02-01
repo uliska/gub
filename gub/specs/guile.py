@@ -131,8 +131,13 @@ exec %(tools_archmatch_prefix)s/bin/guile "$@"
         self.update_libtool ()
         target.AutoBuild.install (self)
         majmin_version = '.'.join (self.expand ('%(version)s').split ('.')[0:2])
+        majmin_version = '2.0'
         
-        self.dump ("prependdir GUILE_LOAD_PATH=$INSTALLER_PREFIX/share/guile/%(majmin_version)s\n",
+        self.dump ('''
+prependdir GUILE_LOAD_PATH=$INSTALLER_PREFIX/share/guile/%(majmin_version)s
+prependdir GUILE_LOAD_PATH=$INSTALLER_PREFIX/share/guile/site
+prependdir GUILE_LOAD_COMPILED_PATH=$INSTALLER_PREFIX/lib/guile/%(majmin_version)s/ccache
+''',
                    '%(install_prefix)s/etc/relocate/guile.reloc',
                    env=locals ())
         version = self.expand ('%(version)s')
@@ -169,8 +174,10 @@ class Guile__mingw (Guile):
                        + ' --without-threads')
     configure_variables = (Guile.configure_variables
                            .replace ("':'", "';'")
+###we're debugging here
+###CFLAGS='-O2 -DHAVE_CONFIG_H=1 -I%(builddir)s'
                 + misc.join_lines ('''
-CFLAGS='-O2 -DHAVE_CONFIG_H=1 -I%(builddir)s'
+CFLAGS='-g -DHAVE_CONFIG_H=1 -I%(builddir)s'
 LIBS='-lgc -lmingw-extras'
 '''))
     config_cache_overrides = Guile.config_cache_overrides + '''
