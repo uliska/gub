@@ -270,8 +270,8 @@ Function create_shortcuts
 	;; Start menu
 	CreateDirectory "$SMPROGRAMS\Schikkers-List"
 	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List.lnk" \
-		"$INSTDIR\usr\bin\guile-windows.exe" '-e main "$INSTDIR\usr\bin\ikli"' SW_SHOWNORMAL\
-		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0
+		"$INSTDIR\usr\bin\schikkers-list.scm" ""\
+ 		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
 	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List Website.lnk" \
 		"http://schikkers-list.org/" "" \
 		"firefox.exe" 0
@@ -288,8 +288,8 @@ Function create_shortcuts
 	ReadRegStr $R0 HKLM \
 		"SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 	CreateShortCut "$DESKTOP\Schikkers-List.lnk" \
-		"$INSTDIR\usr\bin\guile-windows.exe" '-e main "$INSTDIR\usr\bin\ikli"' \
-		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
+		"$INSTDIR\usr\bin\schikkers-list.scm" ""\
+ 		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
 FunctionEnd
 
 Function registry_python
