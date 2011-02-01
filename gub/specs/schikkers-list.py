@@ -39,7 +39,10 @@ prependdir PATH=$INSTALLER_PREFIX/bin
 ''',
                    '%(install_prefix)s/etc/relocate/schikkers-list.reloc',
                    env=locals ())
-        self.file_sub ([(' guile-gnome-2 ', ' guile ')], '%(install_prefix)s/bin/ikli', must_succeed=True)
+        self.file_sub ([(' guile-gnome-2 ', ' $(dirname $0)/guile '),
+                        (' -L [$][(]dirname [$]0[)]', ''),
+                        ],
+                       '%(install_prefix)s/bin/ikli', must_succeed=True)
         self.system ('cd %(install_prefix)s/bin && cp -pv ikli schikkers-list')
 
 class Schikkers_list__mingw (Schikkers_list):
