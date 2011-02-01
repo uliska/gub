@@ -22,10 +22,13 @@ class Libgc__mingw (Libgc):
         'pthreads-w32',
         ]
     patches = [
-        'libgc-6.8-mingw-pthreads.patch',
+        #'libgc-6.8-mingw-pthreads.patch',
+        #'libgc-7.2-mingw-pthreads.patch',
+        'libgc-7.2-mingw-threads.patch',
         ]
     force_autoupdate = True
-    source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc6.8.tar.gz&version=6.8'
+    #source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc6.8.tar.gz&version=6.8'
+    source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc-7.2alpha4.tar.gz&version=7.2.4'
 
 class Libgc (tools.AutoBuild, Libgc):
     pass

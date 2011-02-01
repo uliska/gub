@@ -1,0 +1,17 @@
+--- libgc-7.2.4/configure.ac~	2011-01-31 23:19:46.556212301 +0100
++++ libgc-7.2.4/configure.ac	2011-01-31 23:22:07.347644925 +0100
+@@ -197,6 +197,14 @@ case "$THREADS" in
+ 	THREADDLLIBS=""
+ 	win32_threads=true
+ 	;;
++     *-*-mingw*)
++	AC_DEFINE(GC_THREADS)
++        if test "${enable_parallel_mark}" = yes; then
++	  AC_DEFINE(PARALLEL_MARK)
++	fi
++	AC_DEFINE(THREAD_LOCAL_ALLOC)
++	THREADDLLIBS="-lpthread"
++	;;
+      *-*-darwin*)
+ 	AC_DEFINE(GC_DARWIN_THREADS)
+ 	AC_DEFINE(THREAD_LOCAL_ALLOC)
