@@ -1,6 +1,27 @@
---- guile-1.9.14/lib/canonicalize-lgpl.c~	2011-01-30 15:05:32.398689016 +0100
-+++ guile-1.9.14/lib/canonicalize-lgpl.c	2011-01-30 15:06:45.112470403 +0100
-@@ -76,6 +76,9 @@
+From e8f8f8dc840bfd2c960f86a5e6799420ec755e8c Mon Sep 17 00:00:00 2001
+From: Jan Nieuwenhuizen <janneke@gnu.org>
+Date: Tue, 1 Feb 2011 14:47:50 +0100
+Subject: [PATCH 6/6] canonicalize-lgpl: Add an implementation for canonicalize_file_name.
+
+2011-02-01  Jan Nieuwenhuizen  <janneke@gnu.org>
+
+	* lib/canonicalize-lgpl.c (__realpath)[__MINGW32__]: Add an
+	implementation for canonicalize_file_name.  This marked the first
+	running of guile.exe (1.9) in wine.
+
+	* tests/test-canonicalize-lgpl.c (main)[__MINGW32__]: Do not abort
+	on `nonexistent/..'; in Windows that works fine.
+---
+ ChangeLog                      |    9 ++++
+ lib/canonicalize-lgpl.c        |   87 ++++++++++++++++++++++++++++++++++++++++
+ tests/test-canonicalize-lgpl.c |    8 ++++
+ 3 files changed, 104 insertions(+), 0 deletions(-)
+
+diff --git a/lib/canonicalize-lgpl.c b/lib/canonicalize-lgpl.c
+index 9bfb44f..3c22195 100644
+--- a/lib/canonicalize-lgpl.c
++++ b/lib/canonicalize-lgpl.c
+@@ -84,6 +84,9 @@
  #endif
  
  #if !FUNC_REALPATH_WORKS || defined _LIBC
@@ -10,16 +31,17 @@
  /* Return the canonical absolute name of file NAME.  A canonical name
     does not contain any `.', `..' components nor any repeated path
     separators ('/') or symlinks.  All path components must exist.  If
-@@ -334,6 +337,81 @@ error:
+@@ -342,6 +345,90 @@ error:
    }
    return NULL;
  }
 +
 +#else /* __MINGW32__ */
++#include <ctype.h>
 +#include <direct.h>
 +#include <windows.h>
 +
-+static char const*
++static char const *
 +slashify (char const *str)
 +{
 +  char *p = (char*)str;
@@ -28,6 +50,18 @@
 +    {
 +      if (*p == '\\')
 +	*p = '/';
++      p++;
++    }
++  return str;
++}
++
++static char *
++strlower (char *str)
++{
++  char *p = str;
++  while (*p)
++    {
++      *p = (char)tolower (*p);
 +      p++;
 +    }
 +  return str;
@@ -70,13 +104,9 @@
 +  else
 +    rpath = resolved;
 +
-+  strncpy (rpath, name, PATH_MAX);
-+  size_t len = strlen (name);
-+  if (len > PATH_MAX)
-+    len = PATH_MAX;
-+  rpath[len] = '\0';
-+  
++  GetFullPathName (name, PATH_MAX, rpath, NULL);
 +  slashify (rpath);
++  strlower (rpath);
 +  struct stat st;
 +  if (lstat (rpath, &st) < 0)
 +    {
