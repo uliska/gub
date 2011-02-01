@@ -68,18 +68,6 @@
  
  
  void
---- guile-1.9.14/libguile/bdw-gc.h~	2010-12-14 19:15:17.000000000 +0100
-+++ guile-1.9.14/libguile/bdw-gc.h	2011-01-29 12:35:43.485771038 +0100
-@@ -30,7 +30,9 @@
-    allocation.  */
- 
- # define GC_THREADS 1
-+#ifndef __MINGW32__
- # define GC_REDIRECT_TO_LOCAL 1
-+#endif /* __MINGW32__ */
- 
- #endif
- 
 --- guile-1.9.14/libguile/objcodes.c~	2010-12-14 19:15:17.000000000 +0100
 +++ guile-1.9.14/libguile/objcodes.c	2011-01-30 14:54:56.075069344 +0100
 @@ -70,7 +70,11 @@ make_objcode_by_mmap (int fd)
