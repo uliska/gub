@@ -40,6 +40,7 @@ guile-gnome-schikkers: atk cairo defs glib gtk libglade libgnomecanvas pango
         target.AutoBuild.install (self)
         self.dump ('''
 prependdir GUILE_LOAD_PATH=$INSTALLER_PREFIX/share/guile-gnome-2
+prependdir LD_LIBRARY_PATH=$INSTALLER_PREFIX/lib/guile-gnome-2
 ''',
                    '%(install_prefix)s/etc/relocate/guile-gnome.reloc',
                    env=locals ())
