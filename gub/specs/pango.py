@@ -55,6 +55,7 @@ ModulesPath = $PANGO_PREFIX/lib/pango/%(pango_module_version)s/modules
 setfile PANGO_RC_FILE=$INSTALLER_PREFIX/etc/pango/pangorc
 setdir PANGO_PREFIX=$INSTALLER_PREFIX/
 set PANGO_MODULE_VERSION=%(pango_module_version)s
+set PANGO_SO_EXTENSION=.so
 ''', '%(install_prefix)s/etc/relocate/pango.reloc', env=locals ())
         self.copy ('%(sourcefiledir)s/pango.modules', etc)
     def fix_config_files (self, prefix='/usr'):
@@ -102,3 +103,6 @@ class Pango__mingw (Pango):
 ${PANGO_PREFIX}/lib/pango/${PANGO_MODULE_VERSIOn}/modules/pango-basic-win32${PANGO_SO_EXTENSION} BasicScriptEngineWin32 PangoEngineShape PangoRenderWin32 common:
 ''', '%(etc)s/pango.modules', env=locals (), mode='a')
         Pango.fix_config_files (self, prefix)
+        self.dump ('''
+set PANGO_SO_EXTENSION=.dll
+''', '%(install_prefix)s/etc/relocate/pango.reloc', env=locals (), mode='a')

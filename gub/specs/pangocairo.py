@@ -9,14 +9,17 @@ class Pangocairo (pango.Pango):
 
 class Pangocairo__mingw (Pangocairo):
     # FIXME: cut and paste Pango__mingw
+    configure_flags = (target.AutoBuild.configure_flags
+                + ' --disable-rebuilds')
     def create_config_files (self, prefix='/usr'):
         Pangocairo.create_config_files (self, prefix)
         etc = self.expand ('%(install_root)s/%(prefix)s/etc/pango', locals ())
         self.dump ('''${PANGO_PREFIX}/lib/pango/${PANGO_MODULE_VERSION}/modules/pango-basic-win32${PANGO_SO_EXTENSION} BasicScriptEngineWin32 PangoEngineShape PangoRenderWin32 common:
 ''', '%(etc)s/pango.modules', env=locals (), mode='a')
         Pangocairo.fix_config_files (self, prefix)
-    configure_flags = (target.AutoBuild.configure_flags
-                + ' --disable-rebuilds')
+        self.dump ('''
+set PANGO_SO_EXTENSION=.dll
+''', '%(install_prefix)s/etc/relocate/pango.reloc', env=locals (), mode='a')
 
 class Pangocairo__darwin (Pangocairo):
     source = 'http://ftp.gnome.org/pub/GNOME/platform/2.29/2.29.91/sources/pango-1.27.1.tar.gz'
