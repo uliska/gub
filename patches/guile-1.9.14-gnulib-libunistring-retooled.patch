@@ -1,0 +1,24 @@
+--- guile-1.9.14/m4/libunistring.m4~	2011-02-02 11:02:24.361757176 +0100
++++ guile-1.9.14/m4/libunistring.m4	2011-02-02 11:03:26.727219798 +0100
+@@ -16,9 +16,7 @@ AC_DEFUN([gl_LIBUNISTRING],
+   dnl First, try to link without -liconv. libunistring often depends on
+   dnl libiconv, but we don't know (and often don't need to know) where
+   dnl libiconv is installed.
+-  AC_LIB_HAVE_LINKFLAGS([unistring], [],
+-    [#include <uniconv.h>], [u8_strconv_from_locale((char*)0);],
+-    [no, consider installing GNU libunistring])
++  AC_CHECK_LIB(unistring, [u8_strconv_from_locale], [HAVE_LIBUNISTRING=yes ac_cv_libunistring=yes AC_SUBST(HAVE_LIBUNISTRING) LTLIBUNISTRING="-lunistring" AC_SUBST(LTLIBUNISTRING)])
+   if test "$ac_cv_libunistring" != yes; then
+     dnl Second try, with -liconv.
+     AC_REQUIRE([AM_ICONV])
+@@ -28,9 +26,7 @@ AC_DEFUN([gl_LIBUNISTRING],
+       unset ac_cv_libunistring
+       glus_save_LIBS="$LIBS"
+       LIBS="$LIBS $LIBICONV"
+-      AC_LIB_HAVE_LINKFLAGS([unistring], [],
+-        [#include <uniconv.h>], [u8_strconv_from_locale((char*)0);],
+-        [no, consider installing GNU libunistring])
++      AC_CHECK_LIB(unistring, [u8_strconv_from_locale], [HAVE_LIBUNISTRING=yes ac_cv_libunistring=yes AC_SUBST(HAVE_LIBUNISTRING) LTLIBUNISTRING="-lunistring" AC_SUBST(LTLIBUNISTRING)])
+       if test -n "$LIBUNISTRING"; then
+         LIBUNISTRING="$LIBUNISTRING $LIBICONV"
+         LTLIBUNISTRING="$LTLIBUNISTRING $LTLIBICONV"

@@ -21,6 +21,8 @@ class Guile (target.AutoBuild):
         #'guile-1.8.7-doc-snarfing.patch',
         'guile-1.9.14-configure-cross.patch',
         'guile-1.9.14-cross.patch',
+        #'guile-1.9.14-gnulib-libunistring.patch',
+        'guile-1.9.14-gnulib-libunistring-retooled.patch',
         ]
     force_autoupdate = True
     dependencies = [
@@ -91,13 +93,17 @@ gl_cv_func_svid_putenv=yes
             source.version = misc.bind_method (Guile.version_from_VERSION,
                                                source)
         self.so_version = '17'
+    # REMOVE putenv!
+    gnulib_modules = 'alignof alloca-opt announce-gen autobuild byteswap canonicalize-lgpl duplocale environ extensions flock fpieee full-read full-write func gendocs getaddrinfo git-version-gen gitlog-to-changelog gnu-web-doc-update gnupload havelib iconv_open-utf inet_ntop inet_pton isinf isnan lib-symbol-versions lib-symbol-visibility libunistring locale maintainer-makefile nproc stat-time stdlib strcase strftime striconveh string sys_stat verify version-etc-fsf vsnprintf warnings     '
     def patch (self):
         self.dump ('''#!/bin/sh
 exec %(tools_archmatch_prefix)s/bin/guile "$@"
 ''', "%(srcdir)s/pre-inst-guile.in")
         #self.autopatch ()
-        target.AutoBuild.patch (self)
         self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
+        self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files %(gnulib_modules)s')
+        target.AutoBuild.patch (self)
+        ##self.file_sub ([(^putenv,)
     def autoupdate (self):
         self.system ('cd %(srcdir)s && autoreconf')
         # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
@@ -163,10 +169,11 @@ class Guile__mingw (Guile):
         Guile.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
         self.target_gcc_flags = '-mms-bitfields'
-    patches = Guile.patches + [
+    patches = Guile.patches + [ # [x for x in Guile.patches if not 'libunistring' in x] + [
         'guile-1.9.14-mingw.patch',
         'guile-1.9.14-gnulib-mingw.patch',
         'guile-1.9.14-mingw-dirent.patch',
+        #'guile-1.9.14-gnulib-libunistring-retooled.patch',
         ]
     dependencies = (Guile.dependencies
                     + [
@@ -197,9 +204,9 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
         Guile.configure (self)
         for libtool in ['%(builddir)s/libtool']: # readline patched-out: '%(builddir)s/guile-readline/libtool']:
             self.file_sub ([('-mwindows', '')], libtool)
-    def patch (self):
-        self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files alignof alloca-opt announce-gen autobuild byteswap canonicalize-lgpl duplocale environ extensions flock fpieee full-read full-write func gendocs getaddrinfo git-version-gen gitlog-to-changelog gnu-web-doc-update gnupload havelib iconv_open-utf inet_ntop inet_pton isinf isnan lib-symbol-versions lib-symbol-visibility libunistring locale maintainer-makefile nproc putenv stat-time stdlib strcase strftime striconveh string sys_stat verify version-etc-fsf vsnprintf warnings     accept bind close connect getpeername getsockname getsockopt listen recv recv recvfrom send sendto setsockopt shutdown socket || :')
-        Guile.patch (self)
+
+    gnulib_modules = (Guile.gnulib_modules
+                      + 'accept bind close connect getpeername getsockname getsockopt listen recv recv recvfrom send sendto setsockopt shutdown socket ')
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?
         self.system ('''cd %(builddir)s/libguile &&make %(compile_flags_native)sgen-scmconfig guile_filter_doc_snarfage.exe''')
