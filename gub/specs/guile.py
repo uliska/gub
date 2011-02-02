@@ -21,8 +21,8 @@ class Guile (target.AutoBuild):
         #'guile-1.8.7-doc-snarfing.patch',
         'guile-1.9.14-configure-cross.patch',
         'guile-1.9.14-cross.patch',
-        #'guile-1.9.14-gnulib-libunistring.patch',
-        'guile-1.9.14-gnulib-libunistring-retooled.patch',
+        'guile-1.9.14-gnulib-libunistring.patch',
+        #'guile-1.9.14-gnulib-libunistring-retooled.patch',
         ]
     force_autoupdate = True
     dependencies = [
@@ -32,6 +32,7 @@ class Guile (target.AutoBuild):
         'libunistring',
         'libgc',
         'tools::guile',
+        'tools::gnulib',
         ]
     guile_configure_flags = misc.join_lines ('''
 --without-threads
@@ -101,7 +102,7 @@ exec %(tools_archmatch_prefix)s/bin/guile "$@"
 ''', "%(srcdir)s/pre-inst-guile.in")
         #self.autopatch ()
         self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
-        self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files %(gnulib_modules)s')
+        self.system ('%(tools_prefix)s/share/gnulib/gnulib-tool --import --dir=%(srcdir)s --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files %(gnulib_modules)s')
         target.AutoBuild.patch (self)
         self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/putenv.c')
         self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/stdlib.in.h')
