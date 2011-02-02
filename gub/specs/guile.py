@@ -103,7 +103,8 @@ exec %(tools_archmatch_prefix)s/bin/guile "$@"
         self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
         self.system ('cd %(srcdir)s && gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files %(gnulib_modules)s')
         target.AutoBuild.patch (self)
-        ##self.file_sub ([(^putenv,)
+        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/putenv.c')
+        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/stdlib.in.h')
     def autoupdate (self):
         self.system ('cd %(srcdir)s && autoreconf')
         # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
