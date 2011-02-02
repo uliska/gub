@@ -272,6 +272,9 @@ Function create_shortcuts
 	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List.lnk" \
 		"$INSTDIR\usr\bin\schikkers-list.scm" ""\
  		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
+	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List-NOQUOTE.lnk" \
+		$INSTDIR\usr\bin\schikkers-list.scm ""\
+ 		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
 	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List Website.lnk" \
 		"http://schikkers-list.org/" "" \
 		"firefox.exe" 0
@@ -289,6 +292,9 @@ Function create_shortcuts
 		"SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 	CreateShortCut "$DESKTOP\Schikkers-List.lnk" \
 		"$INSTDIR\usr\bin\schikkers-list.scm" ""\
+ 		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
+	CreateShortCut "$DESKTOP\Schikkers-List-NOQUOTE.lnk" \
+		$INSTDIR\usr\bin\schikkers-list.scm ""\
  		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
 FunctionEnd
 
@@ -335,13 +341,15 @@ scm_done:
 	;;StrCmp $R0 "" 0 scm_auto_file
 	WriteRegStr HKCR "Guile\shell" "" "open"
 	# %1 is the GUILE command, so must be quoted bo the space
-	WriteRegExpandStr HKCR "Guile\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	;;	WriteRegExpandStr HKCR "Guile\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	WriteRegExpandStr HKCR "Guile\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" %1 %2 %3 %4 %5 %6 %7 %8 %9'
 
 ;;scm_auto_file:
 	ReadRegStr $R0 HKCR "scm_auto_file\shell\open\command" ""
 	;;StrCmp $R0 "" 0 scm_end
 	WriteRegStr HKCR "scm_auto_file\shell" "" "open"
 	# %1 is the GUILE command, so must be quoted bo the space
-	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	;;	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" %1 %2 %3 %4 %5 %6 %7 %8 %9'
 ;;scm_end:	
 FunctionEnd
