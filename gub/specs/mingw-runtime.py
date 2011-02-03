@@ -8,5 +8,5 @@ mkdir -p %(install_prefix)s/share
 cd %(srcdir)s && tar -C %(srcdir)s/ -cf - . | tar -C %(install_prefix)s -xf -
 mkdir -p %(install_prefix)s/include/sys
 #cp -p %(sourcefiledir)s/mingw-headers/wait.h %(install_prefix)s/include/sys
-mv %(install_prefix)s/doc %(install_root)s/share
+mv %(install_prefix)s/doc %(install_prefix)s/share
 ''', locals ())

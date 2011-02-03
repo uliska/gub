@@ -7,4 +7,7 @@ class W32api (build.BinaryBuild, build.SdkBuild):
         build.BinaryBuild.untar (self)
         self.system ('''
 cd  %(srcdir)s/ && mkdir usr && mv include lib usr/
+specs/
 ''')
+        self.file_sub ([('[}] DATADIR;', '}, MINGW_DATADIR;')],
+                       '%(install_prefix)s/include/objidl.h')
