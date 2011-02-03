@@ -20,7 +20,7 @@ class Guile (target.AutoBuild):
         'guile-1.8.6-test-use-srfi.patch',
         #'guile-1.8.7-doc-snarfing.patch',
         'guile-1.9.14-configure-cross.patch',
-        'guile-1.9.14-cross.patch',
+        'guile-1.9.15-cross.patch',
         'guile-1.9.14-gnulib-libunistring.patch',
         #'guile-1.9.14-gnulib-libunistring-retooled.patch',
         ]

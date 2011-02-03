@@ -1,0 +1,22 @@
+--- guile-1.9.14/Makefile.am~	2010-12-14 19:15:16.000000000 +0100
++++ guile-1.9.14/Makefile.am	2011-01-29 15:36:05.312047266 +0100
+@@ -32,8 +32,6 @@ SUBDIRS =					\
+ 	guile-readline				\
+ 	examples				\
+ 	emacs					\
+-	test-suite				\
+-	benchmark-suite				\
+ 	am					\
+ 	doc
+ 
+--- guile-1.9.14/meta/guile-2.0.pc.in~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/meta/guile-2.0.pc.in	2011-01-31 13:39:29.453612101 +0100
+@@ -5,7 +5,7 @@ includedir=@includedir@
+ datarootdir=@datarootdir@
+ datadir=@datadir@
+ pkgdatadir=@datadir@/guile
+-pkgincludedir=@includedir@/guile
++pkgincludedir=${includedir}/guile
+ 
+ sitedir=@sitedir@
+ extensiondir=@libdir@/guile/@GUILE_EFFECTIVE_VERSION@/extensions
