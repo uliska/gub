@@ -12,7 +12,7 @@ from gub import tools32
 class Guile (target.AutoBuild):
     # source = 'git://git.sv.gnu.org/guile.git&branch=branch_release-1-8&revision=bba579611b3671c7e4c1515b100f01c048a07935'
     source = 'http://ftp.gnu.org/pub/gnu/guile/guile-1.8.7.tar.gz'
-    source = 'http://alpha.gnu.org/gnu/guile/guile-1.9.14.tar.gz'
+    source = 'http://alpha.gnu.org/gnu/guile/guile-1.9.15.tar.gz'
     patches = [
         #'guile-reloc-1.8.6.patch',
         'guile-1.9.14-reloc.patch',
@@ -34,6 +34,7 @@ class Guile (target.AutoBuild):
         'libgc',
         'tools::guile',
         'tools::gnulib',
+        'tools::pkg-config',
         ]
     guile_configure_flags = misc.join_lines ('''
 --without-threads
