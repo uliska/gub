@@ -29,6 +29,7 @@ class Guile (target.AutoBuild):
         'gettext-devel',
         'gmp-devel',
         'libtool',
+        'libffi',
         'libunistring',
         'libgc',
         'tools::guile',
