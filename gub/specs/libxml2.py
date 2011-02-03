@@ -20,6 +20,12 @@ class Libxml2__mingw (Libxml2):
                 + misc.join_lines ('''
 --without-threads
 '''))
+    # Hmm, should rename sys/mman.h to sys/mingw-mman.h?
+    config_cache_overrides = (Libxml2.config_cache_overrides
+                              + '''
+ac_cv_header_sys_mman_h=${ac_cv_header_sys_mman_h=no}
+''')
+
     def install (self):
         Libxml2.install (self)
         self.copy ('%(install_prefix)s/lib/libxml2.la', '%(install_prefix)s/lib/libxml2-2.la')
