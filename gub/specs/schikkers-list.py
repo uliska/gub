@@ -43,7 +43,7 @@ prependdir PATH=$INSTALLER_PREFIX/bin
                         (' -L [$][(]dirname [$]0[)]', ''),
                         ],
                        '%(install_prefix)s/bin/ikli', must_succeed=True)
-        self.system ('cd %(install_prefix)s/bin && cp -pv ikli schikkers-list')
+        self.system ('cd %(install_prefix)s/bin && rm -f ikli')
 
 class Schikkers_list__mingw (Schikkers_list):
     dependencies = Schikkers_list.dependencies + [
@@ -51,5 +51,5 @@ class Schikkers_list__mingw (Schikkers_list):
         ]
     def install (self):
         Schikkers_list.install (self)
-        self.system ('cd %(install_prefix)s/bin && cp -pv ikli run-ikli.scm')
-        self.system ('cd %(install_prefix)s/bin && cp -pv schikkers-list schikkers-list.scm')
+        self.system ('cd %(install_prefix)s/bin && rm -f ikli')
+        self.system ('cd %(install_prefix)s/bin && mv schikkers-list schikkers-list.scm')
