@@ -176,6 +176,10 @@ if test -d "${dollar}GTK_PATH" -a ! -f "${dollar}GTK_IM_MODULE_FILE"; then
 fi
 
 me=${backquote}basename ${dollar}0${backquote}
+if test "${dollar}me" = "schikkers-list"; then
+    unset GDK_PIXBUF_MODULE_FILE # segfault
+    cd "${dollar}{INSTALLER_PREFIX}"/bin && exec ${dollar}(pwd)/guile --debug -e main -s ${dollar}(pwd)/${dollar}me $expandargs
+fi
 exec "${dollar}{INSTALLER_PREFIX}/bin/${dollar}me" $expandargs
 EOF
 
