@@ -9,7 +9,7 @@
 +	{
 +	  flags = PeekNamedPipe ((HANDLE) _get_osfhandle (fdes), NULL, 0, 
 +				 NULL, NULL, NULL) ? O_RDONLY : O_WRONLY;
-+	  flags = O_WRONLY;
++	  flags = O_RDWR;
 +	}
        /* stdin ? */
        else if (fdes == fileno (stdin) && isatty (fdes))
