@@ -1,0 +1,16 @@
+--- guile-1.9.15/libguile/fports.c~	2011-02-03 23:32:32.643031297 +0100
++++ guile-1.9.15/libguile/fports.c	2011-02-03 23:37:56.194764854 +0100
+@@ -503,8 +503,11 @@ static int getflags (int fdes)
+     {
+       /* Or an anonymous pipe handle ? */
+       if (buf.st_mode & _S_IFIFO)
+-	flags = PeekNamedPipe ((HANDLE) _get_osfhandle (fdes), NULL, 0, 
+-			       NULL, NULL, NULL) ? O_RDONLY : O_WRONLY;
++	{
++	  flags = PeekNamedPipe ((HANDLE) _get_osfhandle (fdes), NULL, 0, 
++				 NULL, NULL, NULL) ? O_RDONLY : O_WRONLY;
++	  flags = O_WRONLY;
++	}
+       /* stdin ? */
+       else if (fdes == fileno (stdin) && isatty (fdes))
+ 	flags = O_RDONLY;

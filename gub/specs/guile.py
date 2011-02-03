@@ -178,6 +178,8 @@ class Guile__mingw (Guile):
         'guile-1.9.14-gnulib-mingw.patch',
         'guile-1.9.14-mingw-dirent.patch',
         #'guile-1.9.14-gnulib-libunistring-retooled.patch',
+        'guile-1.9.15-mingw-compile.patch',
+        'guile-1.9.15-mingw-fports.patch',
         ]
     dependencies = (Guile.dependencies
                     + [
