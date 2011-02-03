@@ -174,7 +174,7 @@ class Guile__mingw (Guile):
         # Configure (compile) without -mwindows for console
         self.target_gcc_flags = '-mms-bitfields'
     patches = Guile.patches + [ # [x for x in Guile.patches if not 'libunistring' in x] + [
-        'guile-1.9.14-mingw.patch',
+        'guile-1.9.15-mingw.patch',
         'guile-1.9.14-gnulib-mingw.patch',
         'guile-1.9.14-mingw-dirent.patch',
         #'guile-1.9.14-gnulib-libunistring-retooled.patch',

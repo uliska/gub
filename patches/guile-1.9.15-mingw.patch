@@ -1,0 +1,64 @@
+--- guile-1.9.14/libguile/filesys.c~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/libguile/filesys.c	2011-01-28 16:10:57.884026263 +0100
+@@ -523,7 +523,7 @@ static int fstat_Win32 (int fdes, struct
+   /* Is this a socket ? */
+   if (getsockopt (fdes, SOL_SOCKET, SO_ERROR, (void *) &error, &optlen) >= 0)
+     {
+-      buf->st_mode = _S_IFSOCK | _S_IREAD | _S_IWRITE | _S_IEXEC;
++      buf->st_mode = _S_IREAD | _S_IWRITE | _S_IEXEC;
+       buf->st_nlink = 1;
+       buf->st_atime = buf->st_ctime = buf->st_mtime = time (NULL);
+       return 0;
+--- guile-1.9.14/libguile/net_db.c~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/libguile/net_db.c	2011-01-28 19:40:57.212601530 +0100
+@@ -456,6 +456,7 @@ SCM_DEFINE (scm_setserv, "setserv", 0, 1
+ 
+ SCM_SYMBOL (sym_getaddrinfo_error, "getaddrinfo-error");
+ 
++#ifndef __MINGW32__
+ /* Make sure the `AI_*' flags can be stored as INUMs.  */
+ verify (SCM_I_INUM (SCM_I_MAKINUM (AI_ALL)) == AI_ALL);
+ 
+@@ -743,6 +741,8 @@ SCM_DEFINE (scm_gai_strerror, "gai-strer
+ }
+ #undef FUNC_NAME
+ 
++#endif /* __MINGW32__ */
++
+ /* TODO: Add a getnameinfo(3) wrapper.  */
+ 
+ 
+--- guile-1.9.14/libguile/deprecated.c~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/libguile/deprecated.c	2011-01-29 12:10:02.504032975 +0100
+@@ -1639,7 +1639,7 @@ scm_i_fluidp (SCM x)
+ 
+ /* Networking.  */
+ 
+-#ifdef HAVE_NETWORKING
++#ifdef HAVE_IPV6
+ 
+ SCM_DEFINE (scm_inet_aton, "inet-aton", 1, 0, 0,
+             (SCM address),
+@@ -1674,7 +1674,7 @@ SCM_DEFINE (scm_inet_ntoa, "inet-ntoa",
+ }
+ #undef FUNC_NAME
+ 
+-#endif /* HAVE_NETWORKING */
++#endif /* HAVE_IPV6 */
+ 
+ 
+ void
+--- guile-1.9.14/libguile/objcodes.c~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.14/libguile/objcodes.c	2011-01-30 14:54:56.075069344 +0100
+@@ -70,7 +70,11 @@ make_objcode_by_mmap (int fd)
+     scm_misc_error (FUNC_NAME, "object file too small (~a bytes)",
+ 		    scm_list_1 (SCM_I_MAKINUM (st.st_size)));
+ 
++#ifndef __MINGW32__
+   addr = mmap (0, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
++#else
++  addr = mmap (0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
++#endif
+   if (addr == MAP_FAILED)
+     {
+       (void) close (fd);
