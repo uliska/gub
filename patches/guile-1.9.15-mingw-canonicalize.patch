@@ -1,0 +1,92 @@
+--- guile-1.9.15/libguile/filesys.h	2011-02-04 21:19:36.819015451 +0100
++++ guile-1.9.15/libguile/filesys.h-	2011-02-04 21:42:50.560522283 +0100
+@@ -27,6 +27,12 @@
+ 
+ 
+ 
++#ifdef __MINGW32__
++extern char *mingw_canonicalize_file_name  (char const *name);
++#undef canonicalize_file_name
++#define canonicalize_file_name mingw_canonicalize_file_name
++#endif /* __MINGW32__ */
++
+ SCM_API scm_t_bits scm_tc16_dir;
+ 
+ #define SCM_DIR_FLAG_OPEN (1L << 0)
+--- guile-1.9.15/libguile/filesys.c	2011-02-04 21:19:36.803015067 +0100
++++ guile-1.9.15/libguile/filesys.c-	2011-02-04 21:42:55.912651065 +0100
+@@ -1634,6 +1634,74 @@ SCM_DEFINE (scm_basename, "basename", 1,
+ }
+ #undef FUNC_NAME
+ 
++#ifdef __MINGW32__
++/* gnulib's canonicalize_file_name silently fails on Mingw.  */
++#include <ctype.h>
++#include <direct.h>
++#include <windows.h>
++
++static char const *
++slashify (char const *str)
++{
++  char *p = (char*)str;
++  
++  while (*p)
++    {
++      if (*p == '\\')
++	*p = '/';
++      p++;
++    }
++  return str;
++}
++
++static char const *
++strlower (char const *str)
++{
++  char *p = str;
++  while (*p)
++    {
++      *p = (char)tolower (*p);
++      p++;
++    }
++  return str;
++}
++
++static char *
++mingw_realpath (char const *name, char *resolved)
++{
++  char *rpath = NULL;
++
++  if (name == NULL || name[0] == '\0')
++    return NULL;
++
++  if (resolved == NULL)
++    {
++      rpath = malloc (PATH_MAX + 1);
++      if (rpath == NULL)
++          return NULL;
++    }
++  else
++    rpath = resolved;
++
++  GetFullPathName (name, PATH_MAX, rpath, NULL);
++  strlower (slashify (rpath));
++  struct stat st;
++  if (lstat (rpath, &st) < 0)
++    {
++      if (resolved == NULL)
++	free (rpath);
++      return NULL;
++    }
++  return rpath;
++}
++
++char *
++mingw_canonicalize_file_name (char const *name)
++{
++  return mingw_realpath (name, NULL);
++}
++#endif /* __MINGW32__ */
++
+ SCM_DEFINE (scm_canonicalize_path, "canonicalize-path", 1, 0, 0, 
+             (SCM path),
+ 	    "Return the canonical path of @var{path}. A canonical path has\n"

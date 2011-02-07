@@ -1,10 +1,21 @@
 --- guile-1.9.15/module/system/base/compile.scm~	2011-01-26 23:03:16.000000000 +0100
-+++ guile-1.9.15/module/system/base/compile.scm	2011-02-03 23:29:08.090142894 +0100
-@@ -104,6 +104,7 @@
++++ guile-1.9.15/module/system/base/compile.scm	2011-02-04 12:04:15.765055771 +0100
+@@ -100,11 +100,16 @@
+            ".go")
+           (else (car %load-compiled-extensions))))
+   (and %compile-fallback-path
+-       (let ((f (string-append
++       (let* ((c (canonicalize-path file))
++	      (f (string-append
                   %compile-fallback-path
                   ;; no need for '/' separator here, canonicalize-path
                   ;; will give us an absolute path
-+		 "/" ;; which does not start with / on MINGW
-                  (canonicalize-path file)
+-                 (canonicalize-path file)
++		 (if (eq? (string-ref c 1) #\:)
++		     ;; on Mingw remove drive-letter separator `:' to
++		     ;; obtain valid file name
++		     (substring c 2)
++		     c)
                   (compiled-extension))))
           (and (false-if-exception (ensure-writable-dir (dirname f)))
+               f))))

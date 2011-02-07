@@ -1,0 +1,41 @@
+--- guile-1.9.15/libguile/filesys.c.orig	2011-02-07 12:07:09.984516150 +0100
++++ guile-1.9.15/libguile/filesys.c	2011-02-07 12:11:53.627350574 +0100
+@@ -680,9 +680,10 @@ SCM_DEFINE (scm_link, "link", 2, 0, 0,
+ #undef FUNC_NAME
+ #endif /* HAVE_LINK */
+ 
+-#ifdef HAVE_RENAME
++#if defined (HAVE_RENAME) && !defined (__MINGW32__)
+ #define my_rename rename
+-#else
++#else /* !HAVE_RENAME || __MINGW32__ */
++#ifndef __MINGW32__
+ static int
+ my_rename (const char *oldname, const char *newname)
+ {
+@@ -698,7 +699,24 @@ my_rename (const char *oldname, const ch
+     }
+   return rv;
+ }
+-#endif
++#else /* __MINGW32__ */
++static int
++my_rename (const char *oldname, const char *newname)
++{
++  int rv;
++  struct stat stat;
++
++  SCM_SYSCALL (rv = stat (newname, &stat));
++  if (rv == 0)
++    SCM_SYSCALL (rv = unlink (newname));
++  if (rv == 0)
++    rv = rename (oldname, newname);
++
++  return rv;
++}
++#endif /* __MINGW32__ */
++#endif /* !HAVE_RENAME || __MINGW32__ */
++
+ 
+ SCM_DEFINE (scm_rename, "rename-file", 2, 0, 0,
+             (SCM oldname, SCM newname),
