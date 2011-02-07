@@ -320,6 +320,7 @@ py_done:
 FunctionEnd
 
 Function registry_guile
+	WriteRegStr HKLM "${ENVIRON}" "XDG_CACHE_HOME" "$LOCALAPPDATA\cache"
 	ReadRegStr $R0 HKLM "${ENVIRON}" "PATHEXT"
  	${StrLoc} $0 $R0 ".SCM;" >
 	StrCmp $0 "" 0 scm_done
