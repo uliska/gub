@@ -1,5 +1,5 @@
 ;;;; schikkers-list.nsi -- Schikkers-List installer script for Microsoft Windows
-;;;; (c) 2005--2010
+;;;; (c) 2005--2011
 ;;;; Jan Nieuwenhuizen <janneke@gnu.org>
 ;;;; Han-Wen Nienhuys <janneke@gnu.org>
 ;;;; licence: GNU GPL
@@ -95,6 +95,7 @@ fresh_install:
 
 	Call registry_installer
 	Call registry_path
+	Call postinstall_schikkers_list
 SectionEnd
 
 Function registry_path
@@ -347,4 +348,19 @@ scm_done:
 	;;	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 ;;scm_end:	
+FunctionEnd
+
+!include "FontName.nsh"
+!include "FontReg.nsh"
+
+Function postinstall_schikkers_list
+	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\Emmentaler-20.otf" "$WINDIR\Fonts\Emmentaler-20.otf"
+	StrCpy $FONT_DIR "$WINDIR\Fonts"
+	!insertmacro InstallTTFFont "${ROOT}\usr\share\lilypond\current\fonts\otf\Emmentaler-20.otf"
+	ClearErrors
+FunctionEnd
+
+Function un.install_schikkers_list_ttf
+	Delete "$WINDIR\Fonts\Emmentaler-20.otf"
+	ClearErrors
 FunctionEnd

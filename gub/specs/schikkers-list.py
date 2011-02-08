@@ -53,3 +53,6 @@ class Schikkers_list__mingw (Schikkers_list):
         Schikkers_list.install (self)
         self.system ('cd %(install_prefix)s/bin && rm -f ikli')
         self.system ('cd %(install_prefix)s/bin && mv schikkers-list schikkers-list.scm')
+        self.file_sub ([(' --debug ', ' --no-autocompile --debug '),
+                        ],
+                       '%(install_prefix)s/bin/schikkers-list.scm', must_succeed=True)
