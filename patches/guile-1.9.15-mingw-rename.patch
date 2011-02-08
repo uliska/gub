@@ -25,8 +25,8 @@
 +  int rv;
 +  struct stat stat;
 +
-+  SCM_SYSCALL (rv = stat (newname, &stat));
-+  if (rv == 0)
++  SCM_SYSCALL (rv = !stat (newname, &stat));
++  if (rv != 0)
 +    SCM_SYSCALL (rv = unlink (newname));
 +  if (rv == 0)
 +    rv = rename (oldname, newname);
