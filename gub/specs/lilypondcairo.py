@@ -6,12 +6,11 @@ from gub.specs import lilypond
 # in.  Hmm.
 
 class Lilypondcairo (lilypond.Lilypond):
-    source = 'http://lilypond.org/download/source/v2.13/lilypond-2.13.47.tar.gz'
+    source = 'http://lilypond.org/download/source/v2.13/lilypond-2.13.51.tar.gz'
     dependencies = [x.replace ('pango', 'pangocairo')
                     for x in lilypond.Lilypond.dependencies]
     patches = [
         '0003-Start-OTF-font-from-E800-avoids-hardcoded-linux-unic.patch',
-        '0001-Guile-1.9-compatibility-fixes.patch',
         ]
     def get_conflict_dict (self):
         return {'': ['lilypond']}
@@ -22,7 +21,6 @@ class Lilypondcairo__mingw (lilypond.Lilypond__mingw):
                 for x in lilypond.Lilypond__mingw.dependencies]
     patches = [
         '0003-Start-OTF-font-from-E800-avoids-hardcoded-linux-unic.patch',
-        '0001-Guile-1.9-compatibility-fixes.patch',
         ]
     def get_conflict_dict (self):
         return {'': ['lilypond']}
