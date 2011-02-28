@@ -7,6 +7,7 @@ from gub import octal
 from gub import repository
 from gub import target
 from gub import tools
+from gub import tools32
 
 class Guile (target.AutoBuild):
     # source = 'git://git.sv.gnu.org/guile.git&branch=branch_release-1-8&revision=bba579611b3671c7e4c1515b100f01c048a07935'
@@ -66,12 +67,12 @@ PATH=/usr/bin:$PATH
                             + ' cross_compiling=yes ')
     # FIXME: guile runs gen_scmconfig [when not x-building also guile]
     # without setting the proper LD_LIBRARY_PATH.
-    configure_command = ('GUILE_FOR_BUILD=%(tools_prefix)s/bin/guile '
+    configure_command = ('GUILE_FOR_BUILD=%(tools_archmatch_prefix)s/bin/guile '
                          + target.AutoBuild.configure_command
                          + guile_configure_flags)
-    compile_command = ('export preinstguile=%(tools_prefix)s/bin/guile; '
+    compile_command = ('export preinstguile=%(tools_archmatch_prefix)s/bin/guile; '
                        + target.AutoBuild.compile_command)
-    install_command = ('export preinstguile=%(tools_prefix)s/bin/guile; '
+    install_command = ('export preinstguile=%(tools_archmatch_prefix)s/bin/guile; '
                        + target.AutoBuild.install_command)
     subpackage_names = ['doc', 'devel', 'runtime', '']
     @staticmethod
@@ -89,7 +90,7 @@ PATH=/usr/bin:$PATH
         self.so_version = '17'
     def patch (self):
         self.dump ('''#!/bin/sh
-exec %(tools_prefix)s/bin/guile "$@"
+exec %(tools_archmatch_prefix)s/bin/guile "$@"
 ''', "%(srcdir)s/pre-inst-guile.in")
         #self.autopatch ()
         target.AutoBuild.patch (self)
@@ -276,3 +277,6 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
 #        self.file_sub ([('[(]string-join other-flags[)]', '(string-join (filter (lambda (x) (not (equal? x "-L/usr/lib"))) other-flags))')],
 #                       '%(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin/guile-config',
 #                       must_succeed=True)
+
+class Guile__tools32 (tools32.AutoBuild, Guile__tools):
+    pass
