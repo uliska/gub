@@ -151,6 +151,7 @@ class FileManager:
                              ),],
                            '%(root)s/%(file)s' % locals (),
                            must_succeed=('tools/root' not in self.root
+                                         and 'tools32/root' not in self.root
                                          and 'cross' not in dir
                                          and '/GUB' not in self.root))
         

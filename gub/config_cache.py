@@ -1,5 +1,6 @@
 config_cache = {
     'tools': '',
+    'tools32': '',
     'all': '''
 ac_cv_c_stack_direction=${ac_cv_c_stack_direction=-1}
 ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}

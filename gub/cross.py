@@ -34,7 +34,7 @@ class AutoBuild (build.AutoBuild):
             + misc.append_path (os.environ.get ('CPLUS_INCLUDE_PATH', '')),
             'LIBRARY_PATH': '%(tools_prefix)s/lib'
             + misc.append_path (os.environ.get ('LIBRARY_PATH', '')),
-            'PATH': '%(cross_prefix)s/bin:%(tools_prefix)s/bin:%(tools_cross_prefix)s/bin:' + os.environ['PATH'],
+            'PATH': '%(cross_prefix)s/bin:%(tools_archmatch_prefix)s/bin:%(tools_prefix)s/bin:%(tools_cross_prefix)s/bin:' + os.environ['PATH'],
         }
         dict.update (env)
         d = build.AutoBuild.get_substitution_dict (self, dict).copy ()

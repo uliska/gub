@@ -37,6 +37,7 @@ platforms = {
     'linux-ppc': 'powerpc-linux',
     'system': 'system',
     'tools': 'tools',
+    'tools32': 'tools32',
     'mingw': 'i686-mingw32',
 }
 
@@ -91,6 +92,14 @@ class Settings (context.Context):
             self.target_cpu = self.build_cpu
             self.target_bits = self.build_bits
 
+        if self.target_architecture == 'tools32':
+            arch32 = { 'x86_64-linux': 'i686-linux', }
+            self.target_architecture = arch32.get (self.build_architecture,
+                                                   self.build_architecture)
+            self.target_os = self.build_os
+            self.target_cpu = self.build_cpu
+            self.target_bits = '32'
+
         # config dirs
         self.root_dir = '/root'
         self.tools_root_dir = '/tools/root'
@@ -138,6 +147,10 @@ class Settings (context.Context):
         self.tools_root = self.alltargetdir + self.tools_root_dir
         self.tools_prefix = self.tools_root + self.prefix_dir
         self.tools_cross_prefix = self.tools_prefix + self.cross_dir
+
+        self.tools32_root_dir = '/tools32/root'
+        self.tools32_root = self.alltargetdir + self.tools32_root_dir
+        self.tools32_prefix = self.tools32_root + self.prefix_dir
 
         self.logdir = self.targetdir + '/log'
         self.alllogdir = self.workdir + '/log'
@@ -239,8 +252,12 @@ class Settings (context.Context):
         # cd /x/y/z.  This terribly breaks stat restriction.
         os.environ['SHELLOPTS'] = 'physical'
 
+        self.tools_archmatch_prefix = self.tools_prefix
         if not '%(tools_prefix)s/bin' % self.__dict__ in os.environ['PATH']:
             os.environ['PATH'] = '%(tools_prefix)s/bin:' % self.__dict__ + os.environ['PATH']
+        if (self.target_bits == '32' and self.build_bits == '64'
+            and not '%(tools32_prefix)s/bin' % self.__dict__ in os.environ['PATH']):
+            self.tools_archmatch_prefix = self.tools32_prefix
         
     def create_dirs (self): 
         for a in (

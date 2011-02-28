@@ -13,6 +13,11 @@ def get_cross_build_dependencies (settings):
 def change_target_package (package):
     package_auto_dependency_dict (package)
 
+# tools packages, such as guile 2.0, that can only compile
+# to equivalent binary platforms: endianness and word length
+tools_archmatch = ['guile', 'tools::guile']
+libs_archmatch = ['gettext', 'gmp', 'guile', 'libtool', 'libunistring', 'libgc']
+
 def package_auto_dependency_dict (package):
     '''Generate get_build_dependencies () and get_dependency_dict ({'':})
     from _get_build_dependencies ().
@@ -30,8 +35,33 @@ def package_auto_dependency_dict (package):
             # a detail of our libtool breakage fixup.
             if (not 'cross/' in package.name ()
                 and not 'system::' in package.platform_name ()):
-                return [name.replace ('tools::libtool', 'libtool')
-                        for name in package.dependencies]
+                package.dependencies = [name.replace ('tools::libtool', 'libtool')
+                                        for name in package.dependencies]
+            if (package.name () in tools_archmatch):
+                # on linux-x86, refuse to build linux-x64::guile
+                if (package.settings.target_bits == '64'
+                    and package.settings.build_bits == '32'):
+                    raise Exception ('cannot build %s for 64 bits' + package.platform_name ())
+                # on linux-64, build linux-x86::guile with tools32::guile
+                if (package.settings.target_bits == '32'
+                    and package.settings.build_bits == '64'):
+                    package.dependencies = [name.replace ('tools::', 'tools32::')
+                                            if (misc.strip_platform (name) in libs_archmatch
+                                                and 'system::' not in name
+                                                and ('cross/' not in name
+                                                     or 'runtime' in name)) else name
+                                            for name in package.dependencies]
+            # only keep tools32:: for libraries linked against,
+            # do not build tools32::autotools etc
+            if (package.settings.target_bits == '32'
+                and package.settings.build_bits == '64'):
+                package.dependencies = ['tools::' + misc.strip_platform (name)
+                                        if (misc.strip_platform (name) not in libs_archmatch
+                                            and misc.strip_name (name, package.platform ()) == 'tools32'
+                                            and 'system::' not in name
+                                            and ('cross/' not in name
+                                                 or 'runtime' in name)) else name
+                                        for name in package.dependencies]
             return package.dependencies
         package.get_build_dependencies \
                 = misc.MethodOverrider (package.nop, get_build_dependencies)
@@ -40,6 +70,7 @@ def package_auto_dependency_dict (package):
                          for x in package.dependencies
                          if ('system::' not in x
                              and 'tools::' not in x
+                             and 'tools32::' not in x
                              and ('cross/' not in x
                                   or 'runtime' in x))]}
             if 'runtime' in package.subpackage_names:
@@ -48,6 +79,7 @@ def package_auto_dependency_dict (package):
                 d['devel'] = ([x for x in package.dependencies
                                if ('system::' not in x
                                    and 'tools::' not in x
+                                   and 'tools32::' not in x
                                    and ('cross/' not in x
                                         or 'runtime' in x))]
                               + [package.name ()])

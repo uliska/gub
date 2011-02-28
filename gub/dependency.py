@@ -9,6 +9,7 @@ from gub import repository
 from gub import system
 from gub import target
 from gub import tools
+from gub import tools32
 
 def get_build_from_file (platform, file_name, name):
     gub_name = file_name.replace (os.getcwd () + '/', '')
@@ -29,7 +30,16 @@ def get_build_from_file (platform, file_name, name):
                   .replace ('+', '_x_')
                   + ('-' + platform).replace ('-', '__'))
     logging.debug ('LOOKING FOR: %(class_name)s\n' % locals ())
-    return misc.most_significant_in_dict (module.__dict__, class_name, '__')
+    cls = misc.most_significant_in_dict (module.__dict__, class_name, '__')
+    if (platform == 'tools32'
+        and (not cls or issubclass (cls, target.AutoBuild))):
+        cls = misc.most_significant_in_dict (module.__dict__, class_name.replace ('tools32', 'tools'), '__')
+    if ((platform == 'tools' or platform == 'tools32')
+        and (issubclass (cls, target.AutoBuild)
+             and not issubclass (cls, tools.AutoBuild)
+             and not issubclass (cls, tools32.AutoBuild))):
+        cls = None
+    return cls
 
 def get_build_class (settings, flavour, name):
     cls = get_build_from_module (settings, name)
@@ -111,6 +121,8 @@ class Dependency:
                 self._flavour = system.Configure
             elif self.settings.platform == 'tools':
                 self._flavour = tools.AutoBuild
+            elif self.settings.platform == 'tools32':
+                self._flavour = tools32.AutoBuild
         return self._flavour
     
     def url (self):

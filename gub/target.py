@@ -149,7 +149,7 @@ cd %(builddir)s && chmod +x %(configure_binary)s && %(configure_command_native)s
             'LD': '%(toolchain_prefix)sld',
             'NM': '%(toolchain_prefix)snm',
             'PKG_CONFIG_PATH': '%(system_prefix)s/lib/pkgconfig',
-            'PATH': '%(cross_prefix)s/bin:%(tools_prefix)s/bin:%(tools_cross_prefix)s/bin:' + os.environ['PATH'],
+            'PATH': '%(cross_prefix)s/bin:%(tools_archmatch_prefix)s/bin:%(tools_prefix)s/bin:%(tools_cross_prefix)s/bin:' + os.environ['PATH'],
             'PERL5LIB': 'foo:%(tools_prefix)s/lib/perl5/5.10.0'
             + ':%(tools_prefix)s/lib/perl5/5.10.0/%(build_architecture)s'
             + ':%(tools_prefix)s/share/autoconf'
