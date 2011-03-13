@@ -1,5 +1,6 @@
 from gub import misc
 from gub import target
+from gub import tools
 
 class Sqlite (target.AutoBuild):
     source = 'http://www.sqlite.org/sqlite-3.6.4.tar.gz' # 3.3.16
@@ -21,3 +22,6 @@ class Sqlite__mingw (Sqlite):
     configure_flags = (' config_TARGET_EXEEXT=.exe '
                 + Sqlite.configure_flags
                 .replace ('--enable-threadsafe', '--disable-threadsafe'))
+
+class Sqlite__tools (tools.AutoBuild, Sqlite):
+    pass
