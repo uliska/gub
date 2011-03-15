@@ -1,0 +1,70 @@
+--- guile-1.9.15/module/system/base/compile.scm~	2011-02-15 10:54:38.483090146 +0100
++++ guile-1.9.15/module/system/base/compile.scm	2011-03-03 09:15:24.742333809 +0100
+@@ -51,7 +51,7 @@
+ ;; (put 'call-with-output-file/atomic 'scheme-indent-function 1)
+ (define* (call-with-output-file/atomic filename proc #:optional reference)
+   (let* ((template (string-append filename ".XXXXXX"))
+-         (tmp (mkstemp! template)))
++         (tmp (mkstemp! template "w+b")))
+     (call-once
+      (lambda ()
+        (with-throw-handler #t
+--- guile-1.9.15/libguile/posix.h~	2010-12-14 19:15:17.000000000 +0100
++++ guile-1.9.15/libguile/posix.h	2011-03-03 09:21:46.058955734 +0100
+@@ -67,7 +67,7 @@
+ SCM_API SCM scm_uname (void);
+ SCM_API SCM scm_environ (SCM env);
+ SCM_API SCM scm_tmpnam (void);
+-SCM_API SCM scm_mkstemp (SCM tmpl);
++SCM_API SCM scm_mkstemp (SCM tmpl, SCM mode);
+ SCM_API SCM scm_tmpfile (void);
+ SCM_API SCM scm_open_pipe (SCM pipestr, SCM modes);
+ SCM_API SCM scm_close_pipe (SCM port);
+--- guile-1.9.15/libguile/posix.c~	2011-01-29 21:36:58.000000000 +0100
++++ guile-1.9.15/libguile/posix.c	2011-03-03 09:14:46.745199721 +0100
+@@ -1329,8 +1329,8 @@
+ extern int mkstemp (char *);
+ #endif
+ 
+-SCM_DEFINE (scm_mkstemp, "mkstemp!", 1, 0, 0,
+-	    (SCM tmpl),
++SCM_DEFINE (scm_mkstemp, "mkstemp!", 1, 1, 0,
++	    (SCM tmpl, SCM mode),
+ 	    "Create a new unique file in the file system and return a new\n"
+ 	    "buffered port open for reading and writing to the file.\n"
+ 	    "\n"
+@@ -1338,6 +1338,8 @@
+ 	    "created: it must end with @samp{XXXXXX} and those @samp{X}s\n"
+ 	    "will be changed in the string to return the name of the file.\n"
+ 	    "(@code{port-filename} on the port also gives the name.)\n"
++	    "The optional @var{mode}, if given, is a string specifying the\n"
++	    "open mode of the file, e.g. w+b\n"
+ 	    "\n"
+ 	    "POSIX doesn't specify the permissions mode of the file, on GNU\n"
+ 	    "and most systems it's @code{#o600}.  An application can use\n"
+@@ -1354,7 +1356,12 @@
+ {
+   char *c_tmpl;
+   int rv;
+-  
++  SCM port;
++  char *c_mode = "w+";
++
++  if (!SCM_UNBNDP (mode))
++    c_mode = scm_to_locale_string (mode);
++
+   scm_dynwind_begin (0);
+ 
+   c_tmpl = scm_to_locale_string (tmpl);
+@@ -1369,7 +1376,10 @@
+ 			tmpl, SCM_INUM0);
+ 
+   scm_dynwind_end ();
+-  return scm_fdes_to_port (rv, "w+", tmpl);
++  port = scm_fdes_to_port (rv, c_mode, tmpl);
++  if (!SCM_UNBNDP (mode))
++    free (c_mode);
++  return port;
+ }
+ #undef FUNC_NAME
+ 

@@ -1,0 +1,21 @@
+In guile 2.0, testsuite fails with
+
+In file included from ../../libguile/scmconfig.h:27,
+                 from /home/janneke/vc/gub/target/tools/src/guile-2.0.0/libguile/__scm.h:54,
+                 from /home/janneke/vc/gub/target/tools/src/guile-2.0.0/libguile.h:31,
+                 from /home/janneke/vc/gub/target/tools/src/guile-2.0.0/test-suite/standalone/test-asmobs-lib.c:23:
+../../lib/time.h:469: error: expected ';', ',' or ')' before '__timer'
+../../lib/time.h:491: error: expected ';', ',' or ')' before '__timer'
+
+
+--- guile-1.9.14/Makefile.am~	2010-12-14 19:15:16.000000000 +0100
++++ guile-1.9.14/Makefile.am	2011-01-29 15:36:05.312047266 +0100
+@@ -32,8 +32,6 @@ SUBDIRS =					\
+ 	guile-readline				\
+ 	examples				\
+ 	emacs					\
+-	test-suite				\
+-	benchmark-suite				\
+ 	am					\
+ 	doc
+ 

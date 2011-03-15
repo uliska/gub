@@ -1,0 +1,22 @@
+diff --git a/libguile/dynl.c b/libguile/dynl.c
+index 2484dda..b612709 100644
+--- a/libguile/dynl.c
++++ b/libguile/dynl.c
+@@ -121,6 +121,17 @@ sysdep_dynl_value (const char *symb, void *handle, const char *subr)
+   return fptr;
+ }
+ 
++#ifdef __MINGW32__
++static void
++setenv (char const *name, char const *value)
++{
++  int len = strlen (value) + strlen (value) + 2;
++  char *str = malloc (len);
++  sprintf (str, "%s=%s", name, value);
++  putenv (str);
++}
++#endif /* __MINGW32__ */
++
+ /* Augment environment variable VARIABLE with VALUE, assuming VARIABLE
+    is a path kind of variable.  */
+ static void

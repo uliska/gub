@@ -13,12 +13,14 @@ class Guile (target.AutoBuild):
     # source = 'git://git.sv.gnu.org/guile.git&branch=branch_release-1-8&revision=bba579611b3671c7e4c1515b100f01c048a07935'
     source = 'http://ftp.gnu.org/pub/gnu/guile/guile-1.8.7.tar.gz'
     source = 'http://alpha.gnu.org/gnu/guile/guile-1.9.15.tar.gz'
+    source = 'http://ftp.gnu.org/gnu/guile/guile-2.0.0.tar.gz'
     patches = [
         #'guile-reloc-1.8.6.patch',
         'guile-1.9.14-reloc.patch',
         #'guile-cexp.patch',
         'guile-1.8.6-test-use-srfi.patch',
         #'guile-1.8.7-doc-snarfing.patch',
+        ##'guile-2.0.0-configure-cross.patch',
         'guile-1.9.14-configure-cross.patch',
         'guile-1.9.15-cross.patch',
         'guile-1.9.14-gnulib-libunistring.patch',
@@ -181,6 +183,9 @@ class Guile__mingw (Guile):
         'guile-1.9.15-mingw-fports.patch',
         'guile-1.9.15-mingw-rename.patch',
         'guile-1.9.15-mingw-cachedir.patch',
+        'guile-2.0.0-mingw-compile-binary.patch',
+        'guile-2.0.0-mingw-fchmod.patch',
+        'guile-2.0.0-mingw-dynl.patch',
         ]
     dependencies = (Guile.dependencies + [
             'regex-devel',
@@ -265,7 +270,10 @@ class Guile__linux__x86 (Guile):
                             'CPATH="%(srcdir)s:%(builddir)s:%(system_prefix)s/include" ')
 
 class Guile__tools (tools.AutoBuild, Guile):
-    patches = []
+    patches = [
+        'guile-2.0.0-testsuite.patch',
+        'guile-2.0.0-mingw-compile-binary.patch',
+        ]
     dependencies = (Guile.dependencies
                     + [
                 'autoconf',
@@ -307,7 +315,7 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
         self.file_sub ([('-std=gnu99', ''),('-std=c99', '')], '%(srcdir)s/configure')
     def install (self):
         tools.AutoBuild.install (self)
-        self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.9')
+        self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-2.0')
 #        self.file_sub ([('[(]string-join other-flags[)]', '(string-join (filter (lambda (x) (not (equal? x "-L/usr/lib"))) other-flags))')],
 #                       '%(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin/guile-config',
 #                       must_succeed=True)

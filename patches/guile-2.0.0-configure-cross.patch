@@ -1,0 +1,27 @@
+--- guile-1.9.14/configure.ac~	2011-01-27 18:33:17.300003072 +0100
++++ guile-1.9.14/configure.ac	2011-01-27 19:29:42.191669551 +0100
+@@ -76,11 +76,7 @@ AC_LIBTOOL_DLOPEN
+ AC_PROG_LIBTOOL
+ 
+ dnl Check for libltdl.
+-AC_LIB_HAVE_LINKFLAGS([ltdl], [], [#include <ltdl.h>],
+-  [lt_dlopenext ("foo");])
+-if test "x$HAVE_LIBLTDL" != "xyes"; then
+-  AC_MSG_ERROR([GNU libltdl (Libtool) not found, see README.])
+-fi
++AC_CHECK_LIB(ltdl, lt_dlopenext, [HAVE_LIBLTDL=yes AC_SUBST(HAVE_LIBLTDL) LTLIBLTDL="-lltdl" AC_SUBST(LTLIBLTDL)])
+ 
+ AC_CHECK_PROG(have_makeinfo, makeinfo, yes, no)
+ AM_CONDITIONAL(HAVE_MAKEINFO, test "$have_makeinfo" = yes)
+@@ -854,10 +850,7 @@ fi
+ 
+ 
+ dnl GMP tests
+-AC_LIB_HAVE_LINKFLAGS([gmp],
+-  [],
+-  [#include <gmp.h>],
+-  [mpz_import (0, 0, 0, 0, 0, 0, 0);])
++AC_CHECK_LIB(gmp, main, [HAVE_LIBGMP=yes AC_SUBST(HAVE_LIBGMP) LTLIBGMP="-lgmp" AC_SUBST(LTLIBGMP)])
+ 
+ if test "x$HAVE_LIBGMP" != "xyes"; then
+   AC_MSG_ERROR([GNU MP 4.1 or greater not found, see README])

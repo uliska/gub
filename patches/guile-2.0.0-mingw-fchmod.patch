@@ -1,0 +1,11 @@
+--- guile-1.9.15/libguile/filesys.c~	2011-03-04 10:36:13.417981644 +0100
++++ guile-1.9.15/libguile/filesys.c	2011-03-04 13:23:41.182832400 +0100
+@@ -121,7 +121,7 @@
+ #ifdef __MINGW32__
+ # define mkdir(path, mode) mkdir (path)
+ # define fsync(fd) _commit (fd)
+-# define fchmod(fd, mode) (-1)
++# define fchmod(fd, mode) (0)
+ #endif /* __MINGW32__ */
+ 
+ /* dirfd() returns the file descriptor underlying a "DIR*" directory stream.
