@@ -188,6 +188,7 @@ class Guile__mingw (Guile):
         'guile-2.0.0-mingw-dynl.patch',
         ]
     dependencies = (Guile.dependencies + [
+            'pthreads-w32',
             'regex-devel',
             'mingw-extras',
             ])
