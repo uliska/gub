@@ -11,7 +11,7 @@ class G_wrap (target.AutoBuild):
         'libffi',
         'tools::g-wrap',
         ]
-    source = 'http://download.savannah.gnu.org/releases/g-wrap/g-wrap-1.9.13.1.tar.gz'
+    source = 'http://download.savannah.gnu.org/releases/g-wrap/g-wrap-1.9.13.2.tar.gz'
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)
         build.add_dict (self, {'GUILE_LOAD_COMPILED_PATH': '%(tools_prefix)s/lib/guile/2.0/ccache'})
