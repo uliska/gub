@@ -11,20 +11,13 @@ from gub import tools32
 
 class Guile (target.AutoBuild):
     # source = 'git://git.sv.gnu.org/guile.git&branch=branch_release-1-8&revision=bba579611b3671c7e4c1515b100f01c048a07935'
-    source = 'http://ftp.gnu.org/pub/gnu/guile/guile-1.8.7.tar.gz'
-    source = 'http://alpha.gnu.org/gnu/guile/guile-1.9.15.tar.gz'
-    source = 'http://ftp.gnu.org/gnu/guile/guile-2.0.0.tar.gz'
+    source = 'http://ftp.gnu.org/gnu/guile/guile-2.0.0.1.tar.gz'
     patches = [
-        #'guile-reloc-1.8.6.patch',
         'guile-1.9.14-reloc.patch',
-        #'guile-cexp.patch',
         'guile-1.8.6-test-use-srfi.patch',
-        #'guile-1.8.7-doc-snarfing.patch',
-        ##'guile-1.9.14-configure-cross.patch',
         'guile-2.0.0-configure-cross.patch',
-        'guile-1.9.15-cross.patch',
+        'guile-2.0.0.1-cross.patch',
         'guile-1.9.14-gnulib-libunistring.patch',
-        #'guile-1.9.14-gnulib-libunistring-retooled.patch',
         ]
     force_autoupdate = True
     dependencies = [
@@ -108,10 +101,8 @@ exec %(tools_archmatch_prefix)s/bin/guile "$@"
         self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
         self.system ('%(tools_prefix)s/share/gnulib/gnulib-tool --import --dir=%(srcdir)s --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=build-aux --libtool --macro-prefix=gl --no-vc-files %(gnulib_modules)s')
         target.AutoBuild.patch (self)
-        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/putenv.c')
-        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/stdlib.in.h')
     def autoupdate (self):
-        self.system ('cd %(srcdir)s && autoreconf')
+        self.system ('cd %(srcdir)s && ./autogen.sh')
         # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
         # arbiters.c:(.text+0x0): multiple definition of `__gmpz_abs'
         self.file_sub ([('-std=gnu99', ''),('-std=c99', '')], '%(srcdir)s/configure')
@@ -219,6 +210,10 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
 
     gnulib_modules = (Guile.gnulib_modules
                       + 'accept bind close connect getpeername getsockname getsockopt listen recv recv recvfrom send sendto setsockopt shutdown socket ')
+    def patch (self):
+        Guile.patch (self)
+        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/putenv.c')
+        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/stdlib.in.h')
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?
         self.system ('''cd %(builddir)s/libguile &&make %(compile_flags_native)sgen-scmconfig guile_filter_doc_snarfage.exe''')
@@ -272,7 +267,7 @@ class Guile__linux__x86 (Guile):
 
 class Guile__tools (tools.AutoBuild, Guile):
     patches = [
-        'guile-2.0.0-testsuite.patch',
+        'guile-2.0.0.1-testsuite.patch',
         'guile-2.0.0-mingw-compile-binary.patch',
         ]
     dependencies = (Guile.dependencies
@@ -310,7 +305,7 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
         #Guile.autopatch (self)
         self.system ('cp -pv %(sourcefiledir)s/fcntl-o.m4 %(srcdir)s/m4')
     def autoupdate (self):
-        self.system ('cd %(srcdir)s && autoreconf')
+        self.system ('cd %(srcdir)s && ./autogen.sh')
         # .libs/libguile_2.0_la-arbiters.o: In function `__gmpz_abs':
         # arbiters.c:(.text+0x0): multiple definition of `__gmpz_abs'
         self.file_sub ([('-std=gnu99', ''),('-std=c99', '')], '%(srcdir)s/configure')
