@@ -1,0 +1,18 @@
+--- guile-2.0.0.1/module/system/base/compile.scm~	2011-03-17 12:37:36.545525860 +0100
++++ guile-2.0.0.1/module/system/base/compile.scm	2011-03-17 20:39:43.286994431 +0100
+@@ -77,7 +77,14 @@
+           (error "directory not writable" dir))
+       (begin
+         (ensure-writable-dir (dirname dir))
+-        (mkdir dir))))
++        (catch #t
++               (lambda ()
++                 (mkdir dir))
++               (lambda (key . args)
++                 (if (file-exists? dir)
++                     (if (access? dir W_OK)
++                         #t
++                         (error "directory not writable" dir))))))))
+ 
+ ;;; This function is among the trickiest I've ever written. I tried many
+ ;;; variants. In the end, simple is best, of course.

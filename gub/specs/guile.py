@@ -18,6 +18,7 @@ class Guile (target.AutoBuild):
         'guile-2.0.0-configure-cross.patch',
         'guile-2.0.0.1-cross.patch',
         'guile-1.9.14-gnulib-libunistring.patch',
+        'guile-2.0.0.1-compile-mkdir.patch',
         ]
     force_autoupdate = True
     dependencies = [
@@ -177,6 +178,7 @@ class Guile__mingw (Guile):
         'guile-2.0.0-mingw-compile-binary.patch',
         'guile-2.0.0-mingw-fchmod.patch',
         'guile-2.0.0-mingw-dynl.patch',
+        'guile-2.0.0.1-mingw-boot.scm',
         ]
     dependencies = (Guile.dependencies + [
             'pthreads-w32',
@@ -212,7 +214,7 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
                       + 'accept bind close connect getpeername getsockname getsockopt listen recv recv recvfrom send sendto setsockopt shutdown socket ')
     def patch (self):
         Guile.patch (self)
-        self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/putenv.c')
+        # self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/putenv.c')
         self.file_sub ([('putenv', 'gnulib_putenv')], '%(srcdir)s/lib/stdlib.in.h')
     def compile (self):
         ## Why the !?#@$ is .EXE only for guile_filter_doc_snarfage?
@@ -269,6 +271,7 @@ class Guile__tools (tools.AutoBuild, Guile):
     patches = [
         'guile-2.0.0.1-testsuite.patch',
         'guile-2.0.0-mingw-compile-binary.patch',
+        'guile-2.0.0.1-compile-mkdir.patch',
         ]
     dependencies = (Guile.dependencies
                     + [

@@ -1,0 +1,1316 @@
+diff --git a/ly/toc-init.ly b/ly/toc-init.ly
+index 488e22b..677bbb0 100644
+--- a/ly/toc-init.ly
++++ b/ly/toc-init.ly
+@@ -34,26 +34,26 @@
+ tocItemWithDotsMarkup = \markup \fill-with-pattern #1 #RIGHT .
+   \fromproperty #'toc:text \fromproperty #'toc:page
+ 
+-#(define-markup-list-command (table-of-contents layout props) ()
+-  ( _i "Outputs the table of contents, using the paper variable
+-@code{tocTitleMarkup} for its title, then the list of lines
+-built using the @code{tocItem} music function
+-Usage: @code{\\markuplines \\table-of-contents}" )
+-  (cons (interpret-markup layout props
+-			  (ly:output-def-lookup layout 'tocTitleMarkup))
+-	(space-lines (chain-assoc-get 'baseline-skip props)
+-		    (map (lambda (toc-item)
+-			   (let ((label (car toc-item))
+-				 (toc-markup (cadr toc-item))
+-				 (text (caddr toc-item)))
+-			     (interpret-markup
+-			       layout
+-			       (cons (list (cons 'toc:page 
+-					    (markup #:page-ref label "XXX" "?"))
+-					   (cons 'toc:text text))
+-				     props)
+-			       (ly:output-def-lookup layout toc-markup))))
+-			 (toc-items)))))
++%#(define-markup-list-command (table-of-contents layout props) ()
++%  ( _i "Outputs the table of contents, using the paper variable
++%@code{tocTitleMarkup} for its title, then the list of lines
++%built using the @code{tocItem} music function
++%Usage: @code{\\markuplines \\table-of-contents}" )
++%  (cons (interpret-markup layout props
++%			  (ly:output-def-lookup layout 'tocTitleMarkup))
++%	(space-lines (chain-assoc-get 'baseline-skip props)
++%		    (map (lambda (toc-item)
++%			   (let ((label (car toc-item))
++%				 (toc-markup (cadr toc-item))
++%				 (text (caddr toc-item)))
++%			     (interpret-markup
++%			       layout
++%			       (cons (list (cons 'toc:page 
++%					    (markup #:page-ref label "XXX" "?"))
++%					   (cons 'toc:text text))
++%				     props)
++%			       (ly:output-def-lookup layout toc-markup))))
++%			 (toc-items)))))
+ 
+ tocItem = 
+ #(define-music-function (parser location text) (markup?)
+diff --git a/scm/define-markup-commands.scm b/scm/define-markup-commands.scm
+index 5de7fdc..c52b953 100644
+--- a/scm/define-markup-commands.scm
++++ b/scm/define-markup-commands.scm
+@@ -2419,32 +2419,6 @@ normal text font, no matter what font was used earlier.
+ ;; symbols.
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+-(define-markup-command (musicglyph layout props glyph-name)
+-  (string?)
+-  #:category music
+-  "@var{glyph-name} is converted to a musical symbol; for example,
+-@code{\\musicglyph #\"accidentals.natural\"} selects the natural sign from
+-the music font.  See @ruser{The Feta font} for a complete listing of
+-the possible glyphs.
+-
+-@lilypond[verbatim,quote]
+-\\markup {
+-  \\musicglyph #\"f\"
+-  \\musicglyph #\"rests.2\"
+-  \\musicglyph #\"clefs.G_change\"
+-}
+-@end lilypond"
+-  (let* ((font (ly:paper-get-font layout
+-				  (cons '((font-encoding . fetaMusic)
+-					  (font-name . #f))
+-
+-						 props)))
+-	 (glyph (ly:font-get-glyph font glyph-name)))
+-    (if (null? (ly:stencil-expr glyph))
+-	(ly:warning (_ "Cannot find glyph ~a") glyph-name))
+-
+-    glyph))
+-
+ (define-markup-command (doublesharp layout props)
+   ()
+   #:category music
+@@ -2612,6 +2586,33 @@ Use the filled head if @var{filled} is specified.
+ 				     props))
+      name)))
+ 
++(define-markup-command (musicglyph layout props glyph-name)
++  (string?)
++  #:category music
++  "@var{glyph-name} is converted to a musical symbol; for example,
++@code{\\musicglyph #\"accidentals.natural\"} selects the natural sign from
++the music font.  See @ruser{The Feta font} for a complete listing of
++the possible glyphs.
++
++@lilypond[verbatim,quote]
++\\markup {
++  \\musicglyph #\"f\"
++  \\musicglyph #\"rests.2\"
++  \\musicglyph #\"clefs.G_change\"
++}
++@end lilypond"
++  (let* ((font (ly:paper-get-font layout
++				  (cons '((font-encoding . fetaMusic)
++					  (font-name . #f))
++
++						 props)))
++	 (glyph (ly:font-get-glyph font glyph-name)))
++    (if (null? (ly:stencil-expr glyph))
++	(ly:warning (_ "Cannot find glyph ~a") glyph-name))
++
++    glyph))
++
++
+ (define-markup-command (lookup layout props glyph-name)
+   (string?)
+   #:category other
+@@ -3137,7 +3138,7 @@ and/or @code{extra-offset} properties.
+ Make a fraction of two markups.
+ @lilypond[verbatim,quote]
+ \\markup {
+-  π ≈
++  pi is
+   \\fraction 355 113
+ }
+ @end lilypond"
+@@ -3575,3 +3576,13 @@ where @var{X} is the number of staff spaces."
+   (pair? markup-list?)
+   "Like @code{\\override}, for markup lists."
+   (interpret-markup-list layout (cons (list new-prop) props) args))
++
++; Draws a circle around markup if (= trigger 0.5)
++(define-markup-command
++  (conditional-circle-markup layout props trigger in-markup)
++  (number? markup?)
++  (interpret-markup layout props
++    (if (eqv? trigger 0.5)
++      (markup #:circle (markup in-markup))
++      (markup in-markup))))
++
+diff --git a/scm/define-woodwind-diagrams.scm b/scm/define-woodwind-diagrams.scm
+index 29825fd..de28080 100644
+--- a/scm/define-woodwind-diagrams.scm
++++ b/scm/define-woodwind-diagrams.scm
+@@ -256,15 +256,6 @@ returns @samp{1/3}."
+ 
+ ;;; Commands for text layout
+ 
+-; Draws a circle around markup if (= trigger 0.5)
+-(define-markup-command
+-  (conditional-circle-markup layout props trigger in-markup)
+-  (number? markup?)
+-  (interpret-markup layout props
+-    (if (eqv? trigger 0.5)
+-      (markup #:circle (markup in-markup))
+-      (markup in-markup))))
+-
+ ; Makes a list of named-keys
+ (define (make-name-keylist input-list key-list font-size)
+   (map (lambda (x y)
+diff --git a/scm/document-identifiers.scm b/scm/document-identifiers.scm
+index ffccf72..9ea707e 100644
+--- a/scm/document-identifiers.scm
++++ b/scm/document-identifiers.scm
+@@ -22,19 +22,12 @@
+       ((name-sym (car music-func-pair))
+        (music-func (cdr music-func-pair))
+        (func (ly:music-function-extract music-func))
+-       (arg-names
+-	(map symbol->string
+-	     (cddr (cadr (procedure-source func)))))
++       (arg-names "")
+        (doc (procedure-documentation func))
+        (sign (object-property func 'music-function-signature))
+        (type-names (map type-name sign))
+ 
+-       (signature-str
+-	(string-join
+-	 (map (lambda (x) (format "@var{~a} (~a)"
+-				  (car x)
+-				  (cadr x)))
+-	      (zip arg-names type-names)))))
++       (signature-str ""))
+     (format
+      "@item @code{~a}~a~a
+ @findex ~a
+diff --git a/scm/document-markup.scm b/scm/document-markup.scm
+index c348e66..b99165b 100644
+--- a/scm/document-markup.scm
++++ b/scm/document-markup.scm
+@@ -46,10 +46,7 @@
+          (f-name (symbol->string (procedure-name  func)))
+          (c-name (regexp-substitute/global #f "-markup(-list)?$" f-name  'pre "" 'post))
+          (sig (object-property func 'markup-signature))
+-         (arg-names (let ((arg-list (cadr (procedure-source func))))
+-                      (if (list? arg-list)
+-                          (map symbol->string (cddr arg-list))
+-                          (make-list (length sig) "arg"))))
++         (arg-names (make-list (length sig) "arg"))
+          (sig-type-names (map type-name sig))
+          (signature-str
+           (string-join
+@@ -79,11 +76,11 @@
+   (let* ((category-string (symbol->string category))
+          (category-name (string-capitalize (regexp-substitute/global #f
+                                         "-" category-string 'pre " " 'post)))
+-        (markup-functions (hash-fold (lambda (markup-function dummy functions)
+-				       (cons markup-function functions))
+-				     '()
+-				     (hashq-ref markup-functions-by-category
+-						category))))
++	 (markup-functions (hash-fold (lambda (markup-function dummy functions)
++					(cons markup-function functions))
++				      '()
++				      (hashq-ref markup-functions-by-category
++						 category))))
+     (make <texi-node>
+       #:appendix #t
+       #:name category-name
+diff --git a/scm/lily-library.scm b/scm/lily-library.scm
+index 0e2c810..2a5c760 100644
+--- a/scm/lily-library.scm
++++ b/scm/lily-library.scm
+@@ -746,6 +746,35 @@ Handy for debugging, possibly turned off."
+ 
+    (reverse matches))
+ 
++;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
++;; Color
++
++(define-public (color? x)
++  (and (list? x)
++       (= 3 (length x))
++       (apply eq? #t (map number? x))
++       (apply eq? #t (map (lambda (y) (<= 0 y 1)) x))))
++
++(define-public (rgb-color r g b) (list r g b))
++
++; predefined colors
++(define-public black       '(0.0 0.0 0.0))
++(define-public white       '(1.0 1.0 1.0))
++(define-public red         '(1.0 0.0 0.0))
++(define-public green       '(0.0 1.0 0.0))
++(define-public blue        '(0.0 0.0 1.0))
++(define-public cyan        '(0.0 1.0 1.0))
++(define-public magenta     '(1.0 0.0 1.0))
++(define-public yellow      '(1.0 1.0 0.0))
++
++(define-public grey        '(0.5 0.5 0.5))
++(define-public darkred     '(0.5 0.0 0.0))
++(define-public darkgreen   '(0.0 0.5 0.0))
++(define-public darkblue    '(0.0 0.0 0.5))
++(define-public darkcyan    '(0.0 0.5 0.5))
++(define-public darkmagenta '(0.5 0.0 0.5))
++(define-public darkyellow  '(0.5 0.5 0.0))
++
+ ;;;;;;;;;;;;;;;;
+ ;; other
+ 
+diff --git a/scm/lily.scm b/scm/lily.scm
+index 203a449..3558ba7 100644
+--- a/scm/lily.scm
++++ b/scm/lily.scm
+@@ -404,29 +404,28 @@ LilyPond safe mode.  The syntax is the same as `define*-public'."
+     "define-music-callbacks.scm"
+     "define-music-types.scm"
+     "define-note-names.scm"
+-    "output-lib.scm"
+     "c++.scm"
+-    "chord-ignatzek-names.scm"
+     "chord-entry.scm"
+-    "chord-generic-names.scm"
+     "stencil.scm"
++    "markup-macros.scm"
++    "define-markup-commands.scm"
+     "markup.scm"
+     "modal-transforms.scm"
++    "output-lib.scm"
++    "chord-generic-names.scm"
++    "chord-ignatzek-names.scm"
+     "music-functions.scm"
+     "part-combiner.scm"
+     "autochange.scm"
+     "define-music-properties.scm"
+     "time-signature-settings.scm"
+     "auto-beam.scm"
++    "chord-name.scm"
+     "bezier-tools.scm"
+     "parser-ly-from-scheme.scm"
+     "ly-syntax-constructors.scm"
+ 
+     "define-context-properties.scm"
+-    ;; guile 1.9 wants markups defined before referenced
+-    "define-markup-commands.scm"
+-
+-    "chord-name.scm"
+     "translation-functions.scm"
+     "script.scm"
+     "midi.scm"
+diff --git a/scm/markup-macros.scm b/scm/markup-macros.scm
+new file mode 100644
+index 0000000..e1f26e6
+--- /dev/null
++++ b/scm/markup-macros.scm
+@@ -0,0 +1,479 @@
++;;;; This file is part of LilyPond, the GNU music typesetter.
++;;;;
++;;;; Copyright (C) 2003--2010 Han-Wen Nienhuys <hanwen@xs4all.nl>
++;;;;
++;;;; LilyPond is free software: you can redistribute it and/or modify
++;;;; it under the terms of the GNU General Public License as published by
++;;;; the Free Software Foundation, either version 3 of the License, or
++;;;; (at your option) any later version.
++;;;;
++;;;; LilyPond is distributed in the hope that it will be useful,
++;;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
++;;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++;;;; GNU General Public License for more details.
++;;;;
++;;;; You should have received a copy of the GNU General Public License
++;;;; along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
++
++"
++Internally markup is stored as lists, whose head is a function.
++
++  (FUNCTION ARG1 ARG2 ... )
++
++When the markup is formatted, then FUNCTION is called as follows
++
++  (FUNCTION GROB PROPS ARG1 ARG2 ... )
++
++GROB is the current grob, PROPS is a list of alists, and ARG1.. are
++the rest of the arguments.
++
++The function should return a stencil (i.e. a formatted, ready to
++print object).
++
++
++To add a markup command, use the define-markup-command utility.
++
++  (define-markup-command (mycommand layout prop arg1 ...) (arg1-type? ...)
++    \"my command usage and description\"
++    ...function body...)
++
++The command is now available in markup mode, e.g.
++
++  \\markup { .... \\MYCOMMAND #1 argument ... }
++
++" ; "
++
++;;;;;;;;;;;;;;;;;;;;;;;;;;;
++;;; markup definer utilities
++
++;; For documentation purposes
++;; category -> markup functions
++(define-public markup-functions-by-category (make-hash-table 150))
++;; markup function -> used properties
++(define-public markup-functions-properties (make-weak-key-hash-table 151))
++;; List of markup list functions
++(define-public markup-list-functions (make-weak-key-hash-table 151))
++
++(use-modules (ice-9 optargs))
++
++(defmacro*-public define-markup-command
++  (command-and-args signature
++   #:key (category '()) (properties '())
++   #:rest body)
++  "
++* Define a COMMAND-markup function after command-and-args and body,
++register COMMAND-markup and its signature,
++
++* add COMMAND-markup to markup-functions-by-category,
++
++* sets COMMAND-markup markup-signature object property,
++
++* define a make-COMMAND-markup function.
++
++Syntax:
++  (define-markup-command (COMMAND layout props . arguments)
++                                 argument-types
++                                 [ #:properties properties ]
++    \"documentation string\"
++    ...command body...)
++
++where:
++  `argument-types' is a list of type predicates for arguments
++  `properties' a list of (property default-value) lists
++
++The specified properties are available as let-bound variables in the
++command body, using the respective `default-value' as fallback in case
++`property' is not found in `props'.  `props' itself is left unchanged:
++if you want defaults specified in that manner passed down into other
++markup functions, you need to adjust `props' yourself.
++
++The autogenerated documentation makes use of some optional
++specifications that are otherwise ignored:
++
++After `argument-types', you may also specify
++                                 [ #:category category ]
++where:
++  `category' is either a symbol or a symbol list specifying the
++             category for this markup command in the docs.
++
++As an element of the `properties' list, you may directly use a
++COMMANDx-markup symbol instead of a `(prop value)' list to indicate
++that this markup command is called by the newly defined command,
++adding its properties to the documented properties of the new
++command.  There is no protection against circular definitions.
++"
++  (let* ((command (car command-and-args))
++         (args (cdr command-and-args))
++         (command-name (string->symbol (format #f "~a-markup" command)))
++         (make-markup-name (string->symbol (format #f "make-~a-markup" command))))
++    (while (and (pair? body) (keyword? (car body)))
++	   (set! body (cddr body)))
++    `(begin
++       ;; define the COMMAND-markup function
++       ,(let* ((documentation (if (string? (car body))
++				  (list (car body))
++				  '()))
++	       (real-body (if (or (null? documentation)
++				  (null? (cdr body)))
++			      body (cdr body))))
++	  `(define-public (,command-name ,@args)
++	     ,@documentation
++	     (let ,(map (lambda (prop-spec)
++			  (let ((prop (car prop-spec))
++				(default-value (if (null? (cdr prop-spec))
++						   #f
++						   (cadr prop-spec)))
++				(props (cadr args)))
++			    `(,prop (chain-assoc-get ',prop ,props ,default-value))))
++			(filter pair? properties))
++	       ,@real-body)))
++       (set! (markup-command-signature ,command-name) (list ,@signature))
++       ;; Register the new function, for markup documentation
++       ,@(map (lambda (category)
++		`(hashq-set!
++		  (or (hashq-ref markup-functions-by-category ',category)
++		      (let ((hash (make-weak-key-hash-table 151)))
++			(hashq-set! markup-functions-by-category ',category
++				    hash)
++			hash))
++		  ,command-name #t))
++	      (if (list? category) category (list category)))
++       ;; Used properties, for markup documentation
++       (hashq-set! markup-functions-properties
++		   ,command-name
++		   (list ,@(map (lambda (prop-spec)
++				  (cond ((symbol? prop-spec)
++					 prop-spec)
++					 ((not (null? (cdr prop-spec)))
++					  `(list ',(car prop-spec) ,(cadr prop-spec)))
++					 (else
++					  `(list ',(car prop-spec)))))
++				(if (pair? args)
++				    properties
++				    (list)))))
++       ;; define the make-COMMAND-markup function
++       (define-public (,make-markup-name . args)
++	 (let ((sig (list ,@signature)))
++	   (make-markup ,command-name ,(symbol->string make-markup-name) sig args))))))
++
++(defmacro*-public define-markup-list-command
++  (command-and-args signature #:key (properties '()) #:rest body)
++  "Same as `define-markup-command', but defines a command that, when
++interpreted, returns a list of stencils instead of a single one"
++  (let* ((command (car command-and-args))
++         (args (cdr command-and-args))
++         (command-name (string->symbol (format #f "~a-markup-list" command)))
++         (make-markup-name (string->symbol (format #f "make-~a-markup-list" command))))
++    (while (and (pair? body) (keyword? (car body)))
++	   (set! body (cddr body)))
++    `(begin
++       ;; define the COMMAND-markup-list function
++       ,(let* ((documentation (if (string? (car body))
++				  (list (car body))
++				  '()))
++	       (real-body (if (or (null? documentation)
++				  (null? (cdr body)))
++			      body (cdr body))))
++	  `(define-public (,command-name ,@args)
++	     ,@documentation
++	     (let ,(map (lambda (prop-spec)
++			  (let ((prop (car prop-spec))
++				(default-value (if (null? (cdr prop-spec))
++						   #f
++						   (cadr prop-spec)))
++				(props (cadr args)))
++			    `(,prop (chain-assoc-get ',prop ,props ,default-value))))
++			(filter pair? properties))
++	       ,@real-body)))
++       (set! (markup-command-signature ,command-name) (list ,@signature))
++       ;; add the command to markup-list-function-list, for markup documentation
++       (hashq-set! markup-list-functions ,command-name #t)
++       ;; Used properties, for markup documentation
++       (hashq-set! markup-functions-properties
++		   ,command-name
++		   (list ,@(map (lambda (prop-spec)
++				  (cond ((symbol? prop-spec)
++					 prop-spec)
++					 ((not (null? (cdr prop-spec)))
++					  `(list ',(car prop-spec) ,(cadr prop-spec)))
++					 (else
++					  `(list ',(car prop-spec)))))
++				(if (pair? args)
++				    properties
++				    (list)))))
++       ;; it's a markup-list command:
++       (set-object-property! ,command-name 'markup-list-command #t)
++       ;; define the make-COMMAND-markup-list function
++       (define-public (,make-markup-name . args)
++	 (let ((sig (list ,@signature)))
++	   (list (make-markup ,command-name
++			      ,(symbol->string make-markup-name) sig args)))))))
++
++;;;;;;;;;;;;;;;
++;;; Utilities for storing and accessing markup commands signature
++;;; Examples:
++;;;
++;;; (set! (markup-command-signature raise-markup) (list number? markup?))
++;;; ==> (#<primitive-procedure number?> #<procedure markup? (obj)>)
++;;;
++;;; (markup-command-signature raise-markup)
++;;; ==> (#<primitive-procedure number?> #<procedure markup? (obj)>)
++;;;
++
++(define-public (markup-command-signature-ref markup-command)
++  "Return markup-command's signature (the 'markup-signature object property)"
++  (object-property markup-command 'markup-signature))
++
++(define-public (markup-command-signature-set! markup-command signature)
++  "Set markup-command's signature (as object property)"
++  (set-object-property! markup-command 'markup-signature signature)
++  signature)
++
++(define-public markup-command-signature
++  (make-procedure-with-setter markup-command-signature-ref
++                              markup-command-signature-set!))
++
++;;;;;;;;;;;;;;;;;;;;;;
++;;; markup type predicates
++
++(define (markup-function? x)
++  (and (markup-command-signature x)
++       (not (object-property x 'markup-list-command))))
++
++(define (markup-list-function? x)
++  (and (markup-command-signature x)
++       (object-property x 'markup-list-command)))
++
++(define-public (markup-command-list? x)
++  "Determine if `x' is a markup command list, ie. a list composed of
++a markup list function and its arguments."
++  (and (pair? x) (markup-list-function? (car x))))
++
++(define-public (markup-list? arg)
++  "Return a true value if `x' is a list of markups or markup command lists."
++  (define (markup-list-inner? lst)
++    (or (null? lst)
++	(and (or (markup? (car lst)) (markup-command-list? (car lst)))
++             (markup-list-inner? (cdr lst)))))
++  (not (not (and (list? arg) (markup-list-inner? arg)))))
++
++(define (markup-argument-list? signature arguments)
++  "Typecheck argument list."
++  (if (and (pair? signature) (pair? arguments))
++      (and ((car signature) (car arguments))
++           (markup-argument-list? (cdr signature) (cdr arguments)))
++      (and (null? signature) (null? arguments))))
++
++
++(define (markup-argument-list-error signature arguments number)
++  "return (ARG-NR TYPE-EXPECTED ARG-FOUND) if an error is detected, or
++#f is no error found.
++"
++  (if (and (pair? signature) (pair? arguments))
++      (if (not ((car signature) (car arguments)))
++          (list number (type-name (car signature)) (car arguments))
++          (markup-argument-list-error (cdr signature) (cdr arguments) (+ 1 number)))
++      #f))
++
++;;
++;; full recursive typecheck.
++;;
++(define (markup-typecheck? arg)
++  (or (string? arg)
++      (and (pair? arg)
++           (markup-function? (car arg))
++           (markup-argument-list? (markup-command-signature (car arg))
++                                  (cdr arg)))))
++
++;;
++;;
++;;
++;;
++(define (markup-thrower-typecheck arg)
++  "typecheck, and throw an error when something amiss.
++
++Uncovered - cheap-markup? is used."
++
++  (cond ((string? arg) #t)
++        ((not (pair? arg))
++         (throw 'markup-format "Not a pair" arg))
++        ((not (markup-function? (car arg)))
++         (throw 'markup-format "Not a markup function " (car arg)))
++        ((not (markup-argument-list? (markup-command-signature (car arg))
++                                     (cdr arg)))
++         (throw 'markup-format "Arguments failed  typecheck for " arg)))
++  #t)
++
++;;
++;; good enough if you only  use make-XXX-markup functions.
++;;
++(define (cheap-markup? x)
++  (or (string? x)
++      (and (pair? x)
++           (markup-function? (car x)))))
++
++;;
++;; replace by markup-thrower-typecheck for more detailed diagnostics.
++;;
++(define-public markup? cheap-markup?)
++
++(define-public (make-markup markup-function make-name signature args)
++  " Construct a markup object from MARKUP-FUNCTION and ARGS. Typecheck
++against SIGNATURE, reporting MAKE-NAME as the user-invoked function.
++"
++  (let* ((arglen (length args))
++	 (siglen (length signature))
++	 (error-msg (if (and (> siglen 0) (> arglen 0))
++			(markup-argument-list-error signature args 1)
++			#f)))
++    (if (or (not (= arglen siglen)) (< siglen 0) (< arglen 0))
++	(ly:error (string-append make-name ": "
++		   (_ "Wrong number of arguments.  Expect: ~A, found ~A: ~S"))
++		  siglen arglen args))
++    (if error-msg
++	(ly:error
++	 (string-append
++	  make-name ": "
++	  (_ "Invalid argument in position ~A.  Expect: ~A, found: ~S."))
++	  (car error-msg) (cadr error-msg)(caddr error-msg))
++	(cons markup-function args))))
++
++;;;;;;;;;;;;;;;;;;;;;;;;;;;
++;;; markup constructors
++;;; lilypond-like syntax for markup construction in scheme.
++
++(use-modules (ice-9 receive))
++
++(defmacro*-public markup* (#:rest body)
++  "Same as `markup', for use in a \\notes block."
++  `(ly:export (markup ,@body)))
++
++
++(define (compile-all-markup-expressions expr)
++  "Return a list of canonical markups expressions, e.g.:
++  (#:COMMAND1 arg11 arg12 #:COMMAND2 arg21 arg22 arg23)
++  ===>
++  ((make-COMMAND1-markup arg11 arg12)
++   (make-COMMAND2-markup arg21 arg22 arg23) ...)"
++  (do ((rest expr rest)
++       (markps '() markps))
++      ((null? rest) (reverse markps))
++    (receive (m r) (compile-markup-expression rest)
++             (set! markps (cons m markps))
++             (set! rest r))))
++
++(define (keyword->make-markup key)
++  "Transform a keyword, e.g. #:COMMAND, in a make-COMMAND-markup symbol."
++  (string->symbol (string-append "make-" (symbol->string (keyword->symbol key)) "-markup")))
++
++(define (compile-markup-expression expr)
++  "Return two values: the first complete canonical markup expression
++   found in `expr', e.g. (make-COMMAND-markup arg1 arg2 ...),
++   and the rest expression."
++  (cond ((and (pair? expr)
++              (keyword? (car expr)))
++         ;; expr === (#:COMMAND arg1 ...)
++         (let ((command (symbol->string (keyword->symbol (car expr)))))
++            (if (not (pair? (lookup-markup-command command)))
++                (ly:error (_ "Not a markup command: ~A") command))
++            (let* ((sig (markup-command-signature
++                         (car (lookup-markup-command command))))
++                   (sig-len (length sig)))
++              (do ((i 0 (1+ i))
++                   (args '() args)
++                   (rest (cdr expr) rest))
++                  ((>= i sig-len)
++                   (values (cons (keyword->make-markup (car expr)) (reverse args)) rest))
++                (cond ((eqv? (list-ref sig i) markup-list?)
++                       ;; (car rest) is a markup list
++                       (set! args (cons `(list ,@(compile-all-markup-expressions (car rest))) args))
++                       (set! rest (cdr rest)))
++                      (else
++                       ;; pick up one arg in `rest'
++                       (receive (a r) (compile-markup-arg rest)
++                         (set! args (cons a args))
++                         (set! rest r))))))))
++        ((and (pair? expr)
++              (pair? (car expr))
++              (keyword? (caar expr)))
++         ;; expr === ((#:COMMAND arg1 ...) ...)
++         (receive (m r) (compile-markup-expression (car expr))
++                  (values m (cdr expr))))
++        ((and (pair? expr)
++              (string? (car expr))) ;; expr === ("string" ...)
++         (values `(make-simple-markup ,(car expr)) (cdr expr)))
++        (else
++         ;; expr === (symbol ...) or ((funcall ...) ...)
++         (values (car expr)
++                 (cdr expr)))))
++
++(define (compile-all-markup-args expr)
++  "Transform `expr' into markup arguments"
++  (do ((rest expr rest)
++       (args '() args))
++      ((null? rest) (reverse args))
++    (receive (a r) (compile-markup-arg rest)
++             (set! args (cons a args))
++             (set! rest r))))
++
++(define (compile-markup-arg expr)
++  "Return two values: the desired markup argument, and the rest arguments"
++  (cond ((null? expr)
++         ;; no more args
++         (values '() '()))
++        ((keyword? (car expr))
++         ;; expr === (#:COMMAND ...)
++         ;; ==> build and return the whole markup expression
++         (compile-markup-expression expr))
++        ((and (pair? (car expr))
++              (keyword? (caar expr)))
++         ;; expr === ((#:COMMAND ...) ...)
++         ;; ==> build and return the whole markup expression(s)
++         ;; found in (car expr)
++         (receive (markup-expr rest-expr) (compile-markup-expression (car expr))
++                  (if (null? rest-expr)
++                      (values markup-expr (cdr expr))
++                      (values `(list ,markup-expr ,@(compile-all-markup-args rest-expr))
++                              (cdr expr)))))
++        ((and (pair? (car expr))
++              (pair? (caar expr)))
++         ;; expr === (((foo ...) ...) ...)
++         (values (cons 'list (compile-all-markup-args (car expr))) (cdr expr)))
++        (else (values (car expr) (cdr expr)))))
++
++(define (lookup-markup-command-aux symbol)
++  (let ((proc (catch 'misc-error
++                (lambda ()
++                  (module-ref (current-module) symbol))
++                (lambda (key . args) #f))))
++    (and (procedure? proc) proc)))
++
++(define-public (lookup-markup-command code)
++  (let ((proc (lookup-markup-command-aux
++	       (string->symbol (format #f "~a-markup" code)))))
++    (and proc (markup-function? proc)
++	 (cons proc (markup-command-signature proc)))))
++
++(define-public (lookup-markup-list-command code)
++  (let ((proc (lookup-markup-command-aux
++	       (string->symbol (format #f "~a-markup-list" code)))))
++     (and proc (markup-list-function? proc)
++	  (cons proc (markup-command-signature proc)))))
++
++;;;;;;;;;;;;;;;;;;;;;;
++;;; used in parser.yy to map a list of markup commands on markup arguments
++(define-public (map-markup-command-list commands markups)
++  "`markups' being a list of markups, eg (markup1 markup2 markup3),
++and `commands' a list of commands with their scheme arguments, in reverse order,
++eg: ((italic) (raise 4) (bold)), maps the commands on each markup argument, eg:
++ ((bold (raise 4 (italic markup1)))
++  (bold (raise 4 (italic markup2)))
++  (bold (raise 4 (italic markup3))))
++"
++  (map-in-order (lambda (arg)
++                  (let ((result arg))
++                    (for-each (lambda (cmd)
++                                (set! result (append cmd (list result))))
++                              commands)
++                    result))
++                markups))
+diff --git a/scm/markup.scm b/scm/markup.scm
+index 6bd9fd6..f6ba141 100644
+--- a/scm/markup.scm
++++ b/scm/markup.scm
+@@ -15,227 +15,6 @@
+ ;;;; You should have received a copy of the GNU General Public License
+ ;;;; along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
+ 
+-"
+-Internally markup is stored as lists, whose head is a function.
+-
+-  (FUNCTION ARG1 ARG2 ... )
+-
+-When the markup is formatted, then FUNCTION is called as follows
+-
+-  (FUNCTION GROB PROPS ARG1 ARG2 ... )
+-
+-GROB is the current grob, PROPS is a list of alists, and ARG1.. are
+-the rest of the arguments.
+-
+-The function should return a stencil (i.e. a formatted, ready to
+-print object).
+-
+-
+-To add a markup command, use the define-markup-command utility.
+-
+-  (define-markup-command (mycommand layout prop arg1 ...) (arg1-type? ...)
+-    \"my command usage and description\"
+-    ...function body...)
+-
+-The command is now available in markup mode, e.g.
+-
+-  \\markup { .... \\MYCOMMAND #1 argument ... }
+-
+-" ; "
+-
+-;;;;;;;;;;;;;;;;;;;;;;;;;;;
+-;;; markup definer utilities
+-
+-;; For documentation purposes
+-;; category -> markup functions
+-(define-public markup-functions-by-category (make-hash-table 150))
+-;; markup function -> used properties
+-(define-public markup-functions-properties (make-weak-key-hash-table 151))
+-;; List of markup list functions
+-(define-public markup-list-functions (make-weak-key-hash-table 151))
+-
+-(use-modules (ice-9 optargs))
+-
+-(defmacro*-public define-markup-command
+-  (command-and-args signature
+-   #:key (category '()) (properties '())
+-   #:rest body)
+-  "
+-* Define a COMMAND-markup function after command-and-args and body,
+-register COMMAND-markup and its signature,
+-
+-* add COMMAND-markup to markup-functions-by-category,
+-
+-* sets COMMAND-markup markup-signature object property,
+-
+-* define a make-COMMAND-markup function.
+-
+-Syntax:
+-  (define-markup-command (COMMAND layout props . arguments)
+-                                 argument-types
+-                                 [ #:properties properties ]
+-    \"documentation string\"
+-    ...command body...)
+-
+-where:
+-  `argument-types' is a list of type predicates for arguments
+-  `properties' a list of (property default-value) lists
+-
+-The specified properties are available as let-bound variables in the
+-command body, using the respective `default-value' as fallback in case
+-`property' is not found in `props'.  `props' itself is left unchanged:
+-if you want defaults specified in that manner passed down into other
+-markup functions, you need to adjust `props' yourself.
+-
+-The autogenerated documentation makes use of some optional
+-specifications that are otherwise ignored:
+-
+-After `argument-types', you may also specify
+-                                 [ #:category category ]
+-where:
+-  `category' is either a symbol or a symbol list specifying the
+-             category for this markup command in the docs.
+-
+-As an element of the `properties' list, you may directly use a
+-COMMANDx-markup symbol instead of a `(prop value)' list to indicate
+-that this markup command is called by the newly defined command,
+-adding its properties to the documented properties of the new
+-command.  There is no protection against circular definitions.
+-"
+-  (let* ((command (car command-and-args))
+-         (args (cdr command-and-args))
+-         (command-name (string->symbol (format #f "~a-markup" command)))
+-         (make-markup-name (string->symbol (format #f "make-~a-markup" command))))
+-    (while (and (pair? body) (keyword? (car body)))
+-	   (set! body (cddr body)))
+-    `(begin
+-       ;; define the COMMAND-markup function
+-       ,(let* ((documentation (if (string? (car body))
+-				  (list (car body))
+-				  '()))
+-	       (real-body (if (or (null? documentation)
+-				  (null? (cdr body)))
+-			      body (cdr body))))
+-	  `(define-public (,command-name ,@args)
+-	     ,@documentation
+-	     (let ,(map (lambda (prop-spec)
+-			  (let ((prop (car prop-spec))
+-				(default-value (if (null? (cdr prop-spec))
+-						   #f
+-						   (cadr prop-spec)))
+-				(props (cadr args)))
+-			    `(,prop (chain-assoc-get ',prop ,props ,default-value))))
+-			(filter pair? properties))
+-	       ,@real-body)))
+-       (set! (markup-command-signature ,command-name) (list ,@signature))
+-       ;; Register the new function, for markup documentation
+-       ,@(map (lambda (category)
+-		`(hashq-set!
+-		  (or (hashq-ref markup-functions-by-category ',category)
+-		      (let ((hash (make-weak-key-hash-table 151)))
+-			(hashq-set! markup-functions-by-category ',category
+-				    hash)
+-			hash))
+-		  ,command-name #t))
+-	      (if (list? category) category (list category)))
+-       ;; Used properties, for markup documentation
+-       (hashq-set! markup-functions-properties
+-		   ,command-name
+-		   (list ,@(map (lambda (prop-spec)
+-				  (cond ((symbol? prop-spec)
+-					 prop-spec)
+-					 ((not (null? (cdr prop-spec)))
+-					  `(list ',(car prop-spec) ,(cadr prop-spec)))
+-					 (else
+-					  `(list ',(car prop-spec)))))
+-				(if (pair? args)
+-				    properties
+-				    (list)))))
+-       ;; define the make-COMMAND-markup function
+-       (define-public (,make-markup-name . args)
+-	 (let ((sig (list ,@signature)))
+-	   (make-markup ,command-name ,(symbol->string make-markup-name) sig args))))))
+-
+-(defmacro*-public define-markup-list-command
+-  (command-and-args signature #:key (properties '()) #:rest body)
+-  "Same as `define-markup-command', but defines a command that, when
+-interpreted, returns a list of stencils instead of a single one"
+-  (let* ((command (car command-and-args))
+-         (args (cdr command-and-args))
+-         (command-name (string->symbol (format #f "~a-markup-list" command)))
+-         (make-markup-name (string->symbol (format #f "make-~a-markup-list" command))))
+-    (while (and (pair? body) (keyword? (car body)))
+-	   (set! body (cddr body)))
+-    `(begin
+-       ;; define the COMMAND-markup-list function
+-       ,(let* ((documentation (if (string? (car body))
+-				  (list (car body))
+-				  '()))
+-	       (real-body (if (or (null? documentation)
+-				  (null? (cdr body)))
+-			      body (cdr body))))
+-	  `(define-public (,command-name ,@args)
+-	     ,@documentation
+-	     (let ,(map (lambda (prop-spec)
+-			  (let ((prop (car prop-spec))
+-				(default-value (if (null? (cdr prop-spec))
+-						   #f
+-						   (cadr prop-spec)))
+-				(props (cadr args)))
+-			    `(,prop (chain-assoc-get ',prop ,props ,default-value))))
+-			(filter pair? properties))
+-	       ,@real-body)))
+-       (set! (markup-command-signature ,command-name) (list ,@signature))
+-       ;; add the command to markup-list-function-list, for markup documentation
+-       (hashq-set! markup-list-functions ,command-name #t)
+-       ;; Used properties, for markup documentation
+-       (hashq-set! markup-functions-properties
+-		   ,command-name
+-		   (list ,@(map (lambda (prop-spec)
+-				  (cond ((symbol? prop-spec)
+-					 prop-spec)
+-					 ((not (null? (cdr prop-spec)))
+-					  `(list ',(car prop-spec) ,(cadr prop-spec)))
+-					 (else
+-					  `(list ',(car prop-spec)))))
+-				(if (pair? args)
+-				    properties
+-				    (list)))))
+-       ;; it's a markup-list command:
+-       (set-object-property! ,command-name 'markup-list-command #t)
+-       ;; define the make-COMMAND-markup-list function
+-       (define-public (,make-markup-name . args)
+-	 (let ((sig (list ,@signature)))
+-	   (list (make-markup ,command-name
+-			      ,(symbol->string make-markup-name) sig args)))))))
+-
+-(define-public (make-markup markup-function make-name signature args)
+-  "Construct a markup object from @var{markup-function} and @var{args}.
+-Typecheck against @var{signature}, reporting @var{make-name} as the
+-user-invoked function."
+-  (let* ((arglen (length args))
+-	 (siglen (length signature))
+-	 (error-msg (if (and (> siglen 0) (> arglen 0))
+-			(markup-argument-list-error signature args 1)
+-			#f)))
+-    (if (or (not (= arglen siglen)) (< siglen 0) (< arglen 0))
+-	(ly:error (string-append make-name ": "
+-		   (_ "Wrong number of arguments.  Expect: ~A, found ~A: ~S"))
+-		  siglen arglen args))
+-    (if error-msg
+-	(ly:error
+-	 (string-append
+-	  make-name ": "
+-	  (_ "Invalid argument in position ~A.  Expect: ~A, found: ~S."))
+-	  (car error-msg) (cadr error-msg)(caddr error-msg))
+-	(cons markup-function args))))
+-
+-;;;;;;;;;;;;;;;;;;;;;;;;;;;
+-;;; markup constructors
+-;;; lilypond-like syntax for markup construction in scheme.
+-
+-(use-modules (ice-9 receive))
+-
+ (defmacro*-public markup (#:rest body)
+   "The `markup' macro provides a lilypond-like syntax for building markups.
+ 
+@@ -258,252 +37,6 @@ Use `markup*' in a \\notemode context."
+ 
+   (car (compile-all-markup-expressions `(#:line ,body))))
+ 
+-(defmacro*-public markup* (#:rest body)
+-  "Same as `markup', for use in a \\notes block."
+-  `(ly:export (markup ,@body)))
+-
+-
+-(define (compile-all-markup-expressions expr)
+-  "Return a list of canonical markups expressions, e.g.:
+-  (#:COMMAND1 arg11 arg12 #:COMMAND2 arg21 arg22 arg23)
+-  ===>
+-  ((make-COMMAND1-markup arg11 arg12)
+-   (make-COMMAND2-markup arg21 arg22 arg23) ...)"
+-  (do ((rest expr rest)
+-       (markps '() markps))
+-      ((null? rest) (reverse markps))
+-    (receive (m r) (compile-markup-expression rest)
+-             (set! markps (cons m markps))
+-             (set! rest r))))
+-
+-(define (keyword->make-markup key)
+-  "Transform a keyword, e.g. #:COMMAND, in a make-COMMAND-markup symbol."
+-  (string->symbol (string-append "make-" (symbol->string (keyword->symbol key)) "-markup")))
+-
+-(define (compile-markup-expression expr)
+-  "Return two values: the first complete canonical markup expression
+-   found in `expr', e.g. (make-COMMAND-markup arg1 arg2 ...),
+-   and the rest expression."
+-  (cond ((and (pair? expr)
+-              (keyword? (car expr)))
+-         ;; expr === (#:COMMAND arg1 ...)
+-         (let ((command (symbol->string (keyword->symbol (car expr)))))
+-            (if (not (pair? (lookup-markup-command command)))
+-                (ly:error (_ "Not a markup command: ~A") command))
+-            (let* ((sig (markup-command-signature
+-                         (car (lookup-markup-command command))))
+-                   (sig-len (length sig)))
+-              (do ((i 0 (1+ i))
+-                   (args '() args)
+-                   (rest (cdr expr) rest))
+-                  ((>= i sig-len)
+-                   (values (cons (keyword->make-markup (car expr)) (reverse args)) rest))
+-                (cond ((eqv? (list-ref sig i) markup-list?)
+-                       ;; (car rest) is a markup list
+-                       (set! args (cons `(list ,@(compile-all-markup-expressions (car rest))) args))
+-                       (set! rest (cdr rest)))
+-                      (else
+-                       ;; pick up one arg in `rest'
+-                       (receive (a r) (compile-markup-arg rest)
+-                         (set! args (cons a args))
+-                         (set! rest r))))))))
+-        ((and (pair? expr)
+-              (pair? (car expr))
+-              (keyword? (caar expr)))
+-         ;; expr === ((#:COMMAND arg1 ...) ...)
+-         (receive (m r) (compile-markup-expression (car expr))
+-                  (values m (cdr expr))))
+-        ((and (pair? expr)
+-              (string? (car expr))) ;; expr === ("string" ...)
+-         (values `(make-simple-markup ,(car expr)) (cdr expr)))
+-        (else
+-         ;; expr === (symbol ...) or ((funcall ...) ...)
+-         (values (car expr)
+-                 (cdr expr)))))
+-
+-(define (compile-all-markup-args expr)
+-  "Transform `expr' into markup arguments"
+-  (do ((rest expr rest)
+-       (args '() args))
+-      ((null? rest) (reverse args))
+-    (receive (a r) (compile-markup-arg rest)
+-             (set! args (cons a args))
+-             (set! rest r))))
+-
+-(define (compile-markup-arg expr)
+-  "Return two values: the desired markup argument, and the rest arguments"
+-  (cond ((null? expr)
+-         ;; no more args
+-         (values '() '()))
+-        ((keyword? (car expr))
+-         ;; expr === (#:COMMAND ...)
+-         ;; ==> build and return the whole markup expression
+-         (compile-markup-expression expr))
+-        ((and (pair? (car expr))
+-              (keyword? (caar expr)))
+-         ;; expr === ((#:COMMAND ...) ...)
+-         ;; ==> build and return the whole markup expression(s)
+-         ;; found in (car expr)
+-         (receive (markup-expr rest-expr) (compile-markup-expression (car expr))
+-                  (if (null? rest-expr)
+-                      (values markup-expr (cdr expr))
+-                      (values `(list ,markup-expr ,@(compile-all-markup-args rest-expr))
+-                              (cdr expr)))))
+-        ((and (pair? (car expr))
+-              (pair? (caar expr)))
+-         ;; expr === (((foo ...) ...) ...)
+-         (values (cons 'list (compile-all-markup-args (car expr))) (cdr expr)))
+-        (else (values (car expr) (cdr expr)))))
+-
+-;;;;;;;;;;;;;;;
+-;;; Utilities for storing and accessing markup commands signature
+-;;; Examples:
+-;;;
+-;;; (set! (markup-command-signature raise-markup) (list number? markup?))
+-;;; ==> (#<primitive-procedure number?> #<procedure markup? (obj)>)
+-;;;
+-;;; (markup-command-signature raise-markup)
+-;;; ==> (#<primitive-procedure number?> #<procedure markup? (obj)>)
+-;;;
+-
+-(define-public (markup-command-signature-ref markup-command)
+-  "Return @var{markup-command}'s signature (the @code{'markup-signature}
+-object property)."
+-  (object-property markup-command 'markup-signature))
+-
+-(define-public (markup-command-signature-set! markup-command signature)
+-  "Set @var{markup-command}'s signature (as object property)."
+-  (set-object-property! markup-command 'markup-signature signature)
+-  signature)
+-
+-(define-public markup-command-signature
+-  (make-procedure-with-setter markup-command-signature-ref
+-                              markup-command-signature-set!))
+-
+-(define (lookup-markup-command-aux symbol)
+-  (let ((proc (catch 'misc-error
+-                (lambda ()
+-                  (module-ref (current-module) symbol))
+-                (lambda (key . args) #f))))
+-    (and (procedure? proc) proc)))
+-
+-(define-public (lookup-markup-command code)
+-  (let ((proc (lookup-markup-command-aux
+-	       (string->symbol (format #f "~a-markup" code)))))
+-    (and proc (markup-function? proc)
+-	 (cons proc (markup-command-signature proc)))))
+-
+-(define-public (lookup-markup-list-command code)
+-  (let ((proc (lookup-markup-command-aux
+-	       (string->symbol (format #f "~a-markup-list" code)))))
+-     (and proc (markup-list-function? proc)
+-	  (cons proc (markup-command-signature proc)))))
+-
+-;;;;;;;;;;;;;;;;;;;;;;
+-;;; used in parser.yy to map a list of markup commands on markup arguments
+-(define-public (map-markup-command-list commands markups)
+-  "@var{markups} being a list of markups, for example
+-@code{(markup1 markup2 markup3)}, and @var{commands} a list of commands with
+-their scheme arguments, in reverse order, for example
+-@code{((italic) (raise 4) (bold))}, map the commands on each markup argument,
+-for example
+-@example
+-((bold (raise 4 (italic markup1)))
+- (bold (raise 4 (italic markup2)))
+- (bold (raise 4 (italic markup3))))
+-@end example"
+-  (map-in-order (lambda (arg)
+-                  (let ((result arg))
+-                    (for-each (lambda (cmd)
+-                                (set! result (append cmd (list result))))
+-                              commands)
+-                    result))
+-                markups))
+-
+-;;;;;;;;;;;;;;;;;;;;;;
+-;;; markup type predicates
+-
+-(define (markup-function? x)
+-  (and (markup-command-signature x)
+-       (not (object-property x 'markup-list-command))))
+-
+-(define (markup-list-function? x)
+-  (and (markup-command-signature x)
+-       (object-property x 'markup-list-command)))
+-
+-(define-public (markup-command-list? x)
+-  "Determine whether @var{x} is a markup command list, i.e. a list
+-composed of a markup list function and its arguments."
+-  (and (pair? x) (markup-list-function? (car x))))
+-
+-(define-public (markup-list? arg)
+-  "Return @code{#t} if @var{x} is a list of markups or markup command lists."
+-  (define (markup-list-inner? lst)
+-    (or (null? lst)
+-	(and (or (markup? (car lst)) (markup-command-list? (car lst)))
+-             (markup-list-inner? (cdr lst)))))
+-  (not (not (and (list? arg) (markup-list-inner? arg)))))
+-
+-(define (markup-argument-list? signature arguments)
+-  "Typecheck argument list."
+-  (if (and (pair? signature) (pair? arguments))
+-      (and ((car signature) (car arguments))
+-           (markup-argument-list? (cdr signature) (cdr arguments)))
+-      (and (null? signature) (null? arguments))))
+-
+-
+-(define (markup-argument-list-error signature arguments number)
+-  "return (ARG-NR TYPE-EXPECTED ARG-FOUND) if an error is detected, or
+-#f is no error found.
+-"
+-  (if (and (pair? signature) (pair? arguments))
+-      (if (not ((car signature) (car arguments)))
+-          (list number (type-name (car signature)) (car arguments))
+-          (markup-argument-list-error (cdr signature) (cdr arguments) (+ 1 number)))
+-      #f))
+-
+-;;
+-;; full recursive typecheck.
+-;;
+-(define (markup-typecheck? arg)
+-  (or (string? arg)
+-      (and (pair? arg)
+-           (markup-function? (car arg))
+-           (markup-argument-list? (markup-command-signature (car arg))
+-                                  (cdr arg)))))
+-
+-;;
+-;;
+-;;
+-;;
+-(define (markup-thrower-typecheck arg)
+-  "typecheck, and throw an error when something amiss.
+-
+-Uncovered - cheap-markup? is used."
+-
+-  (cond ((string? arg) #t)
+-        ((not (pair? arg))
+-         (throw 'markup-format "Not a pair" arg))
+-        ((not (markup-function? (car arg)))
+-         (throw 'markup-format "Not a markup function " (car arg)))
+-        ((not (markup-argument-list? (markup-command-signature (car arg))
+-                                     (cdr arg)))
+-         (throw 'markup-format "Arguments failed  typecheck for " arg)))
+-  #t)
+-
+-;;
+-;; good enough if you only  use make-XXX-markup functions.
+-;;
+-(define (cheap-markup? x)
+-  (or (string? x)
+-      (and (pair? x)
+-           (markup-function? (car x)))))
+-
+-;;
+-;; replace by markup-thrower-typecheck for more detailed diagnostics.
+-;;
+-(define-public markup? cheap-markup?)
+-
+ ;; utility
+ 
+ (define (markup-join markups sep)
+diff --git a/scm/output-lib.scm b/scm/output-lib.scm
+index 27c69fd..5fd9c4c 100644
+--- a/scm/output-lib.scm
++++ b/scm/output-lib.scm
+@@ -388,37 +388,6 @@ and duration-log @var{log}."
+ 			 (make-simple-markup (format "~a" num))
+ 			 (markup #:fontsize -5 #:note numeratornote UP)))))
+ 
+-
+-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+-;; Color
+-
+-(define-public (color? x)
+-  (and (list? x)
+-       (= 3 (length x))
+-       (apply eq? #t (map number? x))
+-       (apply eq? #t (map (lambda (y) (<= 0 y 1)) x))))
+-
+-(define-public (rgb-color r g b) (list r g b))
+-
+-; predefined colors
+-(define-public black       '(0.0 0.0 0.0))
+-(define-public white       '(1.0 1.0 1.0))
+-(define-public red         '(1.0 0.0 0.0))
+-(define-public green       '(0.0 1.0 0.0))
+-(define-public blue        '(0.0 0.0 1.0))
+-(define-public cyan        '(0.0 1.0 1.0))
+-(define-public magenta     '(1.0 0.0 1.0))
+-(define-public yellow      '(1.0 1.0 0.0))
+-
+-(define-public grey        '(0.5 0.5 0.5))
+-(define-public darkred     '(0.5 0.0 0.0))
+-(define-public darkgreen   '(0.0 0.5 0.0))
+-(define-public darkblue    '(0.0 0.0 0.5))
+-(define-public darkcyan    '(0.0 0.5 0.5))
+-(define-public darkmagenta '(0.5 0.0 0.5))
+-(define-public darkyellow  '(0.5 0.5 0.0))
+-
+-
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; key signature
+ 
