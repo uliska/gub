@@ -68,3 +68,122 @@
  }
  #undef FUNC_NAME
  
+--- guile-2.0.0.1/libguile/ports.h~	2011-03-13 23:21:07.000000000 +0100
++++ guile-2.0.0.1/libguile/ports.h	2011-03-18 21:23:27.834575752 +0100
+@@ -137,6 +137,7 @@ SCM_INTERNAL SCM scm_i_port_weak_hash;
+ #define SCM_RDNG	(2L<<16) /* Is it a readable port? */
+ #define SCM_WRTNG	(4L<<16) /* Is it writable? */
+ #define SCM_BUF0	(8L<<16) /* Is it unbuffered? */
++#define SCM_BINARY	(16L<<16) /* Is it binary? */
+ #define SCM_BUFLINE     (64L<<16) /* Is it line-buffered? */
+ 
+ #define SCM_PORTP(x) (!SCM_IMP (x) && (SCM_TYP7 (x) == scm_tc7_port))
+--- guile-2.0.0.1/libguile/ports.c~	2011-03-13 23:21:07.000000000 +0100
++++ guile-2.0.0.1/libguile/ports.c	2011-03-18 21:27:07.755942569 +0100
+@@ -767,6 +767,7 @@ scm_i_mode_bits_n (SCM modes)
+ 	     || scm_i_string_contains_char (modes, 'a')
+ 	     || scm_i_string_contains_char (modes, '+') ? SCM_WRTNG : 0)
+ 	  | (scm_i_string_contains_char (modes, '0') ? SCM_BUF0 : 0)
++	  | (scm_i_string_contains_char (modes, 'b') ? SCM_BINARY : 0)
+ 	  | (scm_i_string_contains_char (modes, 'l') ? SCM_BUFLINE : 0));
+ }
+ 
+@@ -816,6 +817,8 @@ SCM_DEFINE (scm_port_mode, "port-mode",
+     strcpy (modes, "w");
+   if (SCM_CELL_WORD_0 (port) & SCM_BUF0)
+     strcat (modes, "0");
++  if (SCM_CELL_WORD_0 (port) & SCM_BINARY)
++    strcat (modes, "b");
+   return scm_from_locale_string (modes);
+ }
+ #undef FUNC_NAME
+--- guile-2.0.0.1/libguile/mkstemp.c~	2011-03-13 23:21:07.000000000 +0100
++++ guile-2.0.0.1/libguile/mkstemp.c	2011-03-18 22:06:10.889140473 +0100
+@@ -51,6 +51,7 @@
+    conflicts with a declaration in a system header file, we'll find
+    out, because we should include that header file here.  */
+ int mkstemp (char *);
++int mkostemp (char *, int flags);
+ 
+ /* Generate a unique temporary file name from TEMPLATE.
+ 
+@@ -61,10 +62,11 @@ int mkstemp (char *);
+    The last six characters of TEMPLATE must be "XXXXXX"; they are
+    replaced with a string that makes the filename unique.
+ 
+-   Returns a file descriptor open on the file for reading and writing.  */
++   Returns a file descriptor on the file, open with FLAGS .  */
+ int
+-mkstemp (template)
++mkostemp (template, flags)
+      char *template;
++     int flags;
+ {
+   static const char letters[]
+     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+@@ -112,7 +114,7 @@ mkstemp (template)
+       v /= 62;
+       XXXXXX[5] = letters[v % 62];
+ 
+-      fd = open (template, O_RDWR|O_CREAT|O_EXCL, 0600);
++      fd = open (template, flags, 0600);
+       if (fd >= 0)
+ 	/* The file does not exist.  */
+ 	return fd;
+@@ -127,3 +129,24 @@ mkstemp (template)
+   template[0] = '\0';
+   return -1;
+ }
++
++/* Generate a unique temporary file name from TEMPLATE.
++
++   TEMPLATE has the form:
++
++   <path>/ccXXXXXX
++
++   The last six characters of TEMPLATE must be "XXXXXX"; they are
++   replaced with a string that makes the filename unique.
++
++   Returns a file descriptor on the file for reading and writing */
++int
++mkstemp (template)
++     char *template;
++{
++  return mkostemp (template, O_RDWR|O_CREAT|O_EXCL
++#ifdef O_BINARY
++		   |O_BINARY
++#endif
++		   );
++}
+--- guile-2.0.0.1/libguile/fports.c~	2011-03-18 22:09:54.270594577 +0100
++++ guile-2.0.0.1/libguile/fports.c	2011-03-18 22:09:45.086370334 +0100
+@@ -568,6 +571,8 @@ scm_i_fdes_to_port (int fdes, long mode_
+     else
+       scm_fport_buffer_add (port, -1, -1);
+   }
++  if (mode_bits & SCM_BINARY)
++    scm_i_set_port_encoding_x (port, 0);
+   SCM_SET_FILENAME (port, name);
+   scm_i_pthread_mutex_unlock (&scm_i_port_table_mutex);
+   return port;
+--- guile-2.0.0.1/libguile/load.c~	2011-03-17 20:58:49.923054099 +0100
++++ guile-2.0.0.1/libguile/load.c	2011-03-18 23:02:16.870989978 +0100
+@@ -887,9 +887,15 @@ SCM_DEFINE (scm_primitive_load_path, "pr
+       && scm_is_string (scm_car (*scm_loc_load_compiled_extensions)))
+     {
+       SCM fallback = scm_string_append
+-        (scm_list_3 (*scm_loc_compile_fallback_path,
+-                     full_filename,
+-                     scm_car (*scm_loc_load_compiled_extensions)));
++	(scm_list_3 (*scm_loc_compile_fallback_path,
++		     scm_equal_p (scm_i_substring (full_filename, 1, 2),
++				  scm_from_locale_string (":"))
++		     /* on MinGW remove drive-letter separator `:' to
++			obtain valid file name */
++		     ? scm_i_substring (full_filename, 2,
++					scm_i_string_length (full_filename))
++		     : full_filename,
++		     scm_car (*scm_loc_load_compiled_extensions)));
+       if (scm_is_true (scm_stat (fallback, SCM_BOOL_F)))
+         {
+           compiled_filename = fallback;
