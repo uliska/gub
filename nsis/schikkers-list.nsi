@@ -337,14 +337,14 @@ scm_done:
 	;;StrCmp $R0 "" 0 scm_auto_file
 	WriteRegStr HKCR "Guile\shell" "" "open"
 	# %1 is the GUILE command, so must be quoted bo the space
-	WriteRegExpandStr HKCR "Guile\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" --no-auto-compile "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	WriteRegExpandStr HKCR "Guile\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 
 ;;scm_auto_file:
 	ReadRegStr $R0 HKCR "scm_auto_file\shell\open\command" ""
 	;;StrCmp $R0 "" 0 scm_end
 	WriteRegStr HKCR "scm_auto_file\shell" "" "open"
 	# %1 is the GUILE command, so must be quoted bo the space
-	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" --no-auto-compile "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+	WriteRegExpandStr HKCR "scm_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 ;;scm_end:	
 FunctionEnd
 
