@@ -55,6 +55,3 @@ class Schikkers_list__mingw (Schikkers_list):
         self.system ('''FONTFORGE_LANGUAGE=ff fontforge -c 'Open($1); Generate($2)' %(system_prefix)s/share/lilypond/current/fonts/otf/emmentaler-20.otf %(install_prefix)s/share/lilypond/current/fonts/ttf/emmentaler-20.ttf''')
         self.system ('cd %(install_prefix)s/bin && rm -f ikli')
         self.system ('cd %(install_prefix)s/bin && mv schikkers-list schikkers-list.scm')
-        self.file_sub ([(' --debug ', ' --no-autocompile --debug '),
-                        ],
-                       '%(install_prefix)s/bin/schikkers-list.scm', must_succeed=True)
