@@ -187,3 +187,18 @@
        if (scm_is_true (scm_stat (fallback, SCM_BOOL_F)))
          {
            compiled_filename = fallback;
+--- guile-2.0.0.1/module/ice-9/boot-9.scm~	2011-03-18 23:39:22.092737409 +0100
++++ guile-2.0.0.1/module/ice-9/boot-9.scm	2011-03-19 09:23:48.673392189 +0100
+@@ -3277,7 +3277,11 @@ module '(ice-9 q) '(make-q q-length))}."
+          (string-append
+           %compile-fallback-path
+           ;; no need for '/' separator here, canon-path is absolute
+-          canon-path
++          (if (eq? (string-ref canon-path 1) #\:)
++              ;; on Mingw remove drive-letter separator `:' to
++              ;; obtain valid file name
++              (substring canon-path 2)
++              canon-path)
+           (cond ((or (null? %load-compiled-extensions)
+                      (string-null? (car %load-compiled-extensions)))
+                  (warn "invalid %load-compiled-extensions"
