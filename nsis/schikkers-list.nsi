@@ -272,7 +272,7 @@ Function create_shortcuts
 	CreateDirectory "$SMPROGRAMS\Schikkers-List"
 	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List.lnk" \
 		"$INSTDIR\usr\bin\schikkers-list.scm" ""\
- 		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
+ 		"$INSTDIR\usr\share\guile\site\ikli\images\note-elevator.ico" 0 SW_SHOWNORMAL
 	CreateShortCut "$SMPROGRAMS\Schikkers-List\Schikkers-List Website.lnk" \
 		"http://schikkers-list.org/" "" \
 		"firefox.exe" 0
@@ -290,7 +290,7 @@ Function create_shortcuts
 		"SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 	CreateShortCut "$DESKTOP\Schikkers-List.lnk" \
 		"$INSTDIR\usr\bin\schikkers-list.scm" ""\
- 		"$INSTDIR\usr\share\guile\site\ikli\images\ikli.ico" 0 SW_SHOWNORMAL
+ 		"$INSTDIR\usr\share\ikli\images\note-elevator.ico" 0 SW_SHOWNORMAL
 FunctionEnd
 
 Function registry_python
@@ -352,15 +352,34 @@ FunctionEnd
 !include "FontReg.nsh"
 
 Function postinstall_schikkers_list
-	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\Emmentaler-20.otf" "$WINDIR\Fonts\Emmentaler-20.otf"
-	StrCpy $FONT_DIR "$WINDIR\Fonts"
 ;;	!insertmacro InstallTTFFont "${ROOT}\usr\share\lilypond\current\fonts\ttf\Emmentaler-20.ttf"
-	!insertmacro InstallFONFont "${ROOT}\usr\share\lilypond\current\fonts\otf\Emmentaler-20.otf" "Emmentaler-20 (TrueType)"
+
+	StrCpy $FONT_DIR "$WINDIR\Fonts"
+
+	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\Emmentaler-20.otf" "$WINDIR\Fonts\Emmentaler-20.otf"
+	!insertmacro InstallFONFont "${ROOT}\usr\share\lilypond\current\fonts\otf\Emmentaler-20.otf" "Emmentaler-20 (OpenType)"
+
+	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\CenturySchL-BoldItal.otf" "$WINDIR\Fonts\CenturySchL-BoldItal.otf"
+	!insertmacro InstallFONFont "${ROOT}\usr\share\lilypond\current\fonts\otf\CenturySchL-BoldItal.otf" "Century Schoolbook Bold Italic (Open Type)"
+
+	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\CenturySchL-Bold.otf" "$WINDIR\Fonts\CenturySchL-Bold.otf"
+	!insertmacro InstallFONFont "${ROOT}\usr\share\lilypond\current\fonts\otf\CenturySchL-Bold.otf" "Century Schoolbook Bold (OpenType)"
+
+	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\CenturySchL-Ital.otf" "$WINDIR\Fonts\CenturySchL-Ital.otf"
+	!insertmacro InstallFONFont "${ROOT}\usr\share\lilypond\current\fonts\otf\CenturySchL-Ital.otf" "Century Schoolbook Italic (OpenType)"
+
+	CopyFiles /silent "$INSTDIR\usr\share\lilypond\current\fonts\otf\CenturySchL-Roma.otf" "$WINDIR\Fonts\CenturySchL-Roma.otf"
+	!insertmacro InstallFONFont "${ROOT}\usr\share\lilypond\current\fonts\otf\CenturySchL-Roma.otf" "Century Schoolbook Roman (OpenType)"
+
 	ClearErrors
 FunctionEnd
 
 Function un.install_schikkers_list_ttf
 ;	!insertmacro RemoveFONFont "Emmentaler-20.otf"
 	Delete "$WINDIR\Fonts\Emmentaler-20.otf"
+	Delete "$WINDIR\Fonts\CenturySchL-BoldItal.otf"
+	Delete "$WINDIR\Fonts\CenturySchL-Bold.otf"
+	Delete "$WINDIR\Fonts\CenturySchL-Ital.otf"
+	Delete "$WINDIR\Fonts\CenturySchL-Roma.otf"
 	ClearErrors
 FunctionEnd
