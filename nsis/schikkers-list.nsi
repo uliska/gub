@@ -95,6 +95,7 @@ fresh_install:
 
 	Call registry_installer
 	Call registry_path
+ 	Call registry_sy
 	Call postinstall_schikkers_list
 SectionEnd
 
@@ -318,6 +319,33 @@ py_done:
 	# %1 is the PYTHON command, so must be quoted bo the space
 	WriteRegExpandStr HKCR "py_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\python-windows.exe" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
 ;;py_end:	
+FunctionEnd
+
+Function registry_sy
+	ReadRegStr $R0 HKLM "${ENVIRON}" "PATHEXT"
+ 	${StrLoc} $0 $R0 ".SY;" >
+	StrCmp $0 "" 0 sy_done
+	WriteRegStr HKLM "${ENVIRON}" "PATHEXT" ".SY;$R0"
+
+sy_done:
+	WriteRegStr HKCR ".sy" "" "Schikkers-List"
+	WriteRegStr HKCR ".sy" "Schikkers-List" "Schikkers-List"
+	WriteRegStr HKCR ".sy" "Content Type" "text/schikkers-list-source"
+
+;;sy_open:
+	ReadRegStr $R0 HKCR "Guile\shell\open\command" ""
+	;;StrCmp $R0 "" 0 sy_auto_file
+	WriteRegStr HKCR "Schikkers-List\shell" "" "open"
+	# %1 is the GUILE command, so must be quoted bo the space
+	WriteRegExpandStr HKCR "Schikkers-List\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "$INSTDIR\usr\bin\schikkers-list.scm" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+
+;;sy_auto_file:
+	ReadRegStr $R0 HKCR "sy_auto_file\shell\open\command" ""
+	;;StrCmp $R0 "" 0 sy_end
+	WriteRegStr HKCR "sy_auto_file\shell" "" "open"
+	# %1 is the GUILE command, so must be quoted bo the space
+	WriteRegExpandStr HKCR "sy_auto_file\shell\open\command" "" '"$INSTDIR\usr\bin\guile-windows.exe" "$INSTDIR\usr\bin\schikkers-list.scm" "%1" %2 %3 %4 %5 %6 %7 %8 %9'
+;;sy_end:	
 FunctionEnd
 
 Function registry_guile
