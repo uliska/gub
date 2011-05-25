@@ -15,8 +15,9 @@ def change_target_package (package):
 
 # tools packages, such as guile 2.0, that can only compile
 # to equivalent binary platforms: endianness and word length
-tools_archmatch = ['guile', 'tools::guile']
-libs_archmatch = ['gettext', 'gmp', 'guile', 'libtool', 'libunistring', 'libgc']
+tools_archmatch = [] #'guile', 'tools::guile']
+libs_archmatch = [] #'gettext', 'gmp', 'guile', 'libtool', 'libunistring', 'libgc']
+
 
 def package_auto_dependency_dict (package):
     '''Generate get_build_dependencies () and get_dependency_dict ({'':})
