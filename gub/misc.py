@@ -144,7 +144,7 @@ def version_from_pc_in (pc_in, default_version='0.0.0'):
     return default_version
 
 def version_to_string (t):
-    if t[-1]:
+    if t[-1] and t[-1] != '0':
         return '%s-%s' % ('.'.join (map (str, t[:-1])), t[-1])
     return '.'.join (map (str, t[:-1]))
 
@@ -158,11 +158,7 @@ def string_to_version (s):
     s = re.sub ('([^0-9][^0-9]*)', ' \\1 ', s)
     s = re.sub ('[ _.-][ _.-]*', ' ', s)
     s = s.strip ()
-    def atoi (x):
-        if re.match ('^[0-9]+$', x):
-            return int (x)
-        return x
-    return tuple (map (atoi, (s.split (' '))))
+    return tuple (s.split (' '))
 
 def is_ball (s):
     # FIXME: do this properly, by identifying different flavours:

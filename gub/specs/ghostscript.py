@@ -22,10 +22,14 @@ models.'''
     exe = ''
     revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
-    source = 'http://mirror2.cs.wisc.edu/pub/mirrors/ghost/GPL/gs870/ghostscript-8.70.tar.gz'
+    source = 'http://mirror2.cs.wisc.edu/pub/mirrors/ghost/GPL/gs902/ghostscript-9.02.tar.gz'
     patches = [
-        'ghostscript-8.70-make.patch',
-        ]
+        'ghostscript-9.00-make.patch',
+        'ghostscript-9.00-cygwin.patch',
+        'ghostscript-9.00-share-libtiff-init.patch',
+        'ghostscript-9.00-windows-snprintf.patch',
+        'ghostscript-8.70-windows-make.patch',
+       ]
     parallel_build_broken = True
     # For --enable-compile-inits, see comment in compile()
     configure_flags = (target.AutoBuild.configure_flags
@@ -55,13 +59,15 @@ models.'''
     make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s'
     obj = 'obj'
     @staticmethod
-    def static_version ():
+    def static_version (self=False):
         return misc.version_from_url (Ghostscript.source)
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)
         if (isinstance (source, repository.Repository)
             and not isinstance (source, repository.TarBall)):
             source.version = misc.bind_method (Ghostscript.version_from_VERSION, source)
+        else:
+            source.version = misc.bind_method (Ghostscript.static_version, source)
     @staticmethod
     def version_from_VERSION (self):
         try:
@@ -73,7 +79,13 @@ models.'''
         except:
             pass
         return '0.0'
-    dependencies = ['libjpeg-devel', 'libpng-devel']
+    dependencies = [
+        'freetype-devel',
+        'lcms-devel',
+        'libjpeg-devel',
+        'libpng-devel',
+        'libtiff-devel',
+        ]
     subpackage_names = ['doc', '']
     def srcdir (self):
         return re.sub ('-source', '',
@@ -83,6 +95,12 @@ models.'''
                        target.AutoBuild.builddir (self))
     def name (self):
         return 'ghostscript'
+    def patch (self):
+        self.symlink('base', self.expand('%(srcdir)s/src'))
+        target.AutoBuild.patch (self)
+        self.file_sub ([('[([]PKGCONFIG', '(XPKGCONFIG'),
+                        ('PKGCONFIG', 'PKG_CONFIG')],
+                       '%(srcdir)s/base/configure.ac', must_succeed=True)
     def autoupdate (self):
         # generate Makefile.in
         self.system ('cd %(srcdir)s && sh ./autogen.sh --help')
@@ -146,6 +164,8 @@ models.'''
     def configure (self):
         target.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
+        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype ')],
+                       '%(builddir)s/Makefile')
     def makefile_fixup (self, file):
         self.file_sub ([
             ('-Dmalloc=rpl_malloc', ''),
@@ -199,8 +219,7 @@ class Ghostscript_shared (Ghostscript_static):
                      .replace (' install', ' soinstall'))
     def install (self):
         Ghostscript_static.install (self)
-        self.system ('mv %(install_prefix)s/bin/gs%(exe)sc %(install_prefix)s/bin/gs%(exe)s')
-        self.system ('rm -f %(install_prefix)s/bin/gs%(exe)sx')
+        self.system ('mv %(install_prefix)s/bin/gsc%(exe)s %(install_prefix)s/bin/gs%(exe)s')
 
 if shared:
     Ghostscript = Ghostscript_shared
@@ -209,12 +228,7 @@ else:
     
 class Ghostscript__mingw (Ghostscript):
     exe = '.exe'
-    patches = Ghostscript.patches + [
-        'ghostscript-8.70-cygwin.patch',
-        'ghostscript-8.70-windows-wb.patch',
-        'ghostscript-8.70-windows-make.patch',
-        'ghostscript-8.70-gs_dll.patch',
-        ]
+    patches = Ghostscript.patches
     def __init__ (self, settings, source):
         Ghostscript.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
@@ -227,9 +241,6 @@ class Ghostscript__mingw (Ghostscript):
 ac_cv_lib_pthread_pthread_create=no
 '''
     compile_flags = Ghostscript.compile_flags.replace ("XLDFLAGS='", "XLDFLAGS='-mwindows ")
-    def patch (self):
-        self.symlink('base', self.expand('%(srcdir)s/src'))
-        Ghostscript.patch (self)
     def configure (self):
         Ghostscript.configure (self)
         if shared: # Shared is a configure cross-compile disaster area,
@@ -286,13 +297,21 @@ class Ghostscript__darwin (Ghostscript):
 
 class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
-    dependencies = ['libjpeg', 'libpng']
+    dependencies = [
+        'freetype-devel',
+        'lcms-devel',
+        'libjpeg-devel',
+        'libpng-devel',
+        'libtiff-devel',
+        ]
     configure_flags = (tools.AutoBuild.configure_flags
                        + Ghostscript_static.configure_flags)
     make_flags = Ghostscript_static.make_flags
     def configure (self):
         tools.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
+        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype ')],
+                       '%(builddir)s/Makefile')
     def compile (self):
         self.system ('''
 cd %(builddir)s && mkdir -p obj
