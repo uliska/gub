@@ -10,6 +10,7 @@ from gub import tools
 shared = True
 
 class Ghostscript_static (target.AutoBuild):
+    parallel_build_broken = True
     '''The GPL Ghostscript PostScript interpreter
 Ghostscript is used for PostScript preview and printing.  It can
 display PostScript documents in an X11 environment.  It can render
