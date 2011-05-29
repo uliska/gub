@@ -181,8 +181,9 @@ class Installer (context.RunnableContext):
             'share/guile/*/ice-9/debugger/',
             'share/gettext/intl',
             'share/ghostscript/*/{doc,examples}/',
-            'share/ghostscript/*/Resource/{CMap,ColorSpace,Decoding}/',
-# keep font, otherwise mingw users have problems.
+# keep Decoding, avoids utf8 warnings.
+            'share/ghostscript/*/Resource/{CMap,ColorSpace}/',
+# keep Font, otherwise mingw users have problems.
             'share/ghostscript/*/Resource/{Encoding,SubstCID}/',
             'share/gs/*/{doc,examples}/',
             'share/gtk-doc',
