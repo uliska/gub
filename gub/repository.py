@@ -573,7 +573,8 @@ cd %(dir_slash_vcs)s && mv *bz2 *deb *gz *zip .. || :
         # We cannot do a shallow download if we're not tracking
         # we have to get at least enough history to include the
         # fixed committish ... :-)
-        self.shallow = self.is_tracking ()
+        #no shallow# self.shallow = self.is_tracking ()
+        self.shallow = False
         assert self.url_host
         assert self.url_dir
     def version (self):
