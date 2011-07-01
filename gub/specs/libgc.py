@@ -28,7 +28,7 @@ class Libgc__mingw (Libgc):
         ]
     force_autoupdate = True
     #source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc6.8.tar.gz&version=6.8'
-    source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc-7.2alpha4.tar.gz&version=7.2.4'
+    source = 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc-7.2alpha4.tar.gz&version=7.2.6'
 
 class Libgc (tools.AutoBuild, Libgc):
     pass
