@@ -15,6 +15,7 @@ class Gcc__cygwin (cross_gcc.Gcc__mingw):
                     + ['cygwin',
                        'libiconv',
                        'libmpfr-devel',
+#                       'tools::mpfr', # ugh: use apt-get install libmpfr-dev
                        'w32api-in-usr-lib'])
     configure_flags = (cross_gcc.Gcc__mingw.configure_flags
                        + misc.join_lines ('''
