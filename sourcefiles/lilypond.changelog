@@ -1,3 +1,9 @@
+lilypond (2.14.1-1) unstable; urgency=low
+
+  * New major upstream release, see http://lilypond.org/news .
+
+ -- Jan Nieuwenhuizen janneke@gnu.org>  Fri,  1 Jul 14:10:28 2011 +0200
+
 lilypond (2.13.39-2) unstable; urgency=low
 
   * New upstream release: first 2.14 beta.
