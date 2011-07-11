@@ -9,7 +9,7 @@ from gub import target
 from gub import versiondb
 from gub.specs import ghostscript
 
-VERSION='v2.13'
+VERSION='v2.14'
 def url (version=VERSION):
     url = 'http://lilypond.org/download/source/%(version)s/' % locals ()
     raw_version_file = 'lilypond-%(version)s.index' % locals ()
@@ -21,6 +21,7 @@ LilyPond lets you create music notation.  It produces beautiful
 sheet music from a high-level description file.'''
 
     source = 'git://git.sv.gnu.org/lilypond.git'
+#    source = url () # for release builds
     branch = 'master'
     subpackage_names = ['']
     dependencies = ['cross/gcc-c++-runtime',
