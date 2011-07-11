@@ -9,7 +9,7 @@ class LilyPond (lilypond.LilyPond):
 LilyPond lets you create music notation.  It produces beautiful
 sheet music from a high-level description file.'''
     subpackage_names = ['doc', '']
-    source = 'http://lilypond.org/download/source/v2.13/lilypond-2.13.39.tar.gz'
+    source = 'http://lilypond.org/download/source/v2.14/lilypond-2.14.1.tar.gz'
 #    source = 'git://git.sv.gnu.org/lilypond.git'
     dependencies = gup.gub_to_distro_deps (lilypond.LilyPond.dependencies,
                                            cygwin.gub_to_distro_dict) + [
@@ -48,6 +48,8 @@ sheet music from a high-level description file.'''
         self.system ('''
 mkdir -p %(install_prefix)s/share/doc/lilypond
 cd %(install_prefix)s && LIBRESTRICT_ALLOW=/ tar -C %(install_prefix)s -jxf %(docball)s
+cd %(install_prefix)s/share/doc/lilypond/html && mv offline-root/Documentation .
+cd %(install_prefix)s/share/doc/lilypond/html && rm -rf offline-root
 cd %(install_prefix)s && rm -rf license
 ''',
                   locals ())
