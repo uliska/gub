@@ -6,7 +6,7 @@ from gub import tools
 # And this is supposed to be one of the most compiled packages?
 # So why doesn't anyone fix configuring/compiling it?  Shees.
 class Perl__tools (tools.AutoBuild):
-    source = 'http://www.cpan.org/src/perl-5.10.0.tar.gz'
+    source = 'http://www.cpan.org/src/perl-5.10.1.tar.gz'
     srcdir_build_broken = True
     def patch (self):
         tools.AutoBuild.patch (self)

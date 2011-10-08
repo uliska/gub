@@ -2,7 +2,8 @@ from gub import target
 from gub import tools
 
 class Git (target.AutoBuild):
-    source = 'http://kernel.org/pub/software/scm/git/git-1.6.4.4.tar.gz'
+    ## source = 'http://kernel.org/pub/software/scm/git/git-1.6.4.4.tar.gz'
+    source = 'http://git-core.googlecode.com/files/git-1.7.7.tar.gz'
     srcdir_build_broken = True
     subpackage_names = ['']
     dependencies = ['zlib-devel']
