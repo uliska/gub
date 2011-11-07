@@ -3,7 +3,7 @@ from gub import target
 from gub import tools
 
 class Curl (target.AutoBuild):
-    source = 'http://curl.haxx.se/download/curl-7.19.0.tar.gz'
+    source = 'http://curl.haxx.se/download/curl-7.22.0.tar.gz'
     dependencies = ['tools::libtool']
     configure_flags = (tools.AutoBuild.configure_flags
                        + ' --without-openssl')
