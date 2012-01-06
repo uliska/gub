@@ -41,9 +41,6 @@ FunctionEnd
 
 
 Function registry_lilypond
-	ReadRegStr $R0 HKLM "${ENVIRON}" "PATH"
-	WriteRegExpandStr HKLM "${ENVIRON}" "PATH" "$R0;$INSTDIR\usr\bin"
-
 	WriteRegStr HKCR ".ly" "" "LilyPond"
 	WriteRegStr HKCR ".ly" "LilyPond" "LilyPond"
 	WriteRegStr HKCR ".ly" "Content Type" "text/lilypond-source"

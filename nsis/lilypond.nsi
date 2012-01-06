@@ -94,7 +94,6 @@ fresh_install:
 	CreateDirectory "$INSTDIR\usr\bin"
 
 	Call registry_installer
-;;	Call registry_path
 
 	;; Use tested lilypad for now
 	StrCpy $EDITOR "$INSTDIR\usr\bin\lilypad.exe"
@@ -112,11 +111,6 @@ fresh_install:
 	Call postinstall_lilypond
 	Call postinstall_lilypad
 SectionEnd
-
-Function registry_path
-	ReadRegStr $R0 HKLM "${ENVIRON}" "PATH"
-	WriteRegExpandStr HKLM "${ENVIRON}" "PATH" "$R0;$INSTDIR\usr\bin"
-FunctionEnd
 
 ;; Optional section (can be disabled by the user)
 Section "Bundled Python"
@@ -239,21 +233,6 @@ silent:
 	DeleteRegKey HKCU "Applications\lilypond-windows.exe"
 	DeleteRegKey HKCU ".ly"
 
-	ReadRegStr $R0 HKLM "${ENVIRON}" "PATH"
-	${UnStrLoc} $0 $R0 "$INSTDIR\usr\bin;" >
-
-path_loop:
-	StrCmp $0 "" path_done
-	StrLen $1 "$INSTDIR\usr\bin;"
-	IntOp $2 $0 + $1
-	StrCpy $3 $R0 $0 0
-	StrCpy $4 $R0 10000 $2
-	WriteRegExpandStr HKLM "${ENVIRON}" "PATH" "$3$4"
-	ReadRegStr $R0 HKLM "${ENVIRON}" "PATH"
-	${UnStrLoc} $0 $R0 "$INSTDIR\usr\bin;" >
-	StrCmp $0 "" path_done path_loop
-
-path_done:
 	;; Remove files and uninstaller
 	;; Try only to delete ${PRETTY_NAME} (and not user) stuff
 
