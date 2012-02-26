@@ -52,7 +52,8 @@ models.'''
                 + ' mandir=%(prefix_dir)s/share/man/ '
                 + ' docdir=%(prefix_dir)s/share/doc/ghostscript/doc '
                 + ' exdir=%(prefix_dir)s/share/doc/ghostscript/examples ')
-    make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s'
+    # Ghostscript's check for sys/time.h is buggy: it only looks in /usr/include.
+    make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s CFLAGS+="-DHAVE_SYS_TIME_H=1"'
     obj = 'obj'
     @staticmethod
     def static_version ():
