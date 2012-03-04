@@ -118,10 +118,8 @@ def create_local_web_dir (options, source):
               'Documentation/changes/index.html',
               'Documentation/notation/index.html',
               'Documentation/internals/index.html',
-              'examples.html',
               'Documentation/music-glossary/index.html',
               'Documentation/learning/index.html',
-#	      'input/test/collated-files.html',
               'input/regression/collated-files.html']:
         do_urchin (f)
 
