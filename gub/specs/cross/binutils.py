@@ -36,6 +36,11 @@ MULTIOSDIR=../../lib
         binutils.install_missing_plain_binaries (self)
         binutils.install_librestrict_stat_helpers (self)
         binutils.remove_fedora9_untwanted_but_mysteriously_built_libiberies (self)
+        remove_fedora17_untwanted_but_mysteriously_built_libiberies (self)
+
+def remove_fedora17_untwanted_but_mysteriously_built_libiberies (self):
+    self.system ('rm -f %(install_prefix)s%(cross_dir)s/lib/libiberty.a')
+    self.system ('rm -f %(install_prefix)s%(cross_dir)s/lib64/libiberty.a')
 
 class Binutils__linux__ppc (Binutils):
     patches = Binutils.patches + [
