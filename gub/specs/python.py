@@ -48,7 +48,6 @@ BLDLIBRARY='%(rpath)s -L. -lpython$(VERSION)'
         if 'stat' in misc.librestrict ():
             self.install_command = ('LIBRESTRICT_ALLOW=/usr/lib/python2.4/lib-dynload:${LIBRESTRICT_ALLOW-/foo} '
                 + target.AutoBuild.install_command)
-
     def patch (self):
         target.AutoBuild.patch (self)
         self.file_sub ([('@CC@', '@CC@ -I$(shell pwd)')],

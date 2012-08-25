@@ -1083,7 +1083,7 @@
  		-d $(LIBDEST)/site-packages -f \
  		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
  
-@@ -769,9 +802,9 @@ libinstall:	$(BUILDPYTHON) $(srcdir)/Lib
+@@ -769,9 +802,10 @@ libinstall:	$(BUILDPYTHON) $(srcdir)/Lib
  $(srcdir)/Lib/$(PLATDIR):
  	mkdir $(srcdir)/Lib/$(PLATDIR)
  	cp $(srcdir)/Lib/plat-generic/regen $(srcdir)/Lib/$(PLATDIR)/regen
@@ -1091,6 +1091,7 @@
 -	export PYTHONPATH; PYTHONPATH="`pwd`/Lib"; \
 -	export DYLD_FRAMEWORK_PATH; DYLD_FRAMEWORK_PATH="`pwd`"; \
 +@CROSS_COMMENT@	export PATH; PATH="`pwd`:$$PATH"; \
++@CROSS_COMMENT@	export LD_LIBRARY_PATH; LD_LIBRARY_PATH="`pwd`:$$LD_LIBRARY_PATH"; \
 +@CROSS_COMMENT@	export PYTHONPATH; PYTHONPATH="`pwd`/Lib"; \
 +@CROSS_COMMENT@	export DYLD_FRAMEWORK_PATH; DYLD_FRAMEWORK_PATH="`pwd`"; \
  	export EXE; EXE="$(BUILDEXE)"; \
