@@ -11,7 +11,8 @@ def change_target_package (package):
     @context.subst_method
     def rpath (foo):
         return ''
-    package.rpath = misc.MethodOverrider (package.nop, rpath)
+    if not isinstance (package, cross.AutoBuild):
+        package.rpath = misc.MethodOverrider (package.nop, rpath)
 
 # FIXME: download from sane place; or rather download only kernel
 # headers and build full toolchain from source?
