@@ -20,9 +20,7 @@ class Odcctools (cross.AutoBuild): #skews dependencies:, build.SdkBuild):
             cross.change_target_package_x86 (self, self.add_linux_x86_env ())
         if 'x86_64-linux' in self.settings.build_architecture:
             self.dependencies += ['linux-x86::glibc']
-        if (self.settings.build_bits == '32'
-            and self.settings.build_hardware_bits == '64'):
-            self.configure_variables = (cross.AutoBuild.configure_variables
+        self.configure_variables = (cross.AutoBuild.configure_variables
                                         + ' CFLAGS=-D_FORTIFY_SOURCE=0')
     def autoupdate (self):
         # PROMOTEME: run aclocal if ^AM_ macros inside configure.*
