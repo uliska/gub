@@ -188,6 +188,7 @@ class Python__tools (tools.AutoBuild, Python):
         'libtool',
         ]
     force_autoupdate = True
+    parallel_build_broken = True
     make_flags = Python.make_flags
     def patch (self):
         Python.patch (self)
