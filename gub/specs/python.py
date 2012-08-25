@@ -180,6 +180,7 @@ class Python__tools (tools.AutoBuild, Python):
 #        'python-2.4.2-fno-stack-protector.patch',
         'python-2.4.5-readline.patch', # Stop python from reading ~/.inputrc
         'python-2.4.5-db4.7.patch',
+        'python-2.4.5-regen.patch',
         ]
     dependencies = [
         'autoconf',
