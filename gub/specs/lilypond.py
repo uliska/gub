@@ -24,29 +24,33 @@ sheet music from a high-level description file.'''
 #    source = url () # for release builds
     branch = 'master'
     subpackage_names = ['']
-    dependencies = ['cross/gcc-c++-runtime',
-                    'flex',
-                    'fontconfig-devel',
-                    'freetype-devel',
-                    'gettext-devel',
-                    'ghostscript',
-                    'guile-devel',
-                    'pango-devel',
-                    'python-devel',
-                    'urw-fonts',
-                    'tools::autoconf',
-                    'tools::flex',
-                    'tools::bison',
-                    'tools::texinfo',
-                    'tools::fontforge',
-                    'tools::pkg-config',
-                    'tools::gettext', # AM_GNU_GETTEXT
-                    'tools::t1utils',
-                    'tools::texi2html',
-                    #'tools::texlive',
-                    'system::mf', 
-                    'system::mpost', 
-                    ]
+    dependencies = [
+        'cross/gcc-c++-runtime',
+
+        'flex',
+        'fontconfig-devel',
+        'freetype-devel',
+        'gettext-devel',
+        'ghostscript',
+        'guile-devel',
+        'pango-devel',
+        'python-devel',
+        'urw-fonts',
+
+        'tools::autoconf',
+        'tools::bison',
+        'tools::flex',
+        'tools::fontforge',
+        'tools::gettext', # AM_GNU_GETTEXT
+        'tools::pkg-config',
+        'tools::t1utils',
+        'tools::texi2html',
+        'tools::texinfo',
+        #'tools::texlive',
+
+        'system::mf', 
+        'system::mpost', 
+        ]
     if 'stat' in misc.librestrict ():
         dependencies = [x for x in dependencies
                         if x not in ['system::mf', 'system::mpost']
