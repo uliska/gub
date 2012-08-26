@@ -12,6 +12,8 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::imagemagick',
                 'tools::rsync', # ugh, we depend on *rsync* !?
                 #'tools::texlive',
+                'system::makeinfo',
+                'system::zip',
                 ])
     make_flags = misc.join_lines ('''
 CROSS=no

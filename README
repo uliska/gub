@@ -114,7 +114,6 @@ INSTALLING
   - standard unix shell utilities: cat, cp, install, mv, rm, sed, ...
   - a standard unix development environment with GCC and G++
   - Python 2.4 or newer (2.5, 2.6, 3.0 are known to work)
-  - /usr/bin/makeinfo [from the texinfo package]
 
 * Try
   bin/gub --help
@@ -493,6 +492,8 @@ or
 In addition to the requirements for GUB, you need
 
   • A TeX installation
+  • texinfo
+  • zip
 
 Build everything
 
