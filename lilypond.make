@@ -70,8 +70,10 @@ include gub.make
 NATIVE_TARGET_DIR=$(CWD)/target/$(BUILD_PLATFORM)
 TOOLS_BIN_DIR=$(CWD)/target/tools/root/usr/bin/
 
-#FIXME: yet another copy of gub/settings.py
-SET_LOCAL_PATH=PATH=$(CWD)/target/local/root/usr/bin:$(PATH)
+#FIXME: we cannot use python from tools, because of the gub/logging.py
+#       name clash.  Todo: rename gub/logging.py -- triggers full
+#       rebuild.  Not using tools means: we depend on /usr/bin/makeinfo
+#SET_TOOLS_PATH=PATH=$(CWD)/target/tools/root/usr/bin:$(PATH)
 
 LILYPOND_VERSIONS = versiondb/lilypond.versions
 
@@ -237,6 +239,7 @@ unlocked-test-clean:
 cached-dist-check cached-doc-export cached-test-export:
 	-mkdir -p uploads/signatures
 	if test ! -f  $(call SIGNATURE_FUNCTION,$@) ; then \
+		$(SET_TOOLS_PATH) \
 		$(MAKE) $(subst cached,unlocked,$@) \
 		&& touch $(call SIGNATURE_FUNCTION,$@) ; fi
 
@@ -253,19 +256,22 @@ unlocked-doc-export:
 unlocked-test-export:
 	mkdir -p uploads/webtest
 	PYTHONPATH=$(NATIVE_LILY_BUILD)/python/out \
-	PATH=$(TOOLS_BIN_DIR):$(PATH) $(PYTHON) test-lily/rsync-test.py \
+	$(SET_TOOLS_PATH) \
+		$(PYTHON) test-lily/rsync-test.py \
 		--version-file=$(NATIVE_LILY_BUILD)/out/VERSION \
 		--output-distance=$(NATIVE_LILY_SRC)/$(BUILDSCRIPTS)/output-distance.py \
 		--test-dir=uploads/webtest
 
 doc-export:
-	$(PYTHON) gub/with-lock.py --skip $(DOC_LOCK) $(MAKE) cached-doc-export
+	$(SET_TOOLS_PATH) \
+		$(PYTHON) gub/with-lock.py --skip $(DOC_LOCK) $(MAKE) cached-doc-export
 
 test-export:
-	$(PYTHON) gub/with-lock.py --skip $(DOC_LOCK) $(MAKE) cached-test-export
+	$(SET_TOOLS_PATH) \
+		$(PYTHON) gub/with-lock.py --skip $(DOC_LOCK) $(MAKE) cached-test-export
 
 unlocked-dist-check:
-	$(SET_LOCAL_PATH)\
+	$(SET_TOOLS_PATH) \
 		$(PYTHON) test-lily/dist-check.py\
 		--branch=$(LILYPOND_BRANCH) \
 		--url=$(LILYPOND_REPO_URL) \
@@ -273,7 +279,8 @@ unlocked-dist-check:
 	cp $(NATIVE_LILY_BUILD)/out/lilypond-$(DIST_VERSION).tar.gz uploads
 
 dist-check:
-	$(PYTHON) gub/with-lock.py --skip $(NATIVE_LILY_BUILD).lock \
+	$(SET_TOOLS_PATH) \
+		$(PYTHON) gub/with-lock.py --skip $(NATIVE_LILY_BUILD).lock \
 		$(MAKE) cached-dist-check
 
 print-branches:

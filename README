@@ -114,7 +114,7 @@ INSTALLING
   - standard unix shell utilities: cat, cp, install, mv, rm, sed, ...
   - a standard unix development environment with GCC and G++
   - Python 2.4 or newer (2.5, 2.6, 3.0 are known to work)
-  - the libmpfr library (and development headers)
+  - /usr/bin/makeinfo [from the texinfo package]
 
 * Try
   bin/gub --help
