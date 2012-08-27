@@ -182,6 +182,7 @@ class Python__tools (tools.AutoBuild, Python):
         'python-2.4.5-regen.patch',
         'python-2.4.5-gcc-R.patch',
         'python-2.4.5-Setup-crypt.patch',
+        'python-2.4.5-Setup-dbm.patch',
         ]
     dependencies = [
         'autoconf',
@@ -190,6 +191,6 @@ class Python__tools (tools.AutoBuild, Python):
         ]
     force_autoupdate = True
     parallel_build_broken = True
-    make_flags = Python.make_flags + ' LIBC=-lcrypt'
+    make_flags = Python.make_flags + ' LIBC="-lcrypt -ldb"'
     def patch (self):
         Python.patch (self)
