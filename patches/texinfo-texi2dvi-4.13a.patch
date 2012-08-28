@@ -1,0 +1,20 @@
+diff --git a/util/texi2dvi b/util/texi2dvi
+index 18b2214..7e5855a 100644
+--- a/util/texi2dvi
++++ b/util/texi2dvi
+@@ -129,12 +129,13 @@
+   }
+   test_local
+   test $foo = bar
+-) || local () {
++) || eval '
++local () {
+   case $1 in
+     *=*) eval "$1";;
+   esac
+ }
+-
++'
+ 
+ # cd_orig
+ # -------
