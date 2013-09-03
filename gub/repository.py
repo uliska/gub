@@ -237,6 +237,8 @@ class Repository:
         return os.path.splitext (os.path.basename (self.source))[0]
     def download (self):
         pass
+    def post_download_hook (self):
+        pass
     def checksum (self):
         '''A checksum that characterizes the entire repository.
 
@@ -355,6 +357,7 @@ class Darcs (Repository):
         else:
             dir = self.dir
             self.system ('darcs get %(source)s %(dir)s' % locals ())
+        self.post_download_hook ()
         
     def is_tracking (self):
         return True
@@ -449,6 +452,7 @@ class TarBall (Repository):
         if self.is_downloaded ():
             return
         self.download_url (self.source, self.dir)
+        self.post_download_hook ()
 
     def checksum (self):
         return misc.ball_basename (self._file_name ())
@@ -644,6 +648,7 @@ fatal: The remote end hung up unexpectedly
         if self.branch and not (self.revision and self.is_downloaded ()):
             self.git ('fetch %(source)s %(branch)s:refs/heads/%(url_host)s/%(url_dir)s/%(branch)s' % self.__dict__)
         self.checksums = {}
+        self.post_download_hook ()
     def get_ref (self):
         if not self.revision:
             return self.branch_dir ().replace ('//', '/')
@@ -849,6 +854,7 @@ class CVS (Repository):
 
         open (dir + '/.vc-checksum', 'w').write (cs)
         open (dir + '/.vc-timestamp', 'w').write ('%d' % stamp)
+        self.post_download_hook ()
         
     def cvs_dirs (self, branch_dir):
         retval =  []
@@ -917,6 +923,7 @@ class SimpleRepo (Repository):
             self._checkout ()
         elif self._current_revision () != self.revision:
             self._update (self.revision)
+        self.post_download_hook ()
         self.info ('downloaded version: ' + self.version ())
 
     def _copy_working_dir (self, dir, copy):
