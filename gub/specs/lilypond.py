@@ -76,7 +76,7 @@ sheet music from a high-level description file.'''
             '%(MAJOR_VERSION)s.%(MINOR_VERSION)s.%(PATCH_LEVEL)s')
 
     @staticmethod
-    def post_download_hook (self):
+    def bind_version (self):
         self.version = misc.bind_method (LilyPond.version_from_VERSION, self)
 
     def __init__ (self, settings, source):
@@ -92,7 +92,7 @@ sheet music from a high-level description file.'''
             if source.is_downloaded ():
                 source.version = misc.bind_method (LilyPond.version_from_VERSION, source)
             else:
-                source.post_download_hook = misc.bind_method (LilyPond.post_download_hook, source)
+                source.post_download_hook = misc.bind_method (LilyPond.bind_version, source)
         if 'stat' in misc.librestrict () and not 'tools::texlive' in self.dependencies:
             build.append_dict (self, {'PATH': os.environ['PATH']}) # need mf, mpost from system
     def get_conflict_dict (self):
