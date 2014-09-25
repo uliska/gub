@@ -80,7 +80,7 @@ Function registry_lilypond
 	ReadRegStr $R0 HKCR "textedit\shell\open\command" ""
 	;;StrCmp $R0 "" 0 exit
 	WriteRegStr HKCR "textedit\shell" "" "open"
-	WriteRegExpandStr HKCR "textedit\shell\open\command" "" '"$INSTDIR\usr\bin\guile.exe" -e main -s "$INSTDIR\usr\bin\lilypond-invoke-editor.scm" "%1"'
+	WriteRegExpandStr HKCR "textedit\shell\open\command" "" '"$INSTDIR\usr\bin\guile.exe" -s "$INSTDIR\usr\bin\lilypond-invoke-editor" "%1"'
 ;;exit:
 FunctionEnd
 
@@ -140,7 +140,7 @@ scm_done:
 	ReadRegStr $R0 HKCR "GUILE\shell\open\command" ""
 	;;StrCmp $R0 "" 0 exit
 	WriteRegStr HKCR "GUILE\shell" "" "open"
-	WriteRegExpandStr HKCR "GUILE\shell\open\command" "" '"$INSTDIR\usr\bin\guile.exe" -e main -s "%1"'
+	WriteRegExpandStr HKCR "GUILE\shell\open\command" "" '"$INSTDIR\usr\bin\guile.exe" -s "%1"'
 exit:
 FunctionEnd
 
