@@ -4,7 +4,7 @@ from gub import misc
 from gub.specs import binutils
 
 class Binutils (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/binutils/binutils-2.24.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/binutils/binutils-2.19.1.tar.bz2'
     patches = []
     dependencies = [
         'tools::zlib',
@@ -44,7 +44,7 @@ def remove_fedora17_untwanted_but_mysteriously_built_libiberies (self):
 
 class Binutils__linux__ppc (Binutils):
     patches = Binutils.patches + [
-        ''
+        'binutils-2.18-werror-ppc.patch'
         ]
 
 class Binutils__mingw (Binutils):
