@@ -44,7 +44,7 @@ def remove_fedora17_untwanted_but_mysteriously_built_libiberies (self):
 
 class Binutils__linux__ppc (Binutils):
     patches = Binutils.patches + [
-        'binutils-2.18-werror-ppc.patch'
+        ''
         ]
 
 class Binutils__mingw (Binutils):
