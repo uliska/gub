@@ -8,7 +8,7 @@ from gub import misc
 from gub.specs import gcc
 
 class Gcc (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.1.2/gcc-4.1.2.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = ['cross/binutils']
     configure_flags = (cross.AutoBuild.configure_flags
                 + '%(enable_languages)s'
@@ -77,7 +77,7 @@ class Gcc__from__source (Gcc):
 Gcc__linux = Gcc__from__source
 
 class Gcc__mingw (Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.1.1/gcc-4.1.1.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = (Gcc.dependencies
                 + ['mingw-runtime', 'w32api']
                 + ['tools::libtool'])
