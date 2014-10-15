@@ -6,7 +6,7 @@ from gub import target
 from gub import tools
 
 class Gmp (target.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/gmp/gmp-4.2.1.tar.gz'
+    source = 'http://ftp.gnu.org/pub/gnu/gmp/gmp-5.1.3.tar.gz'
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)
         if not self.settings.platform.startswith ('darwin'):
@@ -44,7 +44,7 @@ class Gmp__darwin__x86 (Gmp__darwin):
     source = 'http://ftp.gnu.org/pub/gnu/gmp/gmp-4.2.4.tar.gz'
 
 class Gmp__mingw (Gmp):
-    patches = ['gmp-4.1.4-1.patch']
+    patches = []
     def __init__ (self, settings, source):
         Gmp.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
