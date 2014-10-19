@@ -59,8 +59,3 @@ class Binutils__mingw (Binutils):
         # Must ONLY do target stuff, otherwise cross executables cannot find their libraries
 #        self.map_locate (lambda logger,file: build.libtool_update (logger, self.expand ('%(tools_prefix)s/bin/libtool'), file), '%(builddir)s', 'libtool')
         self.map_locate (lambda logger, file: build.libtool_update (logger, self.expand ('%(tools_prefix)s/bin/libtool'), file), '%(builddir)s/libiberty', 'libtool')
-
-class Binutils__freebsd__x86 (Binutils):
-    patches = Binutils.patches + [
-        'binutils-2.24-freebsd4.patch' # This patch will not be needed from binutils 2.25.
-        ]
