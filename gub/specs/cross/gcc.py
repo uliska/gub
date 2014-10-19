@@ -83,29 +83,8 @@ class Gcc__mingw (Gcc):
                 + ['tools::libtool'])
     def patch (self):
         Gcc.patch (self)
-        for f in ['%(srcdir)s/gcc/config/i386/mingw32.h',
-                  '%(srcdir)s/gcc/config/i386/t-mingw32']:
-            self.file_sub ([('/mingw/include','%(prefix_dir)s/include'),
-                            ('/mingw/lib','%(prefix_dir)s/lib'),
-                            ], f)
-    def STATIC_GXX_WIP_REMOVE_THIS_PREFIX_configure (self):
-        # leave this for now.
-        # lots of undefined refs.
-        # possibly try static libstc++ with gcc > 4.1.1
-        '''.libs/bitmap_allocator.o: In function `__gthread_mutex_init_function':
-/home/janneke/vc/gub/target/mingw/build/cross/gcc-4.1.1/i686-mingw32/libstdc++-v3/include/i686-mingw32/bits/gthr-default.h:463: undefined reference to `___gthr_win32_mutex_init_function'
-.libs/bitmap_allocator.o: In function `_ZN9__gnu_cxx9free_list6_M_getEj':
-/home/janneke/vc/gub/target/mingw/src/cross/gcc-4.1.1/libstdc++-v3/src/bitmap_allocator.cc:53: undefined reference to `__Unwind_SjLj_Register'
-
+        self.system('''
+ln -s ./ %(allsrcdir)s/debug
+ln -s usr/ %(system_root)s/mingw
 '''
-        Gcc.configure (self)
-        # Configure all subpackages, makes
-        # w32.libtool_fix_allow_undefined to find all libtool files
-        self.system ('cd %(builddir)s && make %(compile_flags)s configure-host configure-target')
-        # Must ONLY do target stuff, otherwise cross executables cannot find their libraries
-        # self.map_locate (lambda logger,file: build.libtool_update (logger, self.expand ('%(tools_prefix)s/bin/libtool'), file), '%(builddir)s/', 'libtool')
-        #self.map_locate (lambda logger, file: build.libtool_update (logger, self.expand ('%(tools_prefix)s/bin/libtool'), file), '%(builddir)s/i686-mingw32', 'libtool')
-        vars = ['CC', 'CXX', 'LTCC', 'LD', 'sys_lib_search_path_spec', 'sys_lib_dlsearch_path_spec', 'predep_objects', 'postdep_objects', 'predeps', 'postdeps', 'old_striplib', 'striplib']
-        self.map_locate (lambda logger, file: build.libtool_update_preserve_vars (logger, self.expand ('%(tools_prefix)s/bin/libtool'), vars, file), '%(builddir)s/i686-mingw32', 'libtool')
-        self.map_locate (lambda logger, file: build.libtool_force_infer_tag (logger, 'CXX', file), '%(builddir)s/i686-mingw32', 'libtool')
-
+        )
