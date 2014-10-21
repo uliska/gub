@@ -12,13 +12,13 @@ mirror = 'http://ftp.de.debian.org/debian'
 
 # http://ftp.de.debian.org/debian/pool/main/l/linux-kernel-headers/
 
-gcc_version = '4.1.1'
+gcc_version = '4.8.2'
 glibc_version='2.3.2.ds1-22sarge4'
 linux_version = '2.5.999-test7-bk-17'
 def get_cross_build_dependencies (settings):
     global gcc_version, glibc_version, linux_version
     #FIXME too late
-    gcc_version = '4.1.1'
+    gcc_version = '4.8.2'
     if settings.debian_branch == 'stable':
         glibc_version='2.3.2.ds1-22sarge4'
         linux_version = '2.5.999-test7-bk-17'
