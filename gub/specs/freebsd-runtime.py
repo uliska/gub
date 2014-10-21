@@ -12,7 +12,7 @@ rm -f %(srcdir)s%(prefix_dir)s/include/FlexLexer.h
 ''')
 
 class Freebsd_runtime__freebsd__x86 (Freebsd_runtime):
-    patches = ['freebsd4-runtime.patch']
+    patches = ['freebsd4-runtime.patch', 'freebsd4-runtime-gcc-4.8.2.patch']
     def untar (self):
         Freebsd_runtime.untar (self)
         self.patch ()
@@ -21,6 +21,7 @@ class Freebsd_runtime__freebsd__x86 (Freebsd_runtime):
         self.system ('''
 #breaks boost#rm %(srcdir)s%(prefix_dir)s/include/wctype.h
 cp %(sourcefiledir)s/stdint-32.h %(srcdir)s%(prefix_dir)s/include/stdint.h
+ln -s libc_r.so %(srcdir)s%(prefix_dir)s/lib/libpthread.so || true
 ''')
 
 class Freebsd_runtime__freebsd__64 (Freebsd_runtime):

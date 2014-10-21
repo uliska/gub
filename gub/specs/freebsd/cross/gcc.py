@@ -10,3 +10,9 @@ class Gcc__freebsd (cross_gcc.Gcc):
                 + misc.join_lines ('''
 --program-prefix=%(toolchain_prefix)s
 '''))
+    def patch (self):
+        cross_gcc.Gcc.patch (self)
+        self.system('''
+ln -s ./ %(allsrcdir)s/debug || true
+'''
+        )
