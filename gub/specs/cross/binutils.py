@@ -50,6 +50,7 @@ class Binutils__linux__ppc (Binutils):
 class Binutils__mingw (Binutils):
     dependencies = Binutils.dependencies + [
             'tools::libtool',
+            'system::iconv',
             ]
     def configure (self):
         Binutils.configure (self)
