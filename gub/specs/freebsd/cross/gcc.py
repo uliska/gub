@@ -9,6 +9,7 @@ class Gcc__freebsd (cross_gcc.Gcc):
     configure_flags = (cross_gcc.Gcc.configure_flags
                 + misc.join_lines ('''
 --program-prefix=%(toolchain_prefix)s
+--disable-__cxa_atexit
 '''))
     def patch (self):
         cross_gcc.Gcc.patch (self)
