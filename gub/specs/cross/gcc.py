@@ -84,7 +84,7 @@ class Gcc__mingw (Gcc):
     def patch (self):
         Gcc.patch (self)
         self.system('''
-ln -s ./ %(allsrcdir)s/debug
-ln -s usr/ %(system_root)s/mingw
+ln -s ./ %(allsrcdir)s/debug || true
+ln -s usr/ %(system_root)s/mingw || true
 '''
         )
