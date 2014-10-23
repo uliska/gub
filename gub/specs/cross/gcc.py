@@ -10,6 +10,7 @@ from gub.specs import gcc
 class Gcc (cross.AutoBuild):
     source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = ['cross/binutils']
+    patches = ['gcc-4.8.2-libstdc++-debug-path.patch']
     configure_flags = (cross.AutoBuild.configure_flags
                 + '%(enable_languages)s'
                 + ' --enable-static'
@@ -84,7 +85,6 @@ class Gcc__mingw (Gcc):
     def patch (self):
         Gcc.patch (self)
         self.system('''
-ln -s ./ %(allsrcdir)s/debug || true
 ln -s usr/ %(system_root)s/mingw || true
 '''
         )
