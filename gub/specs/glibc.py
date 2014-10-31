@@ -53,6 +53,7 @@ class Glibc (target.AutoBuild, cross.AutoBuild):
         'glibc-2.3-sysdeps-general-initfini.patch',
         'glibc-2.3-sysdeps-i386-Makefile.patch',
         'glibc-2.3-i386-crti-crtn.patch',
+        'glibc-2.3-misc-sys-cdefs-inline.patch',
         ]
     dependencies = ['cross/gcc', 'glibc-core', 'tools::bison', 'tools::gzip', 'tools::perl', 'linux-headers']
     configure_flags = (target.AutoBuild.configure_flags + misc.join_lines ('''

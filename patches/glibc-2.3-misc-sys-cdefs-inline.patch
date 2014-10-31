@@ -1,0 +1,258 @@
+
+http://sourceware.org/ml/glibc-bugs/2006-12/msg00001.html
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=de1c3ebb59c9e9f7caaf5a71920fe613e3e7cfaa
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e18c929d0e69a621
+
+--- a/sysdeps/i386/fpu/bits/mathinline.h	2004-09-08 07:23:42.000000000 +0900
++++ b/sysdeps/i386/fpu/bits/mathinline.h	2014-10-31 21:51:30.528409400 +0900
+@@ -23,10 +23,10 @@
+ # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+ #endif
+ 
+-#ifdef __cplusplus
++#ifndef __extern_inline
+ # define __MATH_INLINE __inline
+ #else
+-# define __MATH_INLINE extern __inline
++# define __MATH_INLINE __extern_inline
+ #endif
+ 
+ 
+--- a/misc/sys/cdefs.h	2004-10-18 13:17:13.000000000 +0900
++++ b/misc/sys/cdefs.h	2014-10-31 22:02:58.733429500 +0900
+@@ -255,6 +255,32 @@
+ # define __nonnull(params)
+ #endif
+ 
++/* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
++   inline semantics, unless -fgnu89-inline is used.  Using __GNUC_STDC_INLINE__
++   or __GNUC_GNU_INLINE is not a good enough check for gcc because gcc versions
++   older than 4.3 may define these macros and still not guarantee GNU inlining
++   semantics.
++
++   clang++ identifies itself as gcc-4.2, but has support for GNU inlining
++   semantics, that can be checked fot by using the __GNUC_STDC_INLINE_ and
++   __GNUC_GNU_INLINE__ macro definitions.  */
++#if (!defined __cplusplus || __GNUC_PREREQ (4,3) \
++     || (defined __clang__ && (defined __GNUC_STDC_INLINE__ \
++			       || defined __GNUC_GNU_INLINE__)))
++# if defined __GNUC_STDC_INLINE__ || defined __cplusplus
++#  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
++#  define __extern_always_inline \
++  extern __always_inline __attribute__ ((__gnu_inline__))
++# else
++#  define __extern_inline extern __inline
++#  define __extern_always_inline extern __always_inline
++# endif
++#endif
++
++#ifdef __extern_always_inline
++# define __fortify_function __extern_always_inline __attribute_artificial__
++#endif
++
+ /* It is possible to compile containing GCC extensions even if GCC is
+    run in pedantic mode if the uses are carefully marked using the
+    `__extension__' keyword.  But this is not generally available before
+--- a/stdlib/stdlib.h	2005-07-18 10:15:30.000000000 +0900
++++ b/stdlib/stdlib.h	2014-10-31 23:40:25.492451800 +0900
+@@ -321,18 +321,18 @@
+ /* Define inline functions which call the internal entry points.  */
+ 
+ __BEGIN_NAMESPACE_STD
+-extern __inline double
++__extern_inline double
+ __NTH (strtod (__const char *__restrict __nptr, char **__restrict __endptr))
+ {
+   return __strtod_internal (__nptr, __endptr, 0);
+ }
+-extern __inline long int
++__extern_inline long int
+ __NTH (strtol (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	       int __base))
+ {
+   return __strtol_internal (__nptr, __endptr, __base, 0);
+ }
+-extern __inline unsigned long int
++__extern_inline unsigned long int
+ __NTH (strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
+ 		int __base))
+ {
+@@ -342,12 +342,12 @@
+ 
+ # ifdef __USE_ISOC99
+ __BEGIN_NAMESPACE_C99
+-extern __inline float
++__extern_inline float
+ __NTH (strtof (__const char *__restrict __nptr, char **__restrict __endptr))
+ {
+   return __strtof_internal (__nptr, __endptr, 0);
+ }
+-extern __inline long double
++__extern_inline long double
+ __NTH (strtold (__const char *__restrict __nptr, char **__restrict __endptr))
+ {
+   return __strtold_internal (__nptr, __endptr, 0);
+@@ -356,13 +356,13 @@
+ # endif
+ 
+ # ifdef __USE_BSD
+-__extension__ extern __inline long long int
++__extension__ __extern_inline long long int
+ __NTH (strtoq (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	       int __base))
+ {
+   return __strtoll_internal (__nptr, __endptr, __base, 0);
+ }
+-__extension__ extern __inline unsigned long long int
++__extension__ __extern_inline unsigned long long int
+ __NTH (strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
+ 		int __base))
+ {
+@@ -372,13 +372,13 @@
+ 
+ # if defined __USE_MISC || defined __USE_ISOC99
+ __BEGIN_NAMESPACE_C99
+-__extension__ extern __inline long long int
++__extension__ __extern_inline long long int
+ __NTH (strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
+ 		int __base))
+ {
+   return __strtoll_internal (__nptr, __endptr, __base, 0);
+ }
+-__extension__ extern __inline unsigned long long int
++__extension__ __extern_inline unsigned long long int
+ __NTH (strtoull (__const char * __restrict __nptr, char **__restrict __endptr,
+ 		 int __base))
+ {
+@@ -388,17 +388,17 @@
+ # endif
+ 
+ __BEGIN_NAMESPACE_STD
+-extern __inline double
++__extern_inline double
+ __NTH (atof (__const char *__nptr))
+ {
+   return strtod (__nptr, (char **) NULL);
+ }
+-extern __inline int
++__extern_inline int
+ __NTH (atoi (__const char *__nptr))
+ {
+   return (int) strtol (__nptr, (char **) NULL, 10);
+ }
+-extern __inline long int
++__extern_inline long int
+ __NTH (atol (__const char *__nptr))
+ {
+   return strtol (__nptr, (char **) NULL, 10);
+@@ -407,7 +407,7 @@
+ 
+ # if defined __USE_MISC || defined __USE_ISOC99
+ __BEGIN_NAMESPACE_C99
+-__extension__ extern __inline long long int
++__extension__ __extern_inline long long int
+ __NTH (atoll (__const char *__nptr))
+ {
+   return strtoll (__nptr, (char **) NULL, 10);
+--- a/include/stdlib.h	2005-07-18 10:15:31.000000000 +0900
++++ b/include/stdlib.h	2014-10-31 23:51:07.830765300 +0900
+@@ -141,43 +141,43 @@
+ libc_hidden_proto (____strtoul_l_internal)
+ libc_hidden_proto (____strtoull_l_internal)
+ 
+-extern __inline double
++__extern_inline double
+ __strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	    __locale_t __loc)
+ {
+   return ____strtod_l_internal (__nptr, __endptr, 0, __loc);
+ }
+-extern __inline long int
++__extern_inline long int
+ __strtol_l (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	    int __base, __locale_t __loc)
+ {
+   return ____strtol_l_internal (__nptr, __endptr, __base, 0, __loc);
+ }
+-extern __inline unsigned long int
++__extern_inline unsigned long int
+ __strtoul_l (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	     int __base, __locale_t __loc)
+ {
+   return ____strtoul_l_internal (__nptr, __endptr, __base, 0, __loc);
+ }
+-extern __inline float
++__extern_inline float
+ __strtof_l (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	    __locale_t __loc)
+ {
+   return ____strtof_l_internal (__nptr, __endptr, 0, __loc);
+ }
+-extern __inline long double
++__extern_inline long double
+ __strtold_l (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	     __locale_t __loc)
+ {
+   return ____strtold_l_internal (__nptr, __endptr, 0, __loc);
+ }
+-__extension__ extern __inline long long int
++__extension__ __extern_inline long long int
+ __strtoll_l (__const char *__restrict __nptr, char **__restrict __endptr,
+ 	     int __base, __locale_t __loc)
+ {
+   return ____strtoll_l_internal (__nptr, __endptr, __base, 0, __loc);
+ }
+-__extension__ extern __inline unsigned long long int
++__extension__ __extern_inline unsigned long long int
+ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
+ 	      int __base, __locale_t __loc)
+ {
+--- a/sysdeps/generic/inttypes.h	2004-09-08 07:23:42.000000000 +0900
++++ b/sysdeps/generic/inttypes.h	2014-11-01 00:13:17.091498600 +0900
+@@ -393,7 +393,7 @@
+ 					 int __base, int __group) __THROW;
+ #   define __strtoll_internal_defined	1
+ #  endif
+-extern __inline intmax_t
++__extern_inline intmax_t
+ __NTH (strtoimax (__const char *__restrict nptr, char **__restrict endptr,
+ 		  int base))
+ {
+@@ -411,7 +411,7 @@
+ 						   int __group) __THROW;
+ #   define __strtoull_internal_defined	1
+ #  endif
+-extern __inline uintmax_t
++__extern_inline uintmax_t
+ __NTH (strtoumax (__const char *__restrict nptr, char **__restrict endptr,
+ 		  int base))
+ {
+@@ -427,7 +427,7 @@
+ 					 int __base, int __group) __THROW;
+ #   define __wcstoll_internal_defined	1
+ #  endif
+-extern __inline intmax_t
++__extern_inline intmax_t
+ __NTH (wcstoimax (__const __gwchar_t *__restrict nptr,
+ 		  __gwchar_t **__restrict endptr, int base))
+ {
+@@ -446,7 +446,7 @@
+ 						   int __group) __THROW;
+ #   define __wcstoull_internal_defined	1
+ #  endif
+-extern __inline uintmax_t
++__extern_inline uintmax_t
+ __NTH (wcstoumax (__const __gwchar_t *__restrict nptr,
+ 		  __gwchar_t **__restrict endptr, int base))
+ {
+--- a/libio/bits/stdio.h	2004-09-08 07:23:44.000000000 +0900
++++ b/libio/bits/stdio.h	2014-11-01 00:23:54.329331000 +0900
+@@ -24,7 +24,7 @@
+ #ifdef __cplusplus
+ # define __STDIO_INLINE inline
+ #else
+-# define __STDIO_INLINE extern __inline
++# define __STDIO_INLINE __extern_inline
+ #endif
+ 
+ 
