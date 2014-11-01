@@ -88,3 +88,11 @@ class Gcc__mingw (Gcc):
 ln -s usr/ %(system_root)s/mingw || true
 '''
         )
+    def install (self):
+        Gcc.install (self)
+        self.system('''
+mkdir -p %(system_prefix)s/bin/
+cp %(install_prefix)s/lib/libgcc_s_sjlj-1.dll %(system_prefix)s/bin/
+cp %(install_prefix)s/cross/%(target_architecture)s/lib/libstdc++-6.dll %(system_prefix)s/bin/
+'''
+        )
