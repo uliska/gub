@@ -256,3 +256,182 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  #endif
  
  
+--- a/string/argz.h	2004-09-08 07:23:43.000000000 +0900
++++ b/string/argz.h	2014-11-01 22:35:46.405658900 +0900
+@@ -160,7 +160,7 @@
+ 			__const char *__restrict __entry) __THROW;
+ 
+ #ifdef __USE_EXTERN_INLINES
+-extern inline char *
++__extern_inline char *
+ __NTH (__argz_next (__const char *__argz, size_t __argz_len,
+ 		    __const char *__entry))
+ {
+@@ -174,7 +174,7 @@
+   else
+     return __argz_len > 0 ? (char *) __argz : 0;
+ }
+-extern inline char *
++__extern_inline char *
+ __NTH (argz_next (__const char *__argz, size_t __argz_len,
+ 		  __const char *__entry))
+ {
+--- a/wcsmbs/wchar.h	2004-09-08 07:18:58.000000000 +0900
++++ b/wcsmbs/wchar.h	2014-11-02 10:13:04.769030700 +0900
+@@ -320,7 +320,7 @@
+ 
+ #ifdef __USE_EXTERN_INLINES
+ /* Define inline function as optimization.  */
+-extern __inline size_t
++__extern_inline size_t
+ __NTH (mbrlen (__const char *__restrict __s, size_t __n,
+ 	       mbstate_t *__restrict __ps))
+ { return (__ps != NULL
+@@ -526,38 +526,38 @@
+ /* Define inline functions which call the internal entry points.  */
+ __BEGIN_NAMESPACE_C99
+ 
+-extern __inline double
++__extern_inline double
+ __NTH (wcstod (__const wchar_t *__restrict __nptr,
+ 	       wchar_t **__restrict __endptr))
+ { return __wcstod_internal (__nptr, __endptr, 0); }
+-extern __inline long int
++__extern_inline long int
+ __NTH (wcstol (__const wchar_t *__restrict __nptr,
+ 	       wchar_t **__restrict __endptr, int __base))
+ { return __wcstol_internal (__nptr, __endptr, __base, 0); }
+-extern __inline unsigned long int
++__extern_inline unsigned long int
+ __NTH (wcstoul (__const wchar_t *__restrict __nptr,
+ 		wchar_t **__restrict __endptr, int __base))
+ { return __wcstoul_internal (__nptr, __endptr, __base, 0); }
+ __END_NAMESPACE_C99
+ 
+ # ifdef __USE_GNU
+-extern __inline float
++__extern_inline float
+ __NTH (wcstof (__const wchar_t *__restrict __nptr,
+ 	       wchar_t **__restrict __endptr))
+ { return __wcstof_internal (__nptr, __endptr, 0); }
+-extern __inline long double
++__extern_inline long double
+ __NTH (wcstold (__const wchar_t *__restrict __nptr,
+ 		wchar_t **__restrict __endptr))
+ { return __wcstold_internal (__nptr, __endptr, 0); }
+ 
+ 
+ __extension__
+-extern __inline long long int
++__extern_inline long long int
+ __NTH (wcstoq (__const wchar_t *__restrict __nptr,
+ 	       wchar_t **__restrict __endptr, int __base))
+ { return __wcstoll_internal (__nptr, __endptr, __base, 0); }
+ __extension__
+-extern __inline unsigned long long int
++__extern_inline unsigned long long int
+ __NTH (wcstouq (__const wchar_t *__restrict __nptr,
+ 		wchar_t **__restrict __endptr, int __base))
+ { return __wcstoull_internal (__nptr, __endptr, __base, 0); }
+--- a/include/sys/stat.h	2002-08-13 09:23:12.000000000 +0900
++++ b/include/sys/stat.h	2014-11-02 10:42:42.262380300 +0900
+@@ -19,12 +19,12 @@
+ hidden_proto (__xstat)
+ hidden_proto (__xstat64)
+ #endif
+-extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
++__extern_inline int __stat (__const char *__path, struct stat *__statbuf)
+ {
+   return __xstat (_STAT_VER, __path, __statbuf);
+ }
+ libc_hidden_proto (__xmknod)
+-extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
++__extern_inline int __mknod (__const char *__path, __mode_t __mode,
+ 			       __dev_t __dev)
+ {
+   return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
+--- a/io/sys/stat.h	2004-09-17 17:22:21.000000000 +0900
++++ b/io/sys/stat.h	2014-11-02 10:44:23.137417700 +0900
+@@ -360,28 +360,28 @@
+ #if defined __GNUC__ && __GNUC__ >= 2
+ /* Inlined versions of the real stat and mknod functions.  */
+ 
+-extern __inline__ int
++__extern_inline int
+ __NTH (stat (__const char *__path, struct stat *__statbuf))
+ {
+   return __xstat (_STAT_VER, __path, __statbuf);
+ }
+ 
+ # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+-extern __inline__ int
++__extern_inline int
+ __NTH (lstat (__const char *__path, struct stat *__statbuf))
+ {
+   return __lxstat (_STAT_VER, __path, __statbuf);
+ }
+ # endif
+ 
+-extern __inline__ int
++__extern_inline int
+ __NTH (fstat (int __fd, struct stat *__statbuf))
+ {
+   return __fxstat (_STAT_VER, __fd, __statbuf);
+ }
+ 
+ # if defined __USE_MISC || defined __USE_BSD
+-extern __inline__ int
++__extern_inline int
+ __NTH (mknod (__const char *__path, __mode_t __mode, __dev_t __dev))
+ {
+   return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
+@@ -391,21 +391,21 @@
+ # if defined __USE_LARGEFILE64 \
+   && (! defined __USE_FILE_OFFSET64 \
+       || (defined __REDIRECT_NTH && defined __OPTIMIZE__))
+-extern __inline__ int
++__extern_inline int
+ __NTH (stat64 (__const char *__path, struct stat64 *__statbuf))
+ {
+   return __xstat64 (_STAT_VER, __path, __statbuf);
+ }
+ 
+ #  if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+-extern __inline__ int
++__extern_inline int
+ __NTH (lstat64 (__const char *__path, struct stat64 *__statbuf))
+ {
+   return __lxstat64 (_STAT_VER, __path, __statbuf);
+ }
+ #  endif
+ 
+-extern __inline__ int
++__extern_inline int
+ __NTH (fstat64 (int __fd, struct stat64 *__statbuf))
+ {
+   return __fxstat64 (_STAT_VER, __fd, __statbuf);
+--- a/sysdeps/unix/sysv/linux/sys/sysmacros.h	2004-09-08 07:18:59.000000000 +0900
++++ b/sysdeps/unix/sysv/linux/sys/sysmacros.h	2014-11-02 10:54:55.533059300 +0900
+@@ -38,19 +38,19 @@
+      __THROW;
+ 
+ # if defined __GNUC__ && __GNUC__ >= 2
+-__extension__ extern __inline unsigned int
++__extension__ __extern_inline unsigned int
+ __NTH (gnu_dev_major (unsigned long long int __dev))
+ {
+   return ((__dev >> 8) & 0xfff) | ((unsigned int) (__dev >> 32) & ~0xfff);
+ }
+ 
+-__extension__ extern __inline unsigned int
++__extension__ __extern_inline unsigned int
+ __NTH (gnu_dev_minor (unsigned long long int __dev))
+ {
+   return (__dev & 0xff) | ((unsigned int) (__dev >> 12) & ~0xff);
+ }
+ 
+-__extension__ extern __inline unsigned long long int
++__extension__ __extern_inline unsigned long long int
+ __NTH (gnu_dev_makedev (unsigned int __major, unsigned int __minor))
+ {
+   return ((__minor & 0xff) | ((__major & 0xfff) << 8)
