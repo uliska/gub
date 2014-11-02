@@ -411,8 +411,22 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  {
    return __fxstat64 (_STAT_VER, __fd, __statbuf);
 --- a/sysdeps/unix/sysv/linux/sys/sysmacros.h	2004-09-08 07:18:59.000000000 +0900
-+++ b/sysdeps/unix/sysv/linux/sys/sysmacros.h	2014-11-02 10:54:55.533059300 +0900
-@@ -38,19 +38,19 @@
++++ b/sysdeps/unix/sysv/linux/sys/sysmacros.h	2014-11-02 11:24:13.174161500 +0900
+@@ -27,30 +27,30 @@
+    they need.  */
+ #ifdef __GLIBC_HAVE_LONG_LONG
+ __extension__
+-extern __inline unsigned int gnu_dev_major (unsigned long long int __dev)
++__extern_inline unsigned int gnu_dev_major (unsigned long long int __dev)
+      __THROW;
+ __extension__
+-extern __inline unsigned int gnu_dev_minor (unsigned long long int __dev)
++__extern_inline unsigned int gnu_dev_minor (unsigned long long int __dev)
+      __THROW;
+ __extension__
+-extern __inline unsigned long long int gnu_dev_makedev (unsigned int __major,
++__extern_inline unsigned long long int gnu_dev_makedev (unsigned int __major,
+ 							unsigned int __minor)
       __THROW;
  
  # if defined __GNUC__ && __GNUC__ >= 2
@@ -435,3 +449,14 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  __NTH (gnu_dev_makedev (unsigned int __major, unsigned int __minor))
  {
    return ((__minor & 0xff) | ((__major & 0xfff) << 8)
+--- a/sysdeps/unix/sysv/linux/bits/socket.h	2004-11-20 16:04:23.000000000 +0900
++++ b/sysdeps/unix/sysv/linux/bits/socket.h	2014-11-02 11:39:09.524973000 +0900
+@@ -258,7 +258,7 @@
+ 				      struct cmsghdr *__cmsg) __THROW;
+ #ifdef __USE_EXTERN_INLINES
+ # ifndef _EXTERN_INLINE
+-#  define _EXTERN_INLINE extern __inline
++#  define _EXTERN_INLINE __extern_inline
+ # endif
+ _EXTERN_INLINE struct cmsghdr *
+ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
