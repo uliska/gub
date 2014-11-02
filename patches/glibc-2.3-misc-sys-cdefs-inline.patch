@@ -460,3 +460,67 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  # endif
  _EXTERN_INLINE struct cmsghdr *
  __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
+--- a/linuxthreads/sysdeps/unix/sysv/linux/allocalim.h	2002-10-09 18:14:24.000000000 +0900
++++ b/linuxthreads/sysdeps/unix/sysv/linux/allocalim.h	2014-11-02 12:03:43.486035000 +0900
+@@ -19,7 +19,7 @@
+ 
+ #include <limits.h>
+ 
+-extern inline int __libc_use_alloca (size_t size)
++__extern_inline int __libc_use_alloca (size_t size)
+ {
+   return (__builtin_expect (size <= PTHREAD_STACK_MIN / 4, 1)
+ 	  || __libc_alloca_cutoff (size));
+--- a/string/bits/string2.h	2004-05-28 15:39:13.000000000 +0900
++++ b/string/bits/string2.h	2014-11-02 12:14:07.078595200 +0900
+@@ -43,7 +43,7 @@
+ # ifdef __cplusplus
+ #  define __STRING_INLINE inline
+ # else
+-#  define __STRING_INLINE extern __inline
++#  define __STRING_INLINE __extern_inline
+ # endif
+ #endif
+ 
+--- a/linuxthreads/sysdeps/i386/i686/pt-machine.h	2004-10-19 14:12:59.000000000 +0900
++++ b/linuxthreads/sysdeps/i386/i686/pt-machine.h	2014-11-02 19:42:51.754608200 +0900
+@@ -22,14 +22,14 @@
+ #ifndef _PT_MACHINE_H
+ #define _PT_MACHINE_H	1
+ 
++#include<misc/sys/cdefs.h>
++
+ #ifndef PT_EI
+-# define PT_EI extern inline __attribute__ ((always_inline))
++# define PT_EI __extern_inline
+ #endif
+ #include "kernel-features.h"
+ 
+ #ifndef __ASSEMBLER__
+-extern long int testandset (int *spinlock);
+-extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+ 
+ /* Get some notion of the current stack.  Need not be exactly the top
+    of the stack, just something somewhere in the current frame.  */
+--- a/sysdeps/unix/sysv/linux/bits/sigset.h	2001-07-06 13:56:14.000000000 +0900
++++ b/sysdeps/unix/sysv/linux/bits/sigset.h	2014-11-02 19:54:45.956657100 +0900
+@@ -43,7 +43,7 @@
+ # define _SIGSET_H_fns 1
+ 
+ # ifndef _EXTERN_INLINE
+-#  define _EXTERN_INLINE extern __inline
++#  define _EXTERN_INLINE __extern_inline
+ # endif
+ 
+ /* Return a mask that includes the bit for SIG only.  */
+--- a/linuxthreads/internals.h	2004-12-13 06:05:54.000000000 +0900
++++ b/linuxthreads/internals.h	2014-11-02 20:01:00.133395400 +0900
+@@ -527,7 +527,7 @@
+ # define __manager_thread __pthread_manager_threadp
+ #endif
+ 
+-extern inline __attribute__((always_inline)) pthread_descr
++__extern_inline pthread_descr
+ check_thread_self (void)
+ {
+   pthread_descr self = thread_self ();
