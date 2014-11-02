@@ -86,6 +86,9 @@ libc_cv_rootsbindir=%(prefix_dir)s/sbin
         return {'': ['glibc-core'], 'devel': ['glibc-core'], 'doc': ['glibc-core'], 'runtime': ['glibc-core']}
     def patch (self):
         target.AutoBuild.patch (self)
+        self.system('''
+rm %(srcdir)s/sysdeps/i386/i686/memcmp.S
+''')
     def get_add_ons (self):
         return ('linuxthreads', 'nptl')
     @context.subst_method
