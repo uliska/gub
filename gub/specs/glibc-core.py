@@ -6,7 +6,10 @@ from gub.specs import glibc
 
 class Glibc_core (glibc.Glibc):
     source = 'http://lilypond.org/download/gub-sources/glibc-2.3-20070416.tar.bz2'
-    patches = glibc.Glibc.patches + ['glibc-2.3-core-install.patch']
+    patches = glibc.Glibc.patches + [
+        'glibc-2.3-core-install.patch',
+        'glibc-2.3-core-elf-makefile.patch',
+    ]
     dependencies = ['cross/gcc-core', 'linux-headers', 'tools::bison']
     configure_flags = (glibc.Glibc.configure_flags
                        + misc.join_lines ('''
