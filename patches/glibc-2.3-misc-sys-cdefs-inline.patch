@@ -524,3 +524,103 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  check_thread_self (void)
  {
    pthread_descr self = thread_self ();
+--- a/include/ctype.h	2004-03-16 19:09:04.000000000 +0900
++++ b/include/ctype.h	2014-11-08 23:04:23.515284300 +0900
+@@ -15,7 +15,7 @@
+ #  include <bits/libc-tsd.h>
+ 
+ #  ifndef CTYPE_EXTERN_INLINE	/* Used by ctype/ctype-info.c, which see.  */
+-#   define CTYPE_EXTERN_INLINE extern inline
++#   define CTYPE_EXTERN_INLINE __extern_inline
+ #  endif
+ 
+ __libc_tsd_define (extern, CTYPE_B)
+--- a/ctype/ctype.h	2004-09-08 07:23:45.000000000 +0900
++++ b/ctype/ctype.h	2014-11-08 23:08:15.796613900 +0900
+@@ -187,13 +187,13 @@
+ # endif
+ 
+ # ifdef __USE_EXTERN_INLINES
+-extern __inline int
++__extern_inline int
+ __NTH (tolower (int __c))
+ {
+   return __c >= -128 && __c < 256 ? (*__ctype_tolower_loc ())[__c] : __c;
+ }
+ 
+-extern __inline int
++__extern_inline int
+ __NTH (toupper (int __c))
+ {
+   return __c >= -128 && __c < 256 ? (*__ctype_toupper_loc ())[__c] : __c;
+--- a/math/math_private.h	2005-10-17 13:52:32.000000000 +0900
++++ b/math/math_private.h	2014-11-08 23:21:07.614208900 +0900
+@@ -193,7 +193,7 @@
+ extern double __copysign (double x, double __y);
+ 
+ #if __GNUC_PREREQ (4, 0)
+-extern inline double __copysign (double x, double y)
++__extern_inline double __copysign (double x, double y)
+ { return __builtin_copysign (x, y); }
+ #endif
+ 
+@@ -240,7 +240,7 @@
+ extern float __copysignf (float x, float __y);
+ 
+ #if __GNUC_PREREQ (4, 0)
+-extern inline float __copysignf (float x, float y)
++__extern_inline float __copysignf (float x, float y)
+ { return __builtin_copysignf (x, y); }
+ #endif
+ 
+@@ -308,7 +308,7 @@
+ extern long double __significandl (long double x);
+ 
+ #if __GNUC_PREREQ (4, 0)
+-extern inline long double __copysignl (long double x, long double y)
++__extern_inline long double __copysignl (long double x, long double y)
+ { return __builtin_copysignl (x, y); }
+ #endif
+ 
+--- a/stdlib/gmp.h	2002-08-27 07:39:44.000000000 +0900
++++ b/stdlib/gmp.h	2014-11-08 23:33:47.667574800 +0900
+@@ -21,6 +21,8 @@
+ 
+ #ifndef __GMP_H__
+ 
++#include <features.h>
++
+ #ifndef __GNU_MP__
+ #define __GNU_MP__ 2
+ #define __need_size_t
+@@ -41,7 +43,7 @@
+ 
+ #ifndef _EXTERN_INLINE
+ #ifdef __GNUC__
+-#define _EXTERN_INLINE extern __inline__
++#define _EXTERN_INLINE __extern_inline
+ #else
+ #define _EXTERN_INLINE static
+ #endif
+--- a/argp/argp-fmtstream.h	2003-10-03 07:52:50.000000000 +0900
++++ b/argp/argp-fmtstream.h	2014-11-08 23:38:03.835319800 +0900
+@@ -207,7 +207,7 @@
+ #endif
+ 
+ #ifndef ARGP_FS_EI
+-#define ARGP_FS_EI extern inline
++#define ARGP_FS_EI __extern_inline
+ #endif
+ 
+ ARGP_FS_EI size_t
+--- a/argp/argp.h.org	2004-09-08 07:23:45.000000000 +0900
++++ b/argp/argp.h	2014-11-08 23:42:17.095136400 +0900
+@@ -557,7 +557,7 @@
+ # endif
+ 
+ # ifndef ARGP_EI
+-#  define ARGP_EI extern __inline__
++#  define ARGP_EI __extern_inline
+ # endif
+ 
+ ARGP_EI void
