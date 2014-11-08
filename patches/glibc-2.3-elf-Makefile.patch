@@ -1,0 +1,57 @@
+
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=f4a29fba078c48f9d4c78d06d2ed4bbdf95b3763
+
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=800938a1268309932c20dc523bb226bcab4bfe18
+
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=4e34ac6a1e256f40ab0d8eeed37aa1ea83440e76
+
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=cb84d1e403cf2295307b398ab54cedc6bf9f8973
+
+http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=2f978feb67c29ce3eb866aa719ed75ebdaabf4d1
+
+--- a/elf/Makefile	2005-07-18 10:19:48.000000000 +0900
++++ b/elf/Makefile	2014-11-08 22:33:53.923818700 +0900
+@@ -280,18 +280,16 @@
+ z-now-yes = -Wl,-z,now
+ 
+ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
+-	@rm -f $@.lds
+-	$(LINK.o) -nostdlib -nostartfiles -shared $(z-now-$(bind-now))	\
+-		  $(LDFLAGS-rtld) -Wl,-z,defs -Wl,--verbose 2>&1 |	\
+-		  LC_ALL=C \
+-		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
+-		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
+-		  > $@.lds
+-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@			\
++# Link into a temporary file so that we don't touch $@ at all
++# if the sanity check below fails.
++	$(LINK.o) -nostdlib -nostartfiles -shared -o $@.new		\
+ 		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
+ 		  $(filter-out $(map-file),$^) $(load-map-file)		\
+-		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
+-	rm -f $@.lds
++		  -Wl,-soname=$(rtld-installed-name)			\
++		  -Wl,-defsym=_begin=0
++	$(READELF) -s $@.new \
++	  | $(AWK) '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'
++	mv -f $@.new $@
+ 
+ # interp.c exists just to get this string into the libraries.
+ CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"' \
+--- a/elf/rtld.c	2005-04-06 11:49:51.000000000 +0900
++++ b/elf/rtld.c	2014-11-08 22:44:21.595910400 +0900
+@@ -343,10 +343,11 @@
+ #endif
+ 
+   /* This #define produces dynamic linking inline functions for
+-     bootstrap relocation instead of general-purpose relocation.  */
++     bootstrap relocation instead of general-purpose relocation.
++     Since ld.so must not have any undefined symbols the result
++     is trivial: always the map of ld.so itself.  */
+ #define RTLD_BOOTSTRAP
+-#define RESOLVE_MAP(sym, version, flags) \
+-  ((*(sym))->st_shndx == SHN_UNDEF ? 0 : &bootstrap_map)
++#define RESOLVE_MAP(sym, version, flags) (&bootstrap_map)
+ #define RESOLVE(sym, version, flags) \
+   ((*(sym))->st_shndx == SHN_UNDEF ? 0 : bootstrap_map.l_addr)
+ #include "dynamic-link.h"
