@@ -1,0 +1,31 @@
+--- a/Makerules	2004-12-16 03:52:39.000000000 +0900
++++ b/Makerules	2014-11-10 22:13:31.532959500 +0900
+@@ -604,7 +604,7 @@
+ 			 $(elfobjdir)/sofini.os \
+ 			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
+ 			 $(common-objpfx)shlib.lds
+-	$(build-shlib)
++	$(build-shlib) -Wl,--allow-multiple-definition -Wl,-lgcc
+ ifeq ($(versioning),yes)
+ $(common-objpfx)libc.so: $(common-objpfx)libc.map
+ endif
+--- a/elf/Makefile	2005-07-18 10:19:48.000000000 +0900
++++ b/elf/Makefile	2014-11-02 20:25:51.969531800 +0900
+@@ -243,7 +243,7 @@
+ 
+ $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
+ 	@-rm -f $@T
+-	$(reloc-link) -o $@.o '-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
++	$(reloc-link) -o $@.o '-Wl,-(' $^ '-Wl,-)' -Wl,-Map,$@T
+ 	rm -f $@.o
+ 	mv -f $@T $@
+ 
+@@ -272,7 +272,7 @@
+ 	$(MAKE) -f $< -f rtld-Rules
+ 
+ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
+-	$(LINK.o) -nostdlib -nostartfiles -r -o $@ '-Wl,-(' $^ -lgcc '-Wl,-)' \
++	$(LINK.o) -nostdlib -nostartfiles -r -o $@ '-Wl,-(' $^ '-Wl,-)' \
+ 		  -Wl,-Map,$@.map
+ 
+ generated += librtld.map librtld.mk rtld-libc.a librtld.os.map
