@@ -24,15 +24,16 @@ class Gcc_core (gcc.Gcc__from__source):
 --enable-threads=no
 --without-headers
 --disable-shared
+--disable-decimal-float
 '''))
-    make_flags = gcc.Gcc.make_flags + ' all-gcc'
+    make_flags = gcc.Gcc.make_flags + ' all-gcc all-target-libgcc'
     install_flags = (gcc.Gcc.install_flags
-                     .replace (' install', ' install-gcc'))
+                     .replace (' install',
+                               ' install-gcc install-target-libgcc'))
     # Gcc moves libs into system lib places, which will
     # make gcc-core conflict with gcc.
-    install = cross.AutoBuild.install
     def install (self):
-        gcc.Gcc__from__source.install (self)
+        cross.AutoBuild.install (self)
         self.system('''
 mkdir -p %(cross_prefix)s/lib/gcc/%(target_architecture)s/4.8.2/include/ || true
 ln -s ../include-fixed/limits.h %(cross_prefix)s/lib/gcc/%(target_architecture)s/4.8.2/include/limits.h || true
