@@ -624,3 +624,14 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  # endif
  
  ARGP_EI void
+--- a/nis/nss-nis.h	2004-04-02 18:15:04.000000000 +0900
++++ b/nis/nss-nis.h	2014-11-12 22:48:04.776850700 +0900
+@@ -42,7 +42,7 @@
+ extern int _nis_default_nss_flags attribute_hidden;
+ extern int _nis_check_default_nss (void) attribute_hidden;
+ 
+-extern inline __attribute__((always_inline)) int
++__extern_inline __attribute__((always_inline)) int
+ _nis_default_nss (void)
+ {
+   return _nis_default_nss_flags ?: _nis_check_default_nss ();
