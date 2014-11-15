@@ -35,6 +35,7 @@ touch %(install_prefix)s/include/gnu/stubs.h
 cp %(srcdir)s/include/features.h %(install_prefix)s/include
 mkdir -p %(install_prefix)s/include/bits
 cp %(builddir)s/bits/stdio_lim.h %(install_prefix)s/include/bits
+touch %(install_prefix)s/include/bits/syscall.h
 ''')
 
 class Glibc_core__linux__ppc (Glibc_core):
