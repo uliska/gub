@@ -1,0 +1,10 @@
+--- a/Source/util.h	2009-03-28 18:47:26.000000000 +0900
++++ b/Source/util.h	2014-11-16 01:08:19.464124600 +0900
+@@ -27,6 +27,7 @@
+ #  include <stdio.h>
+ #endif
+ 
++#include<unistd.h>
+ 
+ // these are the standard pause-before-quit shit.
+ extern int g_dopause;
