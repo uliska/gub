@@ -635,3 +635,36 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  _nis_default_nss (void)
  {
    return _nis_default_nss_flags ?: _nis_check_default_nss ();
+--- a/nptl/sysdeps/pthread/bits/libc-lock.h	2005-07-18 12:21:59.000000000 +0900
++++ b/nptl/sysdeps/pthread/bits/libc-lock.h	2014-11-15 17:01:53.719263900 +0900
+@@ -408,7 +408,7 @@
+ 
+ 
+ /* Normal cleanup handling, based on C cleanup attribute.  */
+-extern __inline void
++__extern_inline void
+ __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
+ {
+   if (f->__do_it)
+--- a/nptl/sysdeps/pthread/allocalim.h	2005-02-26 10:38:45.000000000 +0900
++++ b/nptl/sysdeps/pthread/allocalim.h	2014-11-15 17:22:43.159354700 +0900
+@@ -21,7 +21,7 @@
+ #include <limits.h>
+ 
+ 
+-extern inline int
++__extern_inline int
+ __libc_use_alloca (size_t size)
+ {
+   return (__builtin_expect (size <= PTHREAD_STACK_MIN / 4, 1)
+--- a/nptl/sysdeps/pthread/pthread.h	2005-07-18 12:21:59.000000000 +0900
++++ b/nptl/sysdeps/pthread/pthread.h	2014-11-15 17:24:38.472224700 +0900
+@@ -532,7 +532,7 @@
+    function the compiler is free to decide inlining the change when
+    needed or fall back on the copy which must exist somewhere
+    else.  */
+-extern __inline void
++__extern_inline void
+ __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
+ {
+   if (__frame->__do_it)
