@@ -65,6 +65,8 @@ class Gcc__from__source (Gcc):
 --with-local-prefix=%(system_prefix)s
 --disable-multilib
 --disable-nls
+--disable-libitm
+--disable-libsanitizer
 --enable-threads=posix
 --enable-__cxa_atexit
 --enable-symvers=gnu
