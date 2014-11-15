@@ -668,3 +668,47 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
  {
    if (__frame->__do_it)
+--- a/locale/programs/charmap-kw.h	2001-07-06 14:28:41.000000000 +0900
++++ b/locale/programs/charmap-kw.h	2014-11-15 18:09:57.525279600 +0900
+@@ -95,6 +95,9 @@
+ 
+ #ifdef __GNUC__
+ __inline
++#if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
++__attribute__ ((__gnu_inline__))
++#endif
+ #endif
+ const struct keyword_t *
+ charmap_hash (register const char *str, register unsigned int len)
+--- a/locale/programs/locfile-kw.h	2001-07-06 14:28:41.000000000 +0900
++++ b/locale/programs/locfile-kw.h	2014-11-15 18:15:59.306819600 +0900
+@@ -95,6 +95,9 @@
+ 
+ #ifdef __GNUC__
+ __inline
++#if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
++__attribute__ ((__gnu_inline__))
++#endif
+ #endif
+ const struct keyword_t *
+ locfile_hash (register const char *str, register unsigned int len)
+--- a/nptl/sysdeps/unix/sysv/linux/aio_misc.h	2004-05-26 13:26:48.000000000 +0900
++++ b/nptl/sysdeps/unix/sysv/linux/aio_misc.h	2014-11-15 18:21:12.427297700 +0900
+@@ -26,7 +26,7 @@
+ # define aio_start_notify_thread __aio_start_notify_thread
+ # define aio_create_helper_thread __aio_create_helper_thread
+ 
+-extern inline void
++__extern_inline void
+ __aio_start_notify_thread (void)
+ {
+   sigset_t ss;
+@@ -35,7 +35,7 @@
+   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
+ }
+ 
+-extern inline int
++__extern_inline int
+ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
+ {
+   pthread_attr_t attr;
