@@ -9,7 +9,7 @@ from gub.specs import gcc
 
 class Gcc (cross.AutoBuild):
     source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
-    dependencies = ['cross/binutils']
+    dependencies = ['cross/binutils', 'system::gcc', 'system::g++']
     patches = ['gcc-4.8.2-libstdc++-debug-path.patch']
     configure_flags = (cross.AutoBuild.configure_flags
                 + '%(enable_languages)s'
