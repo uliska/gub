@@ -11,6 +11,8 @@ class Nsis (tools.SConsBuild):
     patches = [
         'nsis-2.46-crossmingw.patch',
         'nsis-2.46-util.patch',
+        'nsis-2.46-linker_script-default.patch',
+        'nsis-2.46-linker_script-ndata.patch',
     ]
     scons_flags = misc.join_lines ('''
 DEBUG=yes

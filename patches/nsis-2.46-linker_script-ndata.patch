@@ -1,0 +1,15 @@
+.ndata section is added to the default linker script.
+
+--- a/SCons/Config/linker_script	2014-11-16 15:15:01.302783500 +0900
++++ b/SCons/Config/linker_script	2014-11-16 20:57:45.209797100 +0900
+@@ -137,6 +137,10 @@
+     PROVIDE ( _end = .);
+      __end__ = .;
+   }
++  .ndata BLOCK(__section_alignment__) :
++  {
++    *(.ndata)
++  }
+   .rsrc BLOCK(__section_alignment__) :
+   {
+     *(.rsrc)
