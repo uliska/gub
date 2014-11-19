@@ -34,7 +34,10 @@ gcc_tooldir='%(prefix_dir)s/%(target_architecture)s'
     def get_subpackage_definitions (self):
         d = cross.AutoBuild.get_subpackage_definitions (self)
         prefix_dir = self.settings.prefix_dir
-        d['c++-runtime'] = [prefix_dir + '/lib/libstdc++.so*']
+        d['c++-runtime'] = [
+            prefix_dir + '/lib/libstdc++.so*',
+            prefix_dir + '/lib/libgcc_s.so*',
+        ]
         return d
     def languages (self):
         return ['c', 'c++']
@@ -90,11 +93,19 @@ class Gcc__mingw (Gcc):
 ln -s usr/ %(system_root)s/mingw || true
 '''
         )
+    def get_subpackage_definitions (self):
+        d = cross.AutoBuild.get_subpackage_definitions (self)
+        prefix_dir = self.settings.prefix_dir
+        d['c++-runtime'] = [
+            prefix_dir + '/bin/libstdc++-*.dll',
+            prefix_dir + '/bin/libgcc_s_*.dll',
+        ]
+        return d
     def install (self):
         Gcc.install (self)
         self.system('''
 mkdir -p %(system_prefix)s/bin/
-cp %(install_prefix)s/lib/libgcc_s_sjlj-1.dll %(system_prefix)s/bin/
-cp %(install_prefix)s/cross/%(target_architecture)s/lib/libstdc++-6.dll %(system_prefix)s/bin/
+cp %(install_prefix)s/lib/libgcc_s_*.dll %(install_prefix)s/bin/
+cp %(install_prefix)s/cross/%(target_architecture)s/lib/libstdc++-*.dll %(install_prefix)s/bin/
 '''
         )
