@@ -6,8 +6,7 @@ class Mingwrt_dev (build.BinaryBuild, build.SdkBuild):
         self.system ('''
 mkdir -p %(install_prefix)s/include
 mkdir -p %(install_prefix)s/lib
-mkdir -p %(install_prefix)s/share
-mkdir -p %(install_prefix)s/doc
+mkdir -p %(install_prefix)s/share/doc
 cd %(srcdir)s/include/ && tar -C %(srcdir)s/include/ -cf - . | tar -C %(install_prefix)s/include/ -xf -
 cd %(srcdir)s/lib/ && tar -C %(srcdir)s/lib/ -cf - . | tar -C %(install_prefix)s/lib/ -xf -
 cd %(srcdir)s/share/ && tar -C %(srcdir)s/share/ -cf - . | tar -C %(install_prefix)s/share/ -xf -
