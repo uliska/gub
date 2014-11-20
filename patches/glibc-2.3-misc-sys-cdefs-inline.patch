@@ -208,7 +208,43 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  	      int __base, __locale_t __loc)
  {
 --- a/sysdeps/generic/inttypes.h	2004-09-08 07:23:42.000000000 +0900
-+++ b/sysdeps/generic/inttypes.h	2014-11-01 00:13:17.091498600 +0900
++++ b/sysdeps/generic/inttypes.h	2014-11-20 20:09:25.486639100 +0900
+@@ -330,7 +330,7 @@
+ 				   int __base, int __group) __THROW;
+ #   define __strtol_internal_defined	1
+ #  endif
+-extern __inline intmax_t
++__extern_inline intmax_t
+ __NTH (strtoimax (__const char *__restrict nptr, char **__restrict endptr,
+ 		  int base))
+ {
+@@ -345,7 +345,7 @@
+ 					     int __base, int __group) __THROW;
+ #   define __strtoul_internal_defined	1
+ #  endif
+-extern __inline uintmax_t
++__extern_inline uintmax_t
+ __NTH (strtoumax (__const char *__restrict nptr, char **__restrict endptr,
+ 		  int base))
+ {
+@@ -359,7 +359,7 @@
+ 				   int __base, int __group) __THROW;
+ #   define __wcstol_internal_defined	1
+ #  endif
+-extern __inline intmax_t
++__extern_inline intmax_t
+ __NTH (wcstoimax (__const __gwchar_t *__restrict nptr,
+ 		  __gwchar_t **__restrict endptr, int base))
+ {
+@@ -376,7 +376,7 @@
+ 					     int __base, int __group) __THROW;
+ #   define __wcstoul_internal_defined	1
+ #  endif
+-extern __inline uintmax_t
++__extern_inline uintmax_t
+ __NTH (wcstoumax (__const __gwchar_t *__restrict nptr,
+ 		  __gwchar_t **__restrict endptr, int base))
+ {
 @@ -393,7 +393,7 @@
  					 int __base, int __group) __THROW;
  #   define __strtoll_internal_defined	1
@@ -712,3 +748,36 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
  {
    pthread_attr_t attr;
+--- a/sysdeps/x86_64/fpu/bits/mathinline.h	2004-09-08 07:18:59.000000000 +0900
++++ b/sysdeps/x86_64/fpu/bits/mathinline.h	2014-11-20 20:00:20.907790200 +0900
+@@ -22,10 +22,10 @@
+ # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+ #endif
+ 
+-#ifdef __cplusplus
++#ifndef __extern_inline
+ # define __MATH_INLINE __inline
+ #else
+-# define __MATH_INLINE extern __inline
++# define __MATH_INLINE __extern_inline
+ #endif
+ 
+ 
+--- a/linuxthreads/sysdeps/x86_64/pt-machine.h	2004-04-11 15:13:09.000000000 +0900
++++ b/linuxthreads/sysdeps/x86_64/pt-machine.h	2014-11-20 20:19:23.150928900 +0900
+@@ -27,12 +27,12 @@
+ # include <asm/prctl.h>
+ 
+ 
++#include<misc/sys/cdefs.h>
++
+ # ifndef PT_EI
+-#  define PT_EI extern inline __attribute__ ((always_inline))
++#  define PT_EI __extern_inline
+ # endif
+ 
+-extern long int testandset (int *spinlock);
+-extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+ 
+ /* Get some notion of the current stack.  Need not be exactly the top
+    of the stack, just something somewhere in the current frame.  */
