@@ -215,12 +215,18 @@ def compression_flag (ball):
         return ' -z'
     elif ball.endswith ('bz2'):
         return ' -j'
+    elif (ball.endswith ('xz')
+        or ball.endswith ('lzma')
+        or ball.endswith ('txz')
+        or ball.endswith ('tlz')):
+        return ' -J'
     return ''
 
 def unzip_command (ball):
     return {
         '-z' : 'gzip -dc',
         '-j' : 'bzip2 -dc',
+        '-J' : 'xz -dc',
         '': 'cat'
         }[compression_flag (ball).strip ()]
         
