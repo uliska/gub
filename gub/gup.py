@@ -427,7 +427,7 @@ def get_base_package_name (name):
     # FIXME: rename packages, fragile
     if [True for x in [
             'freebsd-runtime',
-            'mingwrt-dev',
+            'mingw-w64-runtime',
             'lilypond-doc',
             'cygwin::',
             ] if x in name]:

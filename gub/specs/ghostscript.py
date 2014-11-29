@@ -215,6 +215,7 @@ class Ghostscript__mingw (Ghostscript):
         'ghostscript-8.70-windows-wb.patch',
         'ghostscript-8.70-windows-make.patch',
         'ghostscript-8.70-gs_dll.patch',
+        'ghostscript-8.70-mingw-w64-snprintf.patch',
         ]
     def __init__ (self, settings, source):
         Ghostscript.__init__ (self, settings, source)

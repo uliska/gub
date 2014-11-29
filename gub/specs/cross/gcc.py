@@ -85,8 +85,12 @@ Gcc__linux = Gcc__from__source
 class Gcc__mingw (Gcc):
     source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = (Gcc.dependencies
-                + ['mingwrt-dev', 'mingwrt-dll', 'w32api']
+                + ['mingw-w64-runtime']
                 + ['tools::libtool'])
+    configure_flags = (Gcc.configure_flags
+                + misc.join_lines ('''
+--enable-threads=posix
+'''))
     def patch (self):
         Gcc.patch (self)
         self.system('''
