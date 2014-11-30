@@ -171,6 +171,7 @@ class LilyPond__mingw (LilyPond):
     dependencies = LilyPond.dependencies + [
             'tools::imagemagick',
             'tools::icoutils',
+            'mingw-w64-runtime-winpthread-dll',
             ]
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
     configure_flags = (LilyPond.configure_flags
