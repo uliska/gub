@@ -13,6 +13,7 @@ class Nsis (tools.SConsBuild):
         'nsis-2.46-util.patch',
         'nsis-2.46-linker_script-default.patch',
         'nsis-2.46-linker_script-ndata.patch',
+	'nsis-2.46-InstallOptions.patch',
     ]
     scons_flags = misc.join_lines ('''
 DEBUG=yes
