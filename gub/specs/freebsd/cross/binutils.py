@@ -8,8 +8,3 @@ class Binutils__freebsd (cross_binutils.Binutils):
                 + misc.join_lines ('''
 --program-prefix=%(toolchain_prefix)s
 '''))
-
-class Binutils__freebsd__x86 (cross_binutils.Binutils):
-    patches = cross_binutils.Binutils.patches + [
-        'binutils-2.24-freebsd4.patch' # This patch will not be needed from binutils 2.25.
-        ]

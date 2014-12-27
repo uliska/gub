@@ -4,7 +4,7 @@ from gub import misc
 from gub.specs import binutils
 
 class Binutils (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/binutils/binutils-2.24.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/binutils/binutils-2.25.tar.bz2'
     patches = []
     dependencies = [
         'tools::zlib',
