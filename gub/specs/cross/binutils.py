@@ -8,6 +8,7 @@ class Binutils (cross.AutoBuild):
     patches = []
     dependencies = [
         'tools::zlib',
+        'tools::texinfo',
             ]
     # Block usage of libz.so during configure, which may not be
     # available in the library path.
