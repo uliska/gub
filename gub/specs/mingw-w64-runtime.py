@@ -2,6 +2,7 @@ from gub import build
 
 class Mingw_w64_runtime (build.BinaryBuild, build.SdkBuild):
     source = 'http://sourceforge.net/projects/mingw-w64/files/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/4.8.2/threads-posix/sjlj/i686-4.8.2-release-posix-sjlj-rt_v3-rev4.7z'
+    dependencies = [ 'system::7z' ]
     subpackage_names = ['winpthread-dll', '']
     def get_subpackage_definitions (self):
         d = build.BinaryBuild.get_subpackage_definitions (self)
