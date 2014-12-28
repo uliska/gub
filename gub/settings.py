@@ -23,7 +23,7 @@ platforms = {
     'freebsd4-x86': 'i686-freebsd4',
     'freebsd6-x86': 'i686-freebsd6',
 
-    'freebsd-x86': 'i686-freebsd4',
+    'freebsd-x86': 'i686-freebsd6',
     'freebsd-64': 'x86_64-freebsd6',
 
     'linux-arm': 'arm-linux',

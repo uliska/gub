@@ -53,9 +53,6 @@ ac_cv_prog_HAVE_JIKES_IN_PATH=${ac_cv_prog_HAVE_JIKES_IN_PATH=no}
                 ],
                        '%(builddir)s/gettext-tools/Makefile')
 
-class Gettext__freebsd__x86 (Gettext):
-    dependencies = (Gettext.dependencies + ['libgnugetopt'])
-
 class Gettext__mingw (Gettext):
     patches = ['gettext-0.15-mingw.patch']
     config_cache_overrides = (Gettext.config_cache_overrides
