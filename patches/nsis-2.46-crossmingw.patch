@@ -1,11 +1,11 @@
 --- a/SCons/Tools/crossmingw.py	2009-01-11 18:48:07.000000000 +0900
-+++ b/SCons/Tools/crossmingw.py	2014-11-15 23:54:57.176018300 +0900
++++ b/SCons/Tools/crossmingw.py	2014-12-29 09:26:50.204202000 +0900
 @@ -149,7 +149,7 @@
      env['SHLINKFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -shared')
      env['SHLINKCOM']   = shlib_action
      env.Append(SHLIBEMITTER = [shlib_emitter])
 -    env['LINK'] = mingw_prefix + 'g++'
-+    env['LINK'] = mingw_prefix + 'g++ -static-libgcc -static-libstdc++'
++    env['LINK'] = mingw_prefix + 'g++ -static'
      env['AS'] = mingw_prefix + 'as'
      env['AR'] = mingw_prefix + 'ar'
      env['RANLIB'] = mingw_prefix + 'ranlib'
