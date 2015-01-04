@@ -70,6 +70,7 @@ class Gcc__from__source (Gcc):
 --disable-nls
 --disable-libitm
 --disable-libsanitizer
+--disable-libcilkrts
 --enable-threads=posix
 --enable-__cxa_atexit
 --enable-symvers=gnu
