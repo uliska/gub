@@ -174,9 +174,6 @@ class LilyPond__mingw (LilyPond):
             'mingw-w64-runtime-winpthread-dll',
             ]
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
-    configure_flags = (LilyPond.configure_flags
-                       + ' --enable-optimising=off'
-                       )
     make_flags = (LilyPond.make_flags
                   + ' LDFLAGS="%(python_lib)s"'  % locals ())
     # ugh Python hack: C&P Cygwin
