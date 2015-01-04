@@ -6,7 +6,6 @@ from gub import misc
 # http://gcc.gnu.org/PR24196
 #class this_works_but_has_string_exception_across_dll_bug_Gcc__cygwin (cross_gcc.Gcc__mingw):
 class Gcc__cygwin (cross_gcc.Gcc__mingw):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     patches = []
     dependencies = (cross_gcc.Gcc__mingw.dependencies
                     + ['cygwin',
@@ -26,7 +25,6 @@ gcc_tooldir="%(cross_prefix)s/%(target_architecture)s"
 
 #class okGcc__cygwin (cross_gcc.Gcc):
 class above_is_okay_now_cygwin_has_switched_Gcc__cygwin (cross_gcc.Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     patches = []
     dependencies = (cross_gcc.Gcc.dependencies
                     + ['cygwin', 'w32api-in-usr-lib'])

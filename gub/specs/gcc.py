@@ -11,7 +11,6 @@ class Gcc__system (system.Configure):
         return 'GNU C compiler; 4.x is strongly recommended'
 
 class Gcc__tools (tools.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = [
             'binutils',
             ]

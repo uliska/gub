@@ -8,7 +8,7 @@ from gub import misc
 from gub.specs import gcc
 
 class Gcc (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.9.2/gcc-4.9.2.tar.bz2'
     dependencies = ['cross/binutils', 'system::gcc', 'system::g++']
     patches = ['gcc-4.8.2-libstdc++-debug-path.patch']
     configure_flags = (cross.AutoBuild.configure_flags
@@ -83,7 +83,6 @@ class Gcc__from__source (Gcc):
 Gcc__linux = Gcc__from__source
 
 class Gcc__mingw (Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = (Gcc.dependencies
                 + ['mingw-w64-runtime']
                 + ['tools::libtool'])

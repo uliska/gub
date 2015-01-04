@@ -5,7 +5,6 @@ from gub import loggedos
 from gub import cross
 
 class Gcc__darwin (cross_gcc.Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = ['odcctools']
     def patch (self):
         self.file_sub ([('/usr/bin/libtool', '%(cross_prefix)s/bin/%(target_architecture)s-libtool')],
@@ -49,7 +48,6 @@ class Gcc__darwin (cross_gcc.Gcc):
         self.rewire_gcc_libs ()
     
 class Gcc__darwin__x86 (Gcc__darwin):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     patches = []
     dependencies = Gcc__darwin.dependencies + ['tools::mpfr']
     configure_command = (''' LDFLAGS='-L%(tools_prefix)s/lib %(rpath)s' '''
