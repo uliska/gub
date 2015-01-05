@@ -8,5 +8,6 @@ class Gcc__freebsd (cross_gcc.Gcc):
     configure_flags = (cross_gcc.Gcc.configure_flags
                 + misc.join_lines ('''
 --program-prefix=%(toolchain_prefix)s
+--disable-libcilkrts
 --disable-__cxa_atexit
 '''))
