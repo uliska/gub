@@ -9,8 +9,17 @@ from gub.specs import gcc
 
 class Gcc (cross.AutoBuild):
     source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
-    dependencies = ['cross/binutils', 'system::gcc', 'system::g++']
+    dependencies = [
+        'cross/binutils',
+        'system::gcc',
+        'system::g++',
+        'tools::gmp',
+        'tools::mpfr',
+        'tools::mpc',
+    ]
     patches = ['gcc-4.8.2-libstdc++-debug-path.patch']
+    configure_command = (''' LDFLAGS='-L%(tools_prefix)s/lib %(rpath)s' '''
+                         + cross.AutoBuild.configure_command)
     configure_flags = (cross.AutoBuild.configure_flags
                 + '%(enable_languages)s'
                 + ' --enable-static'
@@ -83,7 +92,6 @@ class Gcc__from__source (Gcc):
 Gcc__linux = Gcc__from__source
 
 class Gcc__mingw (Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = (Gcc.dependencies
                 + ['mingw-w64-runtime']
                 + ['tools::libtool'])
