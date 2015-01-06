@@ -565,7 +565,7 @@ class SevenZFile (TarBall):
         #if self.oslog:  #urg, will be fixed when .source is mandatory
         #    _v = self.oslog.verbose_flag ()
         _v = ''   #     self.oslog.verbose_flag ()
-        self.system ('7z x %(_v)s %(tarball)s -o%(destdir)s' % locals ())
+        self.system ('7za x %(_v)s %(tarball)s -o%(destdir)s' % locals ())
 
 RepositoryProxy.register (SevenZFile)
 
