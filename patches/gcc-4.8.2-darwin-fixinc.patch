@@ -1,0 +1,11 @@
+--- gcc-4.8.2/gcc/Makefile.in.org	2015-01-12 19:53:31.179327200 +0900
++++ gcc-4.8.2/gcc/Makefile.in	2015-01-12 19:53:52.471327200 +0900
+@@ -4214,7 +4214,7 @@
+ 	      export TARGET_MACHINE srcdir SHELL MACRO_LIST && \
+ 	      cd $(build_objdir)/fixincludes && \
+ 	      $(SHELL) ./fixinc.sh "$${gcc_dir}/$${fix_dir}" \
+-	        $(SYSTEM_HEADER_DIR) $(OTHER_FIXINCLUDES_DIRS) ); \
++	        $(SYSTEM_HEADER_DIR) $(OTHER_FIXINCLUDES_DIRS) || true ); \
+ 	    rm -f $${fix_dir}/syslimits.h; \
+ 	    if [ -f $${fix_dir}/limits.h ]; then \
+ 	      mv $${fix_dir}/limits.h $${fix_dir}/syslimits.h; \
