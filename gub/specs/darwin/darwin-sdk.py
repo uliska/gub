@@ -1,7 +1,7 @@
 from gub import build
 
 class Darwin_sdk (build.SdkBuild):
-    source = 'http://lilypond.org/download/gub-sources/darwin7-sdk-0.4.tar.gz'
+    source = 'http://lilypond.org/download/gub-sources/darwin8-sdk-0.4.tar.gz'
     def patch (self):
         self.system ('''
 rm %(srcdir)s/usr/lib/libgcc*
@@ -26,6 +26,3 @@ rm %(srcdir)s/usr/include/FlexLexer.h
         pat = self.expand ('%(srcdir)s/usr/lib/*.la')
         for a in glob.glob (pat):
             self.file_sub ([(r' (/usr/lib/.*\.la)', r'%(system_root)s\1')], a)
-
-class Darwin_sdk__darwin__x86 (Darwin_sdk):
-    source = 'http://lilypond.org/download/gub-sources/darwin8-sdk-0.4.tar.gz'

@@ -17,7 +17,7 @@ platforms = {
     'debian-mipsel': 'mipsel-linux',
     'debian-x86': 'i686-linux',
     'cygwin': 'i686-cygwin',
-    'darwin-ppc': 'powerpc-apple-darwin7',
+    'darwin-ppc': 'powerpc-apple-darwin8',
     'darwin-x86': 'i686-apple-darwin8',
 
     'freebsd4-x86': 'i686-freebsd4',
