@@ -18,3 +18,8 @@ class Gcc__darwin (cross_gcc.Gcc):
         cross_gcc.Gcc.install (self)
         # conflicts with darwin-SDK
         self.system ('mv %(install_prefix)s/lib/libsupc++.a %(install_prefix)s/lib/libsupc++.a-')
+
+class Gcc__darwin__ppc (Gcc__darwin):
+    configure_flags = (Gcc__darwin.configure_flags
+                       + ' --disable-libitm'
+    )
