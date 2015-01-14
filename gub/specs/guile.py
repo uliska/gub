@@ -187,12 +187,10 @@ class Guile__darwin (Guile):
         self.map_locate (dylib_link,
                          self.expand ('%(install_prefix)s/lib/'),
                          'libguile-srfi*.dylib')
- 
-class Guile__darwin__x86 (Guile__darwin):
     def configure (self):
         self.file_sub ([('guile-readline', '')],
                        '%(srcdir)s/Makefile.in')
-        Guile__darwin.configure (self)
+        Guile.configure (self)
 
 class Guile__linux__x86 (Guile):
     patches = Guile.patches + ['guile-1.8.6-pthreads-cross.patch']
