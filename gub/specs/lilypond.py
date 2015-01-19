@@ -253,7 +253,7 @@ class LilyPond__darwin (LilyPond):
 class LilyPond__darwin__ppc (LilyPond__darwin):
     def configure (self):
         LilyPond__darwin.configure (self)
-        self.dump ('CXXFLAGS += -DGUILE_ELLIPSIS=...',
+        self.dump ('CXXFLAGS += -fpermissive -DGUILE_ELLIPSIS=...',
                    '%(builddir)s/local.make')
 
 class LilyPond_base (target.AutoBuild):

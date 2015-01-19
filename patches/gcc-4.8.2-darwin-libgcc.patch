@@ -1,0 +1,18 @@
+--- gcc-4.8.2/libgcc/config/t-slibgcc-darwin.org	2015-01-12 23:49:10.689670300 +0900
++++ gcc-4.8.2/libgcc/config/t-slibgcc-darwin	2015-01-12 23:49:40.989670300 +0900
+@@ -29,11 +29,11 @@
+ 
+ # we're only going to build the stubs if the target slib is /usr/lib
+ # there is no other case in which they're useful in a live system.
+-ifeq (/usr/lib,$(shlib_slibdir))
++#ifeq (/usr/lib,$(shlib_slibdir))
+ LGCC_STUBS = libgcc_s.10.4.dylib libgcc_s.10.5.dylib
+-else
+-LGCC_STUBS =
+-endif
++#else
++#LGCC_STUBS =
++#endif
+ 
+ LGCC_FILES = libgcc_s.$(SHLIB_SOVERSION)$(SHLIB_EXT)
+ LGCC_FILES += $(LGCC_STUBS)
