@@ -39,6 +39,9 @@ touch %(install_prefix)s/include/bits/syscall.h
 ''')
 
 class Glibc_core__linux__ppc (Glibc_core):
+    patches = Glibc_core.patches + [
+        'glibc-2.3-linux-ppc-sysdeps-generic-strtol_l.patch',
+        ]
         # ugh, but the gnulib=-lgcc hack does something else on ppc...
         # it (huh?) drops *-lgcc* (instead of -lgcc_eh) from libc.so
         # linkage, which then fails.

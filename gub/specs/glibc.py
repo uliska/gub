@@ -116,6 +116,11 @@ rm %(srcdir)s/sysdeps/i386/i686/memcmp.S
     def LD_PRELOAD (self):
         return ''
 
+class Glibc__linux__ppc (Glibc):
+    patches = Glibc.patches + [
+        'glibc-2.3-linux-ppc-sysdeps-generic-strtol_l.patch',
+        ]
+
 class Glibc__linux__mipsel (Glibc):
     patches = Glibc.patches + [
         'glibc-2.3-mips-syscall.patch',
