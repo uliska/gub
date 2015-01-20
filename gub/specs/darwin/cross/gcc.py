@@ -22,6 +22,9 @@ class Gcc__darwin (cross_gcc.Gcc):
         self.system ('mv %(install_prefix)s/lib/libsupc++.a %(install_prefix)s/lib/libsupc++.a-')
 
 class Gcc__darwin__ppc (Gcc__darwin):
+    patches = Gcc__darwin.patches + [
+        'gcc-4.9.2-darwin-powerpc.patch', # This patch will not be needed from gcc 4.9.3.
+    ]
     configure_flags = (Gcc__darwin.configure_flags
                        + ' --disable-libitm'
     )
