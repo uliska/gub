@@ -1,0 +1,15 @@
+--- a/linuxthreads/Makefile	2014-11-12 18:47:29.238567100 +0900
++++ b/linuxthreads/Makefile	2015-02-01 22:28:42.566756900 +0900
+@@ -186,6 +186,8 @@
+ $(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
+ $(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
+ 
++$(objpfx)libpthread_pic.a: dummy_symbol.os
++
+ znodelete-yes = -DHAVE_Z_NODELETE
+ CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
+ CFLAGS-specific.c += -D__NO_WEAK_PTHREAD_ALIASES
+--- /dev/null	2015-02-01 22:32:29.000000000 +0900
++++ b/linuxthreads/dummy_symbol.c	2015-02-01 22:30:53.158812200 +0900
+@@ -0,0 +1 @@
++int __librt_multiple_threads;

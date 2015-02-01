@@ -42,6 +42,7 @@ class Glibc_core__linux__ppc (Glibc_core):
     patches = Glibc_core.patches + [
         'glibc-2.3-linux-ppc-sysdeps-generic-strtol_l.patch',
         'glibc-2.3-powerpc-unwind-find-fde.patch',
+        'glibc-2.3-powerpc-linuxthreads-librt_multiple_threads.patch',
         ]
         # ugh, but the gnulib=-lgcc hack does something else on ppc...
         # it (huh?) drops *-lgcc* (instead of -lgcc_eh) from libc.so
