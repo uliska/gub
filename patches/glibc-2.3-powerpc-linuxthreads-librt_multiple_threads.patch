@@ -4,7 +4,7 @@
  $(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
  $(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
  
-+$(objpfx)libpthread_pic.a: dummy_symbol.os
++$(objpfx)libpthread_pic.a: $(objpfx)dummy_symbol.os
 +
  znodelete-yes = -DHAVE_Z_NODELETE
  CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
