@@ -14,7 +14,7 @@ class Rewirer (context.RunnableContext):
     def __init__ (self, settings):
         context.RunnableContext.__init__ (self,settings)
         self.ignore_libs = None
-        self.skip = ['libgcc_s', 'libstdc++']
+        self.skip = ['libgcc_s']
 
     def get_libaries (self, name):
         lib_str = loggedos.read_pipe (
