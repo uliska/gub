@@ -21,7 +21,11 @@ class Gcc__darwin (cross_gcc.Gcc):
 /home/janneke/vc/gub/target/darwin-x86/root/usr/cross/bin/i686-apple-darwin8-ld: warning can't open dynamic library: /home/janneke/vc/gub/target/darwin-x86/root/home/janneke/vc/gub/target/darwin-x86/root/usr/cross/i686-apple-darwin8/lib/libgcc_s.1.dylib referenced from: /home/janneke/vc/gub/target/darwin-x86/root/usr/lib/libstdc++.dylib (checking for undefined symbols may be affected) (No such file or directory, errno = 2)
 '''
         # let's try adding libstdc++.dylib?, nah, let's not
-        skip_libs = ['libgcc_s'] #, 'libstdc++']
+        skip_libs = [
+            'libgcc_s.10.',
+            'libgcc_s_',
+            'libgcc_ext.10.'
+        ] #, 'libstdc++']
 
         def rewire_one (logger, file):
             found_skips = [s for s in skip_libs if file.find (s) >= 0]
