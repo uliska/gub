@@ -92,6 +92,13 @@ class Gcc__from__source (Gcc):
 
 Gcc__linux = Gcc__from__source
 
+class Gcc__linux__ppc (Gcc__linux):
+    configure_flags = (Gcc__linux.configure_flags
+                + misc.join_lines ('''
+--disable-libatomic
+--disable-libgomp
+'''))
+
 class Gcc__mingw (Gcc):
     dependencies = (Gcc.dependencies
                 + ['mingw-w64-runtime']

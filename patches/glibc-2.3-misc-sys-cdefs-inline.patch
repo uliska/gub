@@ -781,3 +781,36 @@ http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=b037a293a48718af30d706c2e1
  
  /* Get some notion of the current stack.  Need not be exactly the top
     of the stack, just something somewhere in the current frame.  */
+--- a/sysdeps/powerpc/fpu/bits/mathinline.h	2004-09-30 15:16:28.000000000 +0900
++++ b/sysdeps/powerpc/fpu/bits/mathinline.h	2015-01-20 22:27:55.277405000 +0900
+@@ -22,10 +22,10 @@
+ # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+ #endif
+ 
+-#ifdef __cplusplus
++#ifndef __extern_inline
+ # define __MATH_INLINE __inline
+ #else
+-# define __MATH_INLINE extern __inline
++# define __MATH_INLINE __extern_inline
+ #endif  /* __cplusplus */
+ 
+ #if defined __GNUC__ && !defined _SOFT_FLOAT
+--- a/linuxthreads/sysdeps/powerpc/powerpc32/pt-machine.h	2003-08-01 04:15:43.000000000 +0900
++++ b/linuxthreads/sysdeps/powerpc/powerpc32/pt-machine.h	2015-01-20 22:37:34.182419800 +0900
+@@ -25,12 +25,12 @@
+ #ifndef _PT_MACHINE_H
+ #define _PT_MACHINE_H   1
+ 
++#include<misc/sys/cdefs.h>
++
+ #ifndef PT_EI
+-# define PT_EI extern inline __attribute__ ((always_inline))
++# define PT_EI __extern_inline
+ #endif
+ 
+-extern long int testandset (int *spinlock);
+-extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+ 
+ /* For multiprocessor systems, we want to ensure all memory accesses
+    are completed before we reset a lock.  On other systems, we still

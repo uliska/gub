@@ -56,6 +56,7 @@ class Glibc (target.AutoBuild, cross.AutoBuild):
         'glibc-2.3-misc-sys-cdefs-inline.patch',
         'glibc-2.3-elf-Makefile.patch',
         'glibc-2.3-linuxthreads-crti-crtn.patch',
+        'glibc-2.3-powerpc-sysdeps-Makefile.patch',
         ]
     dependencies = ['cross/gcc', 'glibc-core', 'tools::bison', 'tools::gzip', 'tools::perl', 'linux-headers']
     configure_flags = (target.AutoBuild.configure_flags + misc.join_lines ('''
@@ -114,6 +115,11 @@ rm %(srcdir)s/sysdeps/i386/i686/memcmp.S
     # Disable librestrict.so, as it causes crashes on Fedora 9 and 10.
     def LD_PRELOAD (self):
         return ''
+
+class Glibc__linux__ppc (Glibc):
+    patches = Glibc.patches + [
+        'glibc-2.3-linux-ppc-sysdeps-generic-strtol_l.patch',
+        ]
 
 class Glibc__linux__mipsel (Glibc):
     patches = Glibc.patches + [

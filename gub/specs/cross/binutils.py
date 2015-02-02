@@ -43,11 +43,6 @@ def remove_fedora17_untwanted_but_mysteriously_built_libiberies (self):
     self.system ('rm -f %(install_prefix)s%(cross_dir)s/lib/libiberty.a')
     self.system ('rm -f %(install_prefix)s%(cross_dir)s/lib64/libiberty.a')
 
-class Binutils__linux__ppc (Binutils):
-    patches = Binutils.patches + [
-        ''
-        ]
-
 class Binutils__mingw (Binutils):
     dependencies = Binutils.dependencies + [
             'tools::libtool',

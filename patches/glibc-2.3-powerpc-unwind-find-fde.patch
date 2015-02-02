@@ -1,0 +1,20 @@
+--- a/sysdeps/unix/sysv/linux/configure.in	2004-07-06 13:11:40.000000000 +0900
++++ b/sysdeps/unix/sysv/linux/configure.in	2015-01-31 16:09:20.614292300 +0900
+@@ -80,7 +80,6 @@
+     libc_cv_gcc_unwind_find_fde=yes
+     ;;
+   powerpc/powerpc32)
+-    libc_cv_gcc_unwind_find_fde=yes
+     arch_minimum_kernel=2.0.10
+     ;;
+   powerpc/powerpc64)
+--- a/sysdeps/unix/sysv/linux/configure	2004-07-06 13:13:42.000000000 +0900
++++ b/sysdeps/unix/sysv/linux/configure	2015-01-31 16:08:47.004884100 +0900
+@@ -120,7 +120,6 @@
+     libc_cv_gcc_unwind_find_fde=yes
+     ;;
+   powerpc/powerpc32)
+-    libc_cv_gcc_unwind_find_fde=yes
+     arch_minimum_kernel=2.0.10
+     ;;
+   powerpc/powerpc64)
