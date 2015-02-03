@@ -131,6 +131,6 @@ ln -s usr/ %(system_root)s/mingw || true
         self.system('''
 mkdir -p %(install_prefix)s/bin/
 cp %(install_prefix)s/lib/libgcc_s_*.dll %(install_prefix)s/bin/
-cp %(install_prefix)s/cross/%(target_architecture)s/lib/libstdc++-*.dll %(install_prefix)s/bin/
+cp %(install_prefix)s%(cross_dir)s/%(target_architecture)s/lib/libstdc++-*.dll %(install_prefix)s/bin/
 '''
         )
