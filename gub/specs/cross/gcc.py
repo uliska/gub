@@ -88,6 +88,12 @@ class Gcc__from__source (Gcc):
 '''))
     def get_conflict_dict (self):
         return {'': ['cross/gcc-core'], 'doc': ['cross/gcc-core'], 'runtime': ['cross/gcc-core']}
+    def install (self):
+        Gcc.install (self)
+        self.system('''
+mkdir -p %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/
+ln -s ../include-fixed/limits.h %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/limits.h
+''')
 
 Gcc__linux = Gcc__from__source
 

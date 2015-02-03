@@ -35,8 +35,8 @@ class Gcc_core (gcc.Gcc__from__source):
     def install (self):
         cross.AutoBuild.install (self)
         self.system('''
-mkdir -p %(cross_prefix)s/lib/gcc/%(target_architecture)s/4.8.2/include/ || true
-ln -s ../include-fixed/limits.h %(cross_prefix)s/lib/gcc/%(target_architecture)s/4.8.2/include/limits.h || true
+mkdir -p %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/
+ln -s ../include-fixed/limits.h %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/limits.h
 ''')
     def languages (self):
         return  ['c']
