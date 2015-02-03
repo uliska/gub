@@ -3,7 +3,6 @@ from gub.specs.cross import gcc
 from gub import misc
         
 class Gcc_core (gcc.Gcc__from__source):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = [x for x in gcc.Gcc__from__source.dependencies
                     if x != 'glibc-core']
     subpackage_names = ['']
