@@ -112,12 +112,6 @@ class Gcc__mingw (Gcc):
                 + misc.join_lines ('''
 --enable-threads=posix
 '''))
-    def patch (self):
-        Gcc.patch (self)
-        self.system('''
-ln -s usr/ %(system_root)s/mingw || true
-'''
-        )
     def get_subpackage_definitions (self):
         d = cross.AutoBuild.get_subpackage_definitions (self)
         prefix_dir = self.settings.prefix_dir

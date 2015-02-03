@@ -32,4 +32,5 @@ rm -f %(install_prefix)s/include/error.h # for regex failure
 rm -f %(install_prefix)s/include/iconv.h # for fontconfig failure
 rm -f %(install_prefix)s/lib/libiconv.a # for ghostscript failure
 rm -fr %(srcdir)s/mingw32/
+ln -s usr/ %(install_root)s/mingw
 ''', locals ())
