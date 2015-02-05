@@ -89,6 +89,12 @@ class Gcc__from__source (Gcc):
 '''))
     def get_conflict_dict (self):
         return {'': ['cross/gcc-core'], 'doc': ['cross/gcc-core'], 'runtime': ['cross/gcc-core']}
+    def install (self):
+        Gcc.install (self)
+        self.system('''
+mkdir -p %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/
+ln -s ../include-fixed/limits.h %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/limits.h
+''')
 
 Gcc__linux = Gcc__from__source
 
@@ -107,12 +113,6 @@ class Gcc__mingw (Gcc):
                 + misc.join_lines ('''
 --enable-threads=posix
 '''))
-    def patch (self):
-        Gcc.patch (self)
-        self.system('''
-ln -s usr/ %(system_root)s/mingw || true
-'''
-        )
     def get_subpackage_definitions (self):
         d = cross.AutoBuild.get_subpackage_definitions (self)
         prefix_dir = self.settings.prefix_dir
@@ -126,6 +126,6 @@ ln -s usr/ %(system_root)s/mingw || true
         self.system('''
 mkdir -p %(install_prefix)s/bin/
 cp %(install_prefix)s/lib/libgcc_s_*.dll %(install_prefix)s/bin/
-cp %(install_prefix)s/cross/%(target_architecture)s/lib/libstdc++-*.dll %(install_prefix)s/bin/
+cp %(install_prefix)s%(cross_dir)s/%(target_architecture)s/lib/libstdc++-*.dll %(install_prefix)s/bin/
 '''
         )

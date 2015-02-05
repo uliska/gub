@@ -3,7 +3,6 @@ from gub.specs.cross import gcc
 from gub import misc
         
 class Gcc_core (gcc.Gcc__from__source):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.9.2/gcc-4.9.2.tar.bz2'
     dependencies = [x for x in gcc.Gcc__from__source.dependencies
                     if x != 'glibc-core']
     subpackage_names = ['']
@@ -35,8 +34,8 @@ class Gcc_core (gcc.Gcc__from__source):
     def install (self):
         cross.AutoBuild.install (self)
         self.system('''
-mkdir -p %(cross_prefix)s/lib/gcc/%(target_architecture)s/4.9.2/include/ || true
-ln -s ../include-fixed/limits.h %(cross_prefix)s/lib/gcc/%(target_architecture)s/4.9.2/include/limits.h || true
+mkdir -p %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/
+ln -s ../include-fixed/limits.h %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/limits.h
 ''')
     def languages (self):
         return  ['c']
