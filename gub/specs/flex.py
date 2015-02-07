@@ -4,7 +4,7 @@ from gub import target
 from gub import tools
 
 class Flex (target.AutoBuild):
-    source = 'http://surfnet.dl.sourceforge.net/sourceforge/flex/flex-2.5.35.tar.gz'
+    source = 'http://sourceforge.net/projects/flex/files/flex/flex-2.5.35/flex-2.5.35.tar.gz'
 #    if 'stat' in misc.librestrict (): # too broken to fix
 #        # configure [gettext, flex] blindly look for /USR/include/libi*
 #        configure_variables = (target.configure_variables

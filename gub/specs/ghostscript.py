@@ -22,7 +22,7 @@ models.'''
     exe = ''
     revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
-    source = 'http://mirror2.cs.wisc.edu/pub/mirrors/ghost/GPL/gs870/ghostscript-8.70.tar.gz'
+    source = 'http://sourceforge.net/projects/ghostscript/files/GPL%20Ghostscript/8.70/ghostscript-8.70.tar.gz'
     patches = [
         'ghostscript-8.70-make.patch',
         ]
