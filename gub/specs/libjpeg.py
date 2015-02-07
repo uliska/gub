@@ -7,7 +7,7 @@ from gub import target
 from gub import tools
 
 class Libjpeg (target.AutoBuild):
-    source = 'ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz'
+    source = 'http://www.ijg.org/files/jpegsrc.v6b.tar.gz'
     config_cache_flag_broken = True
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)

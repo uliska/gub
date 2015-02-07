@@ -9,7 +9,7 @@ class Odcctools (cross.AutoBuild): #skews dependencies:, build.SdkBuild):
               '&branch=odcctools'
               '&revision=278')
     # let's use cached tarball
-    source = 'http://lilypond.org/download/gub-sources/odcctools-iphone-dev-278.tar.gz'
+    source = 'http://lilypond.org/gub/download/odcctools-iphone-dev/odcctools-iphone-dev-278.tar.gz'
     patches = ['odcctools-r211-word.patch',
                'odcctools-config-Wno-long-double.patch']
     dependencies = ['darwin-sdk', 'tools::flex', 'tools::automake']
