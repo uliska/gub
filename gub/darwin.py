@@ -62,7 +62,7 @@ class Rewirer (context.RunnableContext):
 
             for o in orig_libs:
                 if o in f:
-                    newpath = re.sub (o, '@executable_path/../lib/', f);
+                    newpath = re.sub (o, '@executable_path/../lib', f);
                     subs.append ((f, newpath))
                 elif self.expand ('%(targetdir)s') in f:
                     must_skip = [s for s in self.skip if s in f]
