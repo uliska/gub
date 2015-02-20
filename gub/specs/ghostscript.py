@@ -285,6 +285,13 @@ class Ghostscript__darwin (Ghostscript):
                             ('^(EXTRALIBS *=.*)(-shared )', r'\1 -dynamic'),
                             ('^(CC_SHARED *=.*)( -shared)', r'\1 -dynamic')],
                            '%(builddir)s/Makefile')
+    def install (self):
+        Ghostscript.install (self)
+        if shared:
+            self.system ('''
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -id /usr/lib/libgs.8.70.dylib %(install_prefix)s/lib/libgs.8.70.dylib
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -change ./bin/../sobin/libgs.8.70.dylib /usr/lib/libgs.8.70.dylib %(install_prefix)s/bin/gs
+''')
 
 class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
