@@ -67,7 +67,11 @@ class Rewirer (context.RunnableContext):
                 elif self.expand ('%(targetdir)s') in f:
                     must_skip = [s for s in self.skip if s in f]
                     if not must_skip:
-                        raise Exception ('found targetdir in linkage[%(name)s]: %(f)s' % locals ())
+                        if 'libgcc_s.1.dylib' in f:
+                            newpath = '@executable_path/../lib/libgcc_s.1.dylib'
+                            subs.append ((f, newpath))
+                        else:
+                            raise Exception ('found targetdir in linkage[%(name)s]: %(f)s' % locals ())
                     printf ('FIXME: skipping[%(name)s]: %(f)s, hope this is ok' % locals ())
 
         self.rewire_mach_o_object (name, subs)
