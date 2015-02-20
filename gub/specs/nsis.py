@@ -5,7 +5,7 @@ from gub import misc
 from gub import tools
 
 class Nsis (tools.SConsBuild):
-    source = 'http://sourceforge.net/projects/nsis/files/NSIS%202/2.46/nsis-2.46-src.tar.bz2'
+    source = 'http://sourceforge.net/projects/nsis/files/NSIS%%202/2.46/nsis-2.46-src.tar.bz2'
     #source = ':pserver:anonymous@nsis.cvs.sourceforge.net:/cvsroot/nsis&module=NSIS&tag=HEAD'
     dependencies = ['mingw::cross/gcc']
     patches = [
