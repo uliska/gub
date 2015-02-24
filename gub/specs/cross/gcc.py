@@ -16,6 +16,7 @@ class Gcc (cross.AutoBuild):
         'tools::gmp',
         'tools::mpfr',
         'tools::mpc',
+        'tools::gawk',
     ]
     patches = ['gcc-4.8.2-libstdc++-debug-path.patch']
     configure_command = (''' LDFLAGS='-L%(tools_prefix)s/lib %(rpath)s' '''
