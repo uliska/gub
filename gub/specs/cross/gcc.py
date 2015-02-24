@@ -72,6 +72,11 @@ gcc_tooldir='%(prefix_dir)s/%(target_architecture)s'
 class Gcc__from__source (Gcc):
     dependencies = (Gcc.dependencies
                     + ['cross/gcc-core', 'glibc-core'])
+    def __init__ (self, settings, source):
+        Gcc.__init__ (self, settings, source)
+        if 'i686-linux' in self.settings.build_architecture:
+            if 'i686-linux' in self.settings.target_architecture:
+                self.configure_flags += ' --build=i686-unknown-linux-gnu '
     #FIXME: merge all configure_command settings with Gcc
     configure_flags = (Gcc.configure_flags
                 + misc.join_lines ('''
