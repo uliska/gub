@@ -427,15 +427,17 @@ def get_base_package_name (name):
     # FIXME: rename packages, fragile
     if [True for x in [
             'freebsd-runtime',
-            'mingw-runtime',
             'lilypond-doc',
             'cygwin::',
             ] if x in name]:
+        return name
+    if re.search('mingw-w64-runtime$', name):
         return name
     name = re.sub ('(gcc(-.*)?)-c[+][+]-runtime', r'\1', name)
     name = re.sub ('-devel$', '', name)
     name = re.sub ('-runtime$', '', name)
     name = re.sub ('-doc$', '', name)
+    name = re.sub ('(mingw-w64-runtime(-.*)?)-winpthread-dll', r'\1', name)
     return name
 
 def get_source_packages (settings, const_todo):

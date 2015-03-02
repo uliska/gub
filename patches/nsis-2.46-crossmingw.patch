@@ -1,0 +1,40 @@
+--- a/SCons/Tools/crossmingw.py	2009-01-11 18:48:07.000000000 +0900
++++ b/SCons/Tools/crossmingw.py	2014-12-29 09:26:50.204202000 +0900
+@@ -149,7 +149,7 @@
+     env['SHLINKFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -shared')
+     env['SHLINKCOM']   = shlib_action
+     env.Append(SHLIBEMITTER = [shlib_emitter])
+-    env['LINK'] = mingw_prefix + 'g++'
++    env['LINK'] = mingw_prefix + 'g++ -static'
+     env['AS'] = mingw_prefix + 'as'
+     env['AR'] = mingw_prefix + 'ar'
+     env['RANLIB'] = mingw_prefix + 'ranlib'
+--- a/SCons/Config/gnu	2009-02-05 09:52:28.000000000 +0900
++++ b/SCons/Config/gnu	2014-11-16 21:13:24.803686400 +0900
+@@ -19,12 +19,12 @@
+ 		x = '_WinMain@16'
+ 	elif x == 'DllMain':
+ 		x = '_DllMain@12'
+-	return '-Wl,-e%s' % x
++	return ''
+ 
+ defenv['ENTRY_FLAG'] = entry
+ defenv['MAP_FLAG'] = '-Wl,-Map,${TARGET.base}.map'
+ defenv['EXCEPTION_FLAG'] = ''
+-defenv['NODEFLIBS_FLAG'] = '-nostdlib -Wl,--exclude-libs,msvcrt.a'
++defenv['NODEFLIBS_FLAG'] = ''
+ defenv['C_FLAG'] = '-xc'
+ defenv['CPP_FLAG'] = '-xc++'
+ defenv['ALIGN_FLAG'] = '-Wl,--file-alignment,512'
+@@ -77,9 +77,9 @@
+ if not defenv['DEBUG'] and defenv['STRIP'] and defenv['STRIP_W32']:
+ 	stub_env.Append(LINKFLAGS = ['-s'])               # strip
+ stub_env.Append(LINKFLAGS = ['-mwindows'])          # build windows executables
+-stub_env.Append(LINKFLAGS = ['$NODEFLIBS_FLAG'])    # no standard libraries
++#stub_env.Append(LINKFLAGS = ['$NODEFLIBS_FLAG'])    # no standard libraries
+ stub_env.Append(LINKFLAGS = ['$ALIGN_FLAG'])        # 512 bytes align
+-stub_env.Append(LINKFLAGS = ['-Wl,-e,_WinMain@16']) # entry point
++#stub_env.Append(LINKFLAGS = ['-Wl,-e,_WinMain@16']) # entry point
+ stub_env.Append(LINKFLAGS = ['$MAP_FLAG'])          # generate map file
+ 
+ ### makensis environment

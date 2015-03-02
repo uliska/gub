@@ -77,7 +77,7 @@ please install a ${arch} build instead.
 Press C to install the program anyway (not recommended),
 E to only extract the program files, or any other key to exit.
 EOF
-    read -sn1 input
+    read -sn1 input 2> /dev/null || read input
     case "$input" in
 	C)
 	  echo "Ignoring architecture incompatibility."

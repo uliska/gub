@@ -1,0 +1,15 @@
+Fix linux-x86::glibc-core (glibc-2.3) build by gcc-4.8.2
+
+suppress warning
+
+--- glibc-core-2.3/sysdeps/i386/Makefile.org	2014-10-25 20:09:47.046611800 +0900
++++ glibc-core-2.3/sysdeps/i386/Makefile	2014-10-25 20:10:27.670611800 +0900
+@@ -8,7 +8,7 @@
+ ifeq ($(subdir),csu)
+ # On i686 we must avoid generating the trampoline functions generated
+ # to get the GOT pointer.
+-CFLAGS-initfini.s += -march=i386 -mcpu=i386
++CFLAGS-initfini.s += -march=i386 -mtune=i386
+ endif
+ 
+ ifeq ($(subdir),gmon)

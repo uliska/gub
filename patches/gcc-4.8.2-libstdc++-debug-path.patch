@@ -1,0 +1,27 @@
+Fix libstdc++-v3 debug version path replacement
+
+gub uses path like target/(arch)/src/cross/gcc-4.8.2/.
+A wrong replacement happened like target/(arch)/src/debug/cross/gcc-4.8.2/.
+
+--- a/libstdc++-v3/src/Makefile.am	2014-10-23 16:15:59.385935000 +0900
++++ b/libstdc++-v3/src/Makefile.am	2014-10-23 16:17:24.925935000 +0900
+@@ -311,7 +311,7 @@
+ 	  mv Makefile Makefile.tmp; \
+ 	  sed -e 's,all-local: all-once,all-local:,' \
+ 	      -e 's,install-data-local: install-data-once,install-data-local:,' \
+-	      -e '/vpath/!s,src/c,src/debug/c,' \
++	      -e '/vpath/!s,src/c++,src/debug/c++,' \
+ 	  < Makefile.tmp > Makefile ; \
+ 	  rm -f Makefile.tmp ; \
+ 	  $(MAKE) CXXFLAGS='$(DEBUG_FLAGS)' \
+--- a/libstdc++-v3/src/Makefile.in	2014-10-23 17:58:17.801935000 +0900
++++ b/libstdc++-v3/src/Makefile.in	2014-10-23 18:00:57.253935000 +0900
+@@ -939,7 +939,7 @@
+ 	  mv Makefile Makefile.tmp; \
+ 	  sed -e 's,all-local: all-once,all-local:,' \
+ 	      -e 's,install-data-local: install-data-once,install-data-local:,' \
+-	      -e '/vpath/!s,src/c,src/debug/c,' \
++	      -e '/vpath/!s,src/c++,src/debug/c++,' \
+ 	  < Makefile.tmp > Makefile ; \
+ 	  rm -f Makefile.tmp ; \
+ 	  $(MAKE) CXXFLAGS='$(DEBUG_FLAGS)' \

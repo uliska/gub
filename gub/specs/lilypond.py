@@ -171,6 +171,7 @@ class LilyPond__mingw (LilyPond):
     dependencies = LilyPond.dependencies + [
             'tools::imagemagick',
             'tools::icoutils',
+            'mingw-w64-runtime-winpthread-dll',
             ]
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
     make_flags = (LilyPond.make_flags
@@ -252,7 +253,7 @@ class LilyPond__darwin (LilyPond):
 class LilyPond__darwin__ppc (LilyPond__darwin):
     def configure (self):
         LilyPond__darwin.configure (self)
-        self.dump ('CXXFLAGS += -DGUILE_ELLIPSIS=...',
+        self.dump ('CXXFLAGS += -fpermissive -DGUILE_ELLIPSIS=...',
                    '%(builddir)s/local.make')
 
 class LilyPond_base (target.AutoBuild):

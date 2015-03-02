@@ -119,7 +119,7 @@ ac_cv_sizeof_pthread_t=12
     def __init__ (self, settings, source):
         Python.__init__ (self, settings, source)
         self.target_gcc_flags = '-DMS_WINDOWS -DPy_WIN_WIDE_FILENAMES -I%(system_prefix)s/include' % self.settings.__dict__
-    dependencies = Python.dependencies + ['pthreads-w32-devel']
+    dependencies = Python.dependencies + ['mingw-w64-runtime-winpthread-dll']
     # FIXME: first is cross compile + mingw patch, backported to
     # 2.4.2 and combined in one patch; move to cross-Python?
     def patch (self):

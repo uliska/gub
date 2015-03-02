@@ -4,10 +4,11 @@ from gub import misc
 from gub.specs import binutils
 
 class Binutils (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/binutils/binutils-2.19.1.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/binutils/binutils-2.25.tar.bz2'
     patches = []
     dependencies = [
         'tools::zlib',
+        'tools::texinfo',
             ]
     # Block usage of libz.so during configure, which may not be
     # available in the library path.
@@ -42,14 +43,10 @@ def remove_fedora17_untwanted_but_mysteriously_built_libiberies (self):
     self.system ('rm -f %(install_prefix)s%(cross_dir)s/lib/libiberty.a')
     self.system ('rm -f %(install_prefix)s%(cross_dir)s/lib64/libiberty.a')
 
-class Binutils__linux__ppc (Binutils):
-    patches = Binutils.patches + [
-        'binutils-2.18-werror-ppc.patch'
-        ]
-
 class Binutils__mingw (Binutils):
     dependencies = Binutils.dependencies + [
             'tools::libtool',
+            'system::iconv',
             ]
     def configure (self):
         Binutils.configure (self)

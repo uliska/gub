@@ -5,8 +5,11 @@ from gub.specs import glibc
 # Hmm? TARGET_CFLAGS=-O --> target.py
 
 class Glibc_core (glibc.Glibc):
-    source = 'http://lilypond.org/download/gub-sources/glibc-2.3-20070416.tar.bz2'
-    patches = glibc.Glibc.patches + ['glibc-2.3-core-install.patch']
+    source = 'http://lilypond.org/download/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
+    patches = glibc.Glibc.patches + [
+        'glibc-2.3-core-install.patch',
+        'glibc-2.3-core-libgcc.patch',
+    ]
     dependencies = ['cross/gcc-core', 'linux-headers', 'tools::bison']
     configure_flags = (glibc.Glibc.configure_flags
                        + misc.join_lines ('''
@@ -32,9 +35,15 @@ touch %(install_prefix)s/include/gnu/stubs.h
 cp %(srcdir)s/include/features.h %(install_prefix)s/include
 mkdir -p %(install_prefix)s/include/bits
 cp %(builddir)s/bits/stdio_lim.h %(install_prefix)s/include/bits
+touch %(install_prefix)s/include/bits/syscall.h
 ''')
 
 class Glibc_core__linux__ppc (Glibc_core):
+    patches = Glibc_core.patches + [
+        'glibc-2.3-linux-ppc-sysdeps-generic-strtol_l.patch',
+        'glibc-2.3-powerpc-unwind-find-fde.patch',
+        'glibc-2.3-powerpc-linuxthreads-librt_multiple_threads.patch',
+        ]
         # ugh, but the gnulib=-lgcc hack does something else on ppc...
         # it (huh?) drops *-lgcc* (instead of -lgcc_eh) from libc.so
         # linkage, which then fails.

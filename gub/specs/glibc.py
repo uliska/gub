@@ -40,7 +40,7 @@ to *not* look in /.
 # automagically depend on it, which is nice.
 # See cross.py:set_cross_dependencies ()
 class Glibc (target.AutoBuild, cross.AutoBuild):
-    source = 'http://lilypond.org/download/gub-sources/glibc-2.3-20070416.tar.bz2'
+    source = 'http://lilypond.org/download/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
     patches = [
         'glibc-2.3-powerpc-initfini.patch',
         'glibc-2.3-powerpc-socket-weakalias.patch',
@@ -49,6 +49,14 @@ class Glibc (target.AutoBuild, cross.AutoBuild):
         'glibc-2.3-slibdir.patch',
         'glibc-2.3-assert-dl_next_tls_modid.patch',
         'glibc-2.3-binutils-2.19-i386.patch',
+        'glibc-2.3-binutils-version-check.patch',
+        'glibc-2.3-sysdeps-general-initfini.patch',
+        'glibc-2.3-sysdeps-i386-Makefile.patch',
+        'glibc-2.3-i386-crti-crtn.patch',
+        'glibc-2.3-misc-sys-cdefs-inline.patch',
+        'glibc-2.3-elf-Makefile.patch',
+        'glibc-2.3-linuxthreads-crti-crtn.patch',
+        'glibc-2.3-powerpc-sysdeps-Makefile.patch',
         ]
     dependencies = ['cross/gcc', 'glibc-core', 'tools::bison', 'tools::gzip', 'tools::perl', 'linux-headers']
     configure_flags = (target.AutoBuild.configure_flags + misc.join_lines ('''
@@ -81,6 +89,9 @@ libc_cv_rootsbindir=%(prefix_dir)s/sbin
         return {'': ['glibc-core'], 'devel': ['glibc-core'], 'doc': ['glibc-core'], 'runtime': ['glibc-core']}
     def patch (self):
         target.AutoBuild.patch (self)
+        self.system('''
+rm %(srcdir)s/sysdeps/i386/i686/memcmp.S
+''')
     def get_add_ons (self):
         return ('linuxthreads', 'nptl')
     @context.subst_method
@@ -104,6 +115,11 @@ libc_cv_rootsbindir=%(prefix_dir)s/sbin
     # Disable librestrict.so, as it causes crashes on Fedora 9 and 10.
     def LD_PRELOAD (self):
         return ''
+
+class Glibc__linux__ppc (Glibc):
+    patches = Glibc.patches + [
+        'glibc-2.3-linux-ppc-sysdeps-generic-strtol_l.patch',
+        ]
 
 class Glibc__linux__mipsel (Glibc):
     patches = Glibc.patches + [

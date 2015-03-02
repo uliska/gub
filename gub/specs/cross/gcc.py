@@ -8,8 +8,19 @@ from gub import misc
 from gub.specs import gcc
 
 class Gcc (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
-    dependencies = ['cross/binutils']
+    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.9.2/gcc-4.9.2.tar.bz2'
+    dependencies = [
+        'cross/binutils',
+        'system::gcc',
+        'system::g++',
+        'tools::gmp',
+        'tools::mpfr',
+        'tools::mpc',
+        'tools::gawk',
+    ]
+    patches = ['gcc-4.8.2-libstdc++-debug-path.patch']
+    configure_command = (''' LDFLAGS='-L%(tools_prefix)s/lib %(rpath)s' '''
+                         + cross.AutoBuild.configure_command)
     configure_flags = (cross.AutoBuild.configure_flags
                 + '%(enable_languages)s'
                 + ' --enable-static'
@@ -33,7 +44,10 @@ gcc_tooldir='%(prefix_dir)s/%(target_architecture)s'
     def get_subpackage_definitions (self):
         d = cross.AutoBuild.get_subpackage_definitions (self)
         prefix_dir = self.settings.prefix_dir
-        d['c++-runtime'] = [prefix_dir + '/lib/libstdc++.so*']
+        d['c++-runtime'] = [
+            prefix_dir + '/lib/libstdc++.so*',
+            prefix_dir + '/lib/libgcc_s.so*',
+        ]
         return d
     def languages (self):
         return ['c', 'c++']
@@ -58,12 +72,20 @@ gcc_tooldir='%(prefix_dir)s/%(target_architecture)s'
 class Gcc__from__source (Gcc):
     dependencies = (Gcc.dependencies
                     + ['cross/gcc-core', 'glibc-core'])
+    def __init__ (self, settings, source):
+        Gcc.__init__ (self, settings, source)
+        if 'i686-linux' in self.settings.build_architecture:
+            if 'i686-linux' in self.settings.target_architecture:
+                self.configure_flags += ' --build=i686-unknown-linux-gnu '
     #FIXME: merge all configure_command settings with Gcc
     configure_flags = (Gcc.configure_flags
                 + misc.join_lines ('''
 --with-local-prefix=%(system_prefix)s
 --disable-multilib
 --disable-nls
+--disable-libitm
+--disable-libsanitizer
+--disable-libcilkrts
 --enable-threads=posix
 --enable-__cxa_atexit
 --enable-symvers=gnu
@@ -73,39 +95,43 @@ class Gcc__from__source (Gcc):
 '''))
     def get_conflict_dict (self):
         return {'': ['cross/gcc-core'], 'doc': ['cross/gcc-core'], 'runtime': ['cross/gcc-core']}
+    def install (self):
+        Gcc.install (self)
+        self.system('''
+mkdir -p %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/
+ln -s ../include-fixed/limits.h %(install_prefix)s%(cross_dir)s/lib/gcc/%(target_architecture)s/%(full_version)s/include/limits.h
+''')
 
 Gcc__linux = Gcc__from__source
 
+class Gcc__linux__ppc (Gcc__linux):
+    configure_flags = (Gcc__linux.configure_flags
+                + misc.join_lines ('''
+--disable-libatomic
+--disable-libgomp
+'''))
+
 class Gcc__mingw (Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = (Gcc.dependencies
-                + ['mingw-runtime', 'w32api']
+                + ['mingw-w64-runtime']
                 + ['tools::libtool'])
-    def patch (self):
-        Gcc.patch (self)
-        for f in ['%(srcdir)s/gcc/config/i386/mingw32.h',
-                  '%(srcdir)s/gcc/config/i386/t-mingw32']:
-            self.file_sub ([('/mingw/include','%(prefix_dir)s/include'),
-                            ('/mingw/lib','%(prefix_dir)s/lib'),
-                            ], f)
-    def STATIC_GXX_WIP_REMOVE_THIS_PREFIX_configure (self):
-        # leave this for now.
-        # lots of undefined refs.
-        # possibly try static libstc++ with gcc > 4.1.1
-        '''.libs/bitmap_allocator.o: In function `__gthread_mutex_init_function':
-/home/janneke/vc/gub/target/mingw/build/cross/gcc-4.1.1/i686-mingw32/libstdc++-v3/include/i686-mingw32/bits/gthr-default.h:463: undefined reference to `___gthr_win32_mutex_init_function'
-.libs/bitmap_allocator.o: In function `_ZN9__gnu_cxx9free_list6_M_getEj':
-/home/janneke/vc/gub/target/mingw/src/cross/gcc-4.1.1/libstdc++-v3/src/bitmap_allocator.cc:53: undefined reference to `__Unwind_SjLj_Register'
-
+    configure_flags = (Gcc.configure_flags
+                + misc.join_lines ('''
+--enable-threads=posix
+'''))
+    def get_subpackage_definitions (self):
+        d = cross.AutoBuild.get_subpackage_definitions (self)
+        prefix_dir = self.settings.prefix_dir
+        d['c++-runtime'] = [
+            prefix_dir + '/bin/libstdc++-*.dll',
+            prefix_dir + '/bin/libgcc_s_*.dll',
+        ]
+        return d
+    def install (self):
+        Gcc.install (self)
+        self.system('''
+mkdir -p %(install_prefix)s/bin/
+cp %(install_prefix)s/lib/libgcc_s_*.dll %(install_prefix)s/bin/
+cp %(install_prefix)s%(cross_dir)s/%(target_architecture)s/lib/libstdc++-*.dll %(install_prefix)s/bin/
 '''
-        Gcc.configure (self)
-        # Configure all subpackages, makes
-        # w32.libtool_fix_allow_undefined to find all libtool files
-        self.system ('cd %(builddir)s && make %(compile_flags)s configure-host configure-target')
-        # Must ONLY do target stuff, otherwise cross executables cannot find their libraries
-        # self.map_locate (lambda logger,file: build.libtool_update (logger, self.expand ('%(tools_prefix)s/bin/libtool'), file), '%(builddir)s/', 'libtool')
-        #self.map_locate (lambda logger, file: build.libtool_update (logger, self.expand ('%(tools_prefix)s/bin/libtool'), file), '%(builddir)s/i686-mingw32', 'libtool')
-        vars = ['CC', 'CXX', 'LTCC', 'LD', 'sys_lib_search_path_spec', 'sys_lib_dlsearch_path_spec', 'predep_objects', 'postdep_objects', 'predeps', 'postdeps', 'old_striplib', 'striplib']
-        self.map_locate (lambda logger, file: build.libtool_update_preserve_vars (logger, self.expand ('%(tools_prefix)s/bin/libtool'), vars, file), '%(builddir)s/i686-mingw32', 'libtool')
-        self.map_locate (lambda logger, file: build.libtool_force_infer_tag (logger, 'CXX', file), '%(builddir)s/i686-mingw32', 'libtool')
-
+        )

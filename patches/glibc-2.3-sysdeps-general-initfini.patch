@@ -1,0 +1,24 @@
+X-Git-Url: http://sourceware.org/git/?p=glibc.git;a=blobdiff_plain;f=sysdeps%2Fgeneric%2Finitfini.c;h=d5ef778367f567bd4814ac956794ddc17095f141;hp=2b8412a42815c15dc2b27999ccb11f7008a3b556;hb=c4243ff43f097b4ac4cd1b81c59a5bbb33558194;hpb=b26e274db237c8e8f076ac80e2aa3afc51028f1e
+
+diff --git a/sysdeps/generic/initfini.c b/sysdeps/generic/initfini.c
+index 2b8412a..d5ef778 100644
+--- a/sysdeps/generic/initfini.c
++++ b/sysdeps/generic/initfini.c
+@@ -81,7 +81,7 @@ call_gmon_start(void)
+ }
+ 
+ SECTION (".init");
+-extern void _init (void);
++extern void __attribute__ ((section (".init"))) _init (void);
+ void
+ _init (void)
+ {
+@@ -107,7 +107,7 @@ asm ("\n/*@_init_EPILOG_ENDS*/");
+ asm ("\n/*@_fini_PROLOG_BEGINS*/");
+ 
+ SECTION (".fini");
+-extern void _fini (void);
++extern void __attribute__ ((section (".fini"))) _fini (void);
+ void
+ _fini (void)
+ {

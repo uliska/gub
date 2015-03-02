@@ -417,7 +417,11 @@ class TarBall (Repository):
          return url and (url.endswith (rety.vc_system)
                          or url.endswith (rety.vc_system + '.gz')
                          or url.endswith ('.tgz')
-                         or url.endswith (rety.vc_system + '.bz2'))
+                         or url.endswith (rety.vc_system + '.bz2')
+                         or url.endswith (rety.vc_system + '.xz')
+                         or url.endswith ('.txz')
+                         or url.endswith (rety.vc_system + '.lzma')
+                         or url.endswith ('.tlz'))
 
     def migrate (self, dir, dir_slash_vcs):
         pass
@@ -539,6 +543,31 @@ class ZipFile (TarBall):
         self.system ('unzip %(_v)s %(tarball)s -d %(destdir)s' % locals ())
 
 RepositoryProxy.register (ZipFile)
+
+class SevenZFile (TarBall):
+    vc_system = '.7z'
+
+    @staticmethod
+    def create (rety, dir, source, branch='', module='', revision='', parameters=list ()):
+        return SevenZFile (dir, source)
+
+    @staticmethod
+    def check_suffix (rety, url):
+         return url and url.endswith (rety.vc_system)
+
+    # TODO: s/url/source
+    def __init__ (self, dir, url, version=None, strip_components=0):
+        TarBall.__init__ (self, dir, url, version, strip_components)
+
+    def _unpack (self, destdir, tarball):
+        strip_components = self.strip_components
+        # fixme
+        #if self.oslog:  #urg, will be fixed when .source is mandatory
+        #    _v = self.oslog.verbose_flag ()
+        _v = ''   #     self.oslog.verbose_flag ()
+        self.system ('7za x %(_v)s %(tarball)s -o%(destdir)s' % locals ())
+
+RepositoryProxy.register (SevenZFile)
 
 class Git (Repository):
     vc_system = '.git'

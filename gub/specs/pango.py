@@ -91,10 +91,6 @@ set PANGO_SO_EXTENSION=.so
 ''', '%(install_prefix)s/etc/relocate/pango.reloc', env=locals (), mode='a')
 
 class Pango__mingw (Pango):
-        # FIXME: need -lpthread now?
-        # /home/janneke/vc/gub/target/mingw/root/usr/cross/bin/i686-mingw32-ld: cannot find -lpthread
-    dependencies = (Pango.dependencies
-                + ['pthreads-w32-devel'])
     def create_config_files (self, prefix='/usr'):
         Pango.create_config_files (self, prefix)
         etc = self.expand ('%(install_root)s/%(prefix)s/etc/pango', locals ())

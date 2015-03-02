@@ -17,13 +17,13 @@ platforms = {
     'debian-mipsel': 'mipsel-linux',
     'debian-x86': 'i686-linux',
     'cygwin': 'i686-cygwin',
-    'darwin-ppc': 'powerpc-apple-darwin7',
+    'darwin-ppc': 'powerpc-apple-darwin8',
     'darwin-x86': 'i686-apple-darwin8',
 
     'freebsd4-x86': 'i686-freebsd4',
     'freebsd6-x86': 'i686-freebsd6',
 
-    'freebsd-x86': 'i686-freebsd4',
+    'freebsd-x86': 'i686-freebsd6',
     'freebsd-64': 'x86_64-freebsd6',
 
     'linux-arm': 'arm-linux',

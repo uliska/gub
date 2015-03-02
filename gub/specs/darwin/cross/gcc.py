@@ -5,15 +5,14 @@ from gub import loggedos
 from gub import cross
 
 class Gcc__darwin (cross_gcc.Gcc):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
     dependencies = ['odcctools']
-    def patch (self):
-        self.file_sub ([('/usr/bin/libtool', '%(cross_prefix)s/bin/%(target_architecture)s-libtool')],
-                       '%(srcdir)s/gcc/config/darwin.h')
-
-        self.file_sub ([('--strip-underscores', '--strip-underscore')],
-                       '%(srcdir)s/libstdc++-v3/scripts/make_exports.pl')
-        cross.AutoBuild.patch (self)
+    patches = cross_gcc.Gcc.patches + [
+        'gcc-4.8.2-darwin-fixinc.patch',
+        'gcc-4.8.2-darwin-libgcc.patch',
+    ]
+    configure_flags = (cross_gcc.Gcc.configure_flags
+                       + ' --disable-libcilkrts'
+    )
     def languages (self):
         # objective-c is used for quartz's Carbon/Carbon.h in pango, gtk+
         return cross_gcc.Gcc.languages (self) + ['objc', 'obj-c++']
@@ -24,7 +23,11 @@ class Gcc__darwin (cross_gcc.Gcc):
 /home/janneke/vc/gub/target/darwin-x86/root/usr/cross/bin/i686-apple-darwin8-ld: warning can't open dynamic library: /home/janneke/vc/gub/target/darwin-x86/root/home/janneke/vc/gub/target/darwin-x86/root/usr/cross/i686-apple-darwin8/lib/libgcc_s.1.dylib referenced from: /home/janneke/vc/gub/target/darwin-x86/root/usr/lib/libstdc++.dylib (checking for undefined symbols may be affected) (No such file or directory, errno = 2)
 '''
         # let's try adding libstdc++.dylib?, nah, let's not
-        skip_libs = ['libgcc_s'] #, 'libstdc++']
+        skip_libs = [
+            'libgcc_s.10.',
+            'libgcc_s_',
+            'libgcc_ext.10.'
+        ] #, 'libstdc++']
 
         def rewire_one (logger, file):
             found_skips = [s for s in skip_libs if file.find (s) >= 0]
@@ -42,25 +45,24 @@ class Gcc__darwin (cross_gcc.Gcc):
         self.map_locate (rewire_one,
                          self.expand ('%(install_prefix)s/lib/'),
                          '*.dylib')
+    def get_subpackage_definitions (self):
+        d = cross.AutoBuild.get_subpackage_definitions (self)
+        prefix_dir = self.settings.prefix_dir
+        d['c++-runtime'] = [
+            prefix_dir + '/lib/libstdc++.6.dylib',
+            prefix_dir + '/lib/libgcc_s.1.dylib',
+        ]
+        return d
     def install (self):
         cross_gcc.Gcc.install (self)
         # conflicts with darwin-SDK
         self.system ('mv %(install_prefix)s/lib/libsupc++.a %(install_prefix)s/lib/libsupc++.a-')
         self.rewire_gcc_libs ()
-    
-class Gcc__darwin__x86 (Gcc__darwin):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2'
-    patches = []
-    dependencies = Gcc__darwin.dependencies + ['tools::mpfr']
-    configure_command = (''' LDFLAGS='-L%(tools_prefix)s/lib %(rpath)s' '''
-                         + Gcc__darwin.configure_command)
 
-class Version_bump_builds_but_needs_a_test_Gcc__darwin__ppc (Gcc__darwin__x86):
-    pass
-
-class Not_used__Gcc__darwin (Gcc__darwin):
-    def configure (self):
-        cross_gcc.Gcc.configure (self)
-    def install (self):
-        cross_gcc.Gcc.install (self)
-        self.rewire_gcc_libs ()
+class Gcc__darwin__ppc (Gcc__darwin):
+    patches = Gcc__darwin.patches + [
+        'gcc-4.9.2-darwin-powerpc.patch', # This patch will not be needed from gcc 4.9.3.
+    ]
+    configure_flags = (Gcc__darwin.configure_flags
+                       + ' --disable-libitm'
+    )

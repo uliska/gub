@@ -1,0 +1,14 @@
+--- a/Contrib/InstallOptions/InstallerOptions.cpp	2014-12-28 01:11:11.671260400 +0900
++++ b/Contrib/InstallOptions/InstallerOptions.cpp	2014-12-28 01:13:29.411260400 +0900
+@@ -16,6 +16,11 @@
+ 
+ #include <nsis/pluginapi.h> // nsis plugin
+ 
++// for mingw-w64 headers
++#ifndef min
++#define min(a, b) (((a) < (b)) ? (a) : (b))
++#endif
++
+ // Use for functions only called from one place to possibly reduce some code
+ // size.  Allows the source code to remain readable by leaving the function
+ // intact.

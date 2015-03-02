@@ -3,7 +3,7 @@ from gub import repository
 from gub import tools
 
 class Tar__tools (tools.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/tar/tar-1.20.tar.gz'
+    source = 'http://ftp.gnu.org/pub/gnu/tar/tar-1.28.tar.gz'
     def __init__ (self, settings, source):
         tools.AutoBuild.__init__ (self, settings, source)
         if isinstance (self.source, repository.TarBall):

@@ -22,7 +22,7 @@ models.'''
     exe = ''
     revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
-    source = 'http://mirror2.cs.wisc.edu/pub/mirrors/ghost/GPL/gs870/ghostscript-8.70.tar.gz'
+    source = 'http://sourceforge.net/projects/ghostscript/files/GPL%%20Ghostscript/8.70/ghostscript-8.70.tar.gz'
     patches = [
         'ghostscript-8.70-make.patch',
         ]
@@ -215,6 +215,7 @@ class Ghostscript__mingw (Ghostscript):
         'ghostscript-8.70-windows-wb.patch',
         'ghostscript-8.70-windows-make.patch',
         'ghostscript-8.70-gs_dll.patch',
+        'ghostscript-8.70-mingw-w64-snprintf.patch',
         ]
     def __init__ (self, settings, source):
         Ghostscript.__init__ (self, settings, source)
@@ -284,6 +285,13 @@ class Ghostscript__darwin (Ghostscript):
                             ('^(EXTRALIBS *=.*)(-shared )', r'\1 -dynamic'),
                             ('^(CC_SHARED *=.*)( -shared)', r'\1 -dynamic')],
                            '%(builddir)s/Makefile')
+    def install (self):
+        Ghostscript.install (self)
+        if shared:
+            self.system ('''
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -id /usr/lib/libgs.8.70.dylib %(install_prefix)s/lib/libgs.8.70.dylib
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -change ./bin/../sobin/libgs.8.70.dylib /usr/lib/libgs.8.70.dylib %(install_prefix)s/bin/gs
+''')
 
 class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
