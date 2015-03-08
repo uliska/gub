@@ -300,8 +300,8 @@ class Ghostscript__darwin (Ghostscript):
         Ghostscript.install (self)
         if shared:
             self.system ('''
-%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -id /usr/lib/libgs.8.70.dylib %(install_prefix)s/lib/libgs.8.70.dylib
-%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -change ./bin/../sobin/libgs.8.70.dylib /usr/lib/libgs.8.70.dylib %(install_prefix)s/bin/gs
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -id /usr/lib/libgs.9.02.dylib %(install_prefix)s/lib/libgs.9.02.dylib
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -change ./bin/../sobin/libgs.9.02.dylib /usr/lib/libgs.9.02.dylib %(install_prefix)s/bin/gs
 ''')
 
 class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
