@@ -321,6 +321,8 @@ class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
         self.makefile_fixup ('%(builddir)s/Makefile')
         self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype ')],
                        '%(builddir)s/Makefile')
+    def autoupdate (self):
+        self.system ('cd %(srcdir)s && sh ./autogen.sh --help')
     def compile (self):
         self.system ('''
 cd %(builddir)s && mkdir -p obj
