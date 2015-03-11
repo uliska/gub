@@ -29,7 +29,7 @@ models.'''
         'ghostscript-9.15-cygwin.patch',
         'ghostscript-9.15-share-libtiff-init.patch',
         'ghostscript-9.15-windows-snprintf.patch',
-        'ghostscript-8.70-windows-make.patch',
+#        'ghostscript-8.70-windows-make.patch',
        ]
     parallel_build_broken = True
     # For --enable-compile-inits, see comment in compile()
