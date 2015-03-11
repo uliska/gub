@@ -197,7 +197,7 @@ models.'''
         # obj/mkromfs is needed for --enable-compile-inits but depends on native -liconv.
         self.system ('''
 cd %(builddir)s && mkdir -p %(obj)s
-cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/genconf %(obj)s/echogs %(obj)s/genarch %(obj)s/arch.h 
+cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/aux/genconf %(obj)s/aux/echogs %(obj)s/aux/genarch %(obj)s/arch.h 
 ''')
         self.fixup_arch ()
         target.AutoBuild.compile (self)
@@ -324,7 +324,7 @@ class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     def compile (self):
         self.system ('''
 cd %(builddir)s && mkdir -p obj
-cd %(builddir)s && make CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= obj/genconf obj/echogs obj/genarch obj/arch.h
+cd %(builddir)s && make CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= obj/aux/genconf obj/aux/echogs obj/aux/genarch obj/arch.h
 cd %(builddir)s && make INCLUDE=/usr/include gconfig__h=gconfig_-native.h gconfig_-native.h
 cd %(builddir)s && make INCLUDE=%(system_prefix)s/include gconfig__h=gconfig_-tools.h gconfig_-tools.h
 cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h > obj/gconfig_.h
