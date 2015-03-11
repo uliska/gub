@@ -102,7 +102,7 @@ models.'''
         target.AutoBuild.patch (self)
         self.file_sub ([('[([]PKGCONFIG', '(XPKGCONFIG'),
                         ('PKGCONFIG', 'PKG_CONFIG')],
-                       '%(srcdir)s/base/configure.ac', must_succeed=True)
+                       '%(srcdir)s/configure.ac', must_succeed=True)
     def autoupdate (self):
         # generate Makefile.in
         self.system ('cd %(srcdir)s && sh ./autogen.sh --help')
