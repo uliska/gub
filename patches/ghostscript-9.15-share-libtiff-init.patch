@@ -1,0 +1,26 @@
+--- a/configure.ac	2014-09-22 19:17:33.000000000 +0900
++++ b/configure.ac	2015-03-11 21:03:53.941625800 +0900
+@@ -998,6 +998,7 @@
+ AC_ARG_WITH([system-libtiff], AC_HELP_STRING([--with-system-libtiff],
+                                              [Force using the systems libtiff]),
+             [], [with_system_libtiff=check])
++SHARE_LIBTIFF=1
+ TIFFDEVS=''
+ FAX_DEVS=''
+ 
+@@ -1012,7 +1013,6 @@
+             LIBTIFFDIR=$srcdir/tiff
+             LIBTIFFCONFDIR=tiff-config
+             HAVE_LOCAL_LIBTIFF=1
+-            SHARE_LIBTIFF=0
+         else
+             # We MUST NOT use PKG_CHECK_MODULES since it is a) not a standard
+             # autoconf macro and b) requires pkg-config on the system, which is
+@@ -1073,7 +1073,6 @@
+             AC_MSG_RESULT([yes])
+             LIBTIFFDIR=$srcdir/tiff
+             LIBTIFFCONFDIR=tiff-config
+-            SHARE_LIBTIFF=0
+             TIFFDEVS="$TIFFDEVS_ALL"
+             FAX_DEVS="$FAX_DEVS_ALL"
+         else

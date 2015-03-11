@@ -25,10 +25,10 @@ models.'''
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
     source = 'http://downloads.ghostscript.com/public/ghostscript-9.15.tar.gz'
     patches = [
-        'ghostscript-9.00-make.patch',
-        'ghostscript-9.00-cygwin.patch',
-        'ghostscript-9.00-share-libtiff-init.patch',
-        'ghostscript-9.00-windows-snprintf.patch',
+        'ghostscript-9.15-make.patch',
+        'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.15-share-libtiff-init.patch',
+        'ghostscript-9.15-windows-snprintf.patch',
         'ghostscript-8.70-windows-make.patch',
        ]
     parallel_build_broken = True

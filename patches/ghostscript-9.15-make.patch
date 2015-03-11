@@ -1,0 +1,105 @@
+--- a/base/unix-dll.mak	2014-09-22 19:17:33.000000000 +0900
++++ b/base/unix-dll.mak	2015-03-11 20:06:35.095445000 +0900
+@@ -28,6 +28,11 @@
+ SODIRPREFIX=so
+ SODEBUGDIRPREFIX=sodebug
+ 
++ifeq ($(TARGET),mingw)
++GS=gs
++XE=.exe
++endif
++
+ # ------------------- Ghostscript shared object --------------------------- #
+ 
+ # Shared object names
+@@ -63,14 +68,27 @@
+ # LDFLAGS_SO=-shared -Wl,$(LD_SET_DT_SONAME)$(LDFLAGS_SO_PREFIX)$(GS_SONAME_MAJOR)
+ 
+ 
++ifeq ($(TARGET),darwin)
+ # MacOS X
+-#GS_SOEXT=dylib
+-#GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
+-#GS_SONAME_MAJOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_SOEXT)
+-#GS_SONAME_MAJOR_MINOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)
++GS_SOEXT=dylib
++GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
++GS_SONAME_MAJOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_SOEXT)
++GS_SONAME_MAJOR_MINOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)
+ #LDFLAGS_SO=-dynamiclib -flat_namespace
+ #LDFLAGS_SO_MAC=-dynamiclib -install_name $(GS_SONAME_MAJOR_MINOR)
+ #LDFLAGS_SO=-dynamiclib -install_name $(FRAMEWORK_NAME)
++LDFLAGS_SO=-dynamiclib
++endif
++
++ifeq ($(TARGET),mingw)
++# Mingw
++GS_SONAME_BASE=gs
++GS_SOEXT=dll
++GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
++GS_SONAME_MAJOR=$(GS_SONAME_BASE)-$(GS_VERSION_MAJOR).$(GS_SOEXT)
++GS_SONAME_MAJOR_MINOR=$(GS_SONAME_BASE)-$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)
++LDFLAGS_SO=-shared -Wl,-soname=$(GS_SONAME_MAJOR_MINOR)
++endif
+ 
+ GS_SO=$(BINDIR)/$(GS_SONAME)
+ GS_SO_MAJOR=$(BINDIR)/$(GS_SONAME_MAJOR) 
+@@ -99,6 +117,8 @@
+ 
+ # ------------------------- Recursive make targets ------------------------- #
+ 
++# Help -rpath $ORIGIN survive the $(MAKE) command line expansion
++MAKE_LDFLAGS=$(subst $$,\$$$$,$(LDFLAGS))
+ SODEFS=\
+  GS_XE=$(BINDIR)/$(GS_SONAME_MAJOR_MINOR)\
+  DISPLAY_DEV=$(DD)display.dev\
+@@ -129,16 +149,16 @@
+ 	$(MAKE) so-subtarget GENOPT='-DDEBUG' BUILDDIRPREFIX=$(SODEBUGDIRPREFIX)
+ 
+ so-subtarget:
+-	$(MAKE) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS)'\
++	$(MAKE) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)' prefix=$(prefix)\
+ 	 directories
+-	$(MAKE) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS)'\
++	$(MAKE) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)' prefix=$(prefix)\
+ 	 $(AUXDIR)/echogs$(XEAUX) $(AUXDIR)/genarch$(XEAUX)
+-	$(MAKE) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS) $(LDFLAGS_SO)'\
++	$(MAKE) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS) $(LDFLAGS_SO)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(CFLAGS_SO) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)'\
+ 	 prefix=$(prefix)
+-	$(MAKE) $(SODEFS_FINAL) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS)'\
++	$(MAKE) $(SODEFS_FINAL) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)' prefix=$(prefix)\
+ 	 $(GSSOC_XE) $(GSSOX_XE)
+ 
+--- a/base/unixlink.mak	2014-09-22 19:17:33.000000000 +0900
++++ b/base/unixlink.mak	2015-03-11 20:53:01.152652900 +0900
+@@ -45,13 +45,16 @@
+ 	$(SH) <$(liar_tr)
+ 	$(RANLIB) $(GS_A)
+ 
++# Help -rpath $ORIGIN survive the ECHOGS_XE sh command line expansion
++SHELL_LDFLAGS=$(subst $$,\$$,$(LDFLAGS))
++
+ # Here is the final link step.  The stuff with LD_RUN_PATH is for SVR4
+ # systems with dynamic library loading; I believe it's harmless elsewhere.
+ # The resetting of the environment variables to empty strings is for SCO Unix,
+ # which has limited environment space.
+ ldt_tr=$(PSOBJ)ldt.tr
+ $(GS_XE): $(ld_tr) $(ECHOGS_XE) $(XE_ALL) $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ)
+-	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(LDFLAGS) -o $(GS_XE)
++	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(SHELL_LDFLAGS) -o $(GS_XE)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -n -s $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) $(PSOBJ)gs.$(OBJ) -s
+ 	cat $(ld_tr) >>$(ldt_tr)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -s - $(EXTRALIBS) $(STDLIBS)
+@@ -70,7 +73,7 @@
+ apitest: $(APITEST_XE)
+ 
+ $(APITEST_XE): $(ld_tr) $(ECHOGS_XE) $(XE_ALL) $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) $(PSOBJ)apitest.$(OBJ)
+-	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(LDFLAGS) -o $(APITEST_XE)
++	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(SHELL_LDFLAGS) -o $(APITEST_XE)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -n -s $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) $(PSOBJ)apitest.$(OBJ) -s
+ 	cat $(ld_tr) >>$(ldt_tr)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -s - $(EXTRALIBS) $(STDLIBS)
