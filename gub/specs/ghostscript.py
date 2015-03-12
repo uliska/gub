@@ -27,7 +27,6 @@ models.'''
     patches = [
         'ghostscript-9.15-make.patch',
         'ghostscript-9.15-cygwin.patch',
-        'ghostscript-9.15-share-libtiff-init.patch',
         'ghostscript-9.15-windows-snprintf.patch',
 #        'ghostscript-8.70-windows-make.patch',
        ]
@@ -47,6 +46,7 @@ models.'''
 --without-omni
 --without-jasper
 --disable-compile-inits
+--with-system-libtiff
 '''))
     compile_flags = (' INCLUDE=%(system_prefix)s/include'
                      + ' PSDOCDIR=%(prefix_dir)s/share/doc'
