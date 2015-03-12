@@ -329,7 +329,7 @@ cd %(builddir)s && mkdir -p obj
 cd %(builddir)s && make CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= obj/aux/genconf obj/aux/echogs obj/aux/genarch obj/arch.h
 cd %(builddir)s && make INCLUDE=/usr/include gconfig__h=gconfig_-native.h gconfig_-native.h
 cd %(builddir)s && make INCLUDE=%(system_prefix)s/include gconfig__h=gconfig_-tools.h gconfig_-tools.h
-cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h > obj/gconfig_.h
+cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h | grep "^#define" | grep -v "HAVE_SYS_TIME_H" > obj/gconfig_.h
 ''')
 #        self.fixup_arch ()
         tools.AutoBuild.compile (self)
