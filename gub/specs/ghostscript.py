@@ -122,6 +122,7 @@ models.'''
         # and send a patch that generates arch.h from configure.
 
         cache_size = 1024*1024
+        big_endian = 0
         can_shift = 1
         align_long_mod = 4
         align_ptr_mod = 4
@@ -129,9 +130,11 @@ models.'''
         sizeof_ptr = 4
         
         if 'powerpc' in self.settings.target_architecture:
+            big_endian = 1
             can_shift = 1
             cache_size = 2097152
         elif re.search ('i[0-9]86', self.settings.target_architecture):
+            big_endian = 0
             can_shift = 0
             cache_size = 1048576
 
@@ -151,6 +154,8 @@ models.'''
         
         # cannot use: must_succeed=5, they may be okay..
         self.file_sub ([
+             ('#define ARCH_IS_BIG_ENDIAN [0-9]',
+              '#define ARCH_IS_BIG_ENDIAN %(big_endian)d' % locals ()),
              ('#define ARCH_ALIGN_LONG_MOD [0-9]',
               '#define ARCH_ALIGN_LONG_MOD %(align_long_mod)d' % locals ()),
              ('#define ARCH_ALIGN_PTR_MOD [0-9]',
