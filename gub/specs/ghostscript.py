@@ -71,6 +71,8 @@ models.'''
             source.version = misc.bind_method (Ghostscript.version_from_VERSION, source)
         else:
             source.version = misc.bind_method (Ghostscript.static_version, source)
+        if 'powerpc' in self.settings.target_architecture:
+            self.configure_flags = self.configure_flags.replace('--enable-little-endian', '--enable-big-endian')
     @staticmethod
     def version_from_VERSION (self):
         try:
