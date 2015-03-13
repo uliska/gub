@@ -1,0 +1,14 @@
+FreeBSD 6 doesn't have posix_memalign().
+FreeBSD 7 has posix_memalign().
+
+--- a/openjpeg/src/lib/openjp2/opj_malloc.h	2014-09-22 19:17:33.000000000 +0900
++++ b/openjpeg/src/lib/openjp2/opj_malloc.h	2015-03-13 23:38:30.196095100 +0900
+@@ -99,7 +99,7 @@
+ 	#if defined(__sun)
+ 		#define HAVE_MEMALIGN
+   #elif defined(__FreeBSD__)
+-    #define HAVE_POSIX_MEMALIGN
++    /*#define HAVE_POSIX_MEMALIGN*/
+ 	/* Linux x86_64 and OSX always align allocations to 16 bytes */
+ 	#elif !defined(__amd64__) && !defined(__APPLE__) && !defined(_AIX)
+ 		#define HAVE_MEMALIGN
