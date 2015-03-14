@@ -248,6 +248,9 @@ ac_cv_lib_pthread_pthread_create=no
     compile_flags = Ghostscript.compile_flags.replace ("XLDFLAGS='", "XLDFLAGS='-mwindows ")
     def configure (self):
         Ghostscript.configure (self)
+        if 'linux' in self.settings.build_architecture:
+            self.file_sub ([('^(AUXEXTRALIBS *=.*)(-liconv )', r'\1')],
+                           '%(builddir)s/Makefile')
         if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1'),
