@@ -266,6 +266,7 @@ $(GLOBJ)gp_stdia.$(OBJ)
 $(GLOBJ)gp_ntfs.$(OBJ)
 $(GLOBJ)gp_win32.$(OBJ)
 $(GLOBJ)gp_upapr.$(OBJ) 
+$(GLOBJ)gp_wutf8.$(OBJ)
 '''))],
                '%(srcdir)s/base/unix-aux.mak')        
         self.dump ('''
