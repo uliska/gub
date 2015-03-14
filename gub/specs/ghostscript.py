@@ -234,7 +234,9 @@ else:
     
 class Ghostscript__mingw (Ghostscript):
     exe = '.exe'
-    patches = Ghostscript.patches
+    patches = Ghostscript.patches + [
+        'ghostscript-9.15-windows-dxmain.patch'
+    ]
     def __init__ (self, settings, source):
         Ghostscript.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
