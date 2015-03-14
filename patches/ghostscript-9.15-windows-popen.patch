@@ -1,0 +1,11 @@
+--- a/base/gp_mswin.c	2015-03-11 21:10:32.833047100 +0900
++++ b/base/gp_mswin.c	2015-03-14 10:38:12.873730900 +0900
+@@ -145,7 +145,7 @@
+                                      win_prntmp, "wb");
+         return pfile;
+     } else if (fname[0] == '|') 	/* pipe */
+-        return mswin_popen(fname + 1, (binary_mode ? "wb" : "w"));
++        return popen(fname + 1, (binary_mode ? "wb" : "w"));
+     else if (strcmp(fname, "LPT1:") == 0)
+         return NULL;	/* not supported, use %printer%name instead  */
+     else

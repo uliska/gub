@@ -27,6 +27,7 @@ models.'''
     patches = [
         'ghostscript-9.15-make.patch',
         'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.15-windows-popen.patch',
         'ghostscript-9.15-windows-snprintf.patch',
         'ghostscript-9.15-windows-make.patch',
        ]
