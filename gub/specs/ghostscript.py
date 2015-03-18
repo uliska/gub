@@ -301,6 +301,9 @@ class Ghostscript__freebsd (Ghostscript):
                            '%(builddir)s/Makefile')
 
 class Ghostscript__darwin (Ghostscript):
+    patches = Ghostscript.patches + [
+        'ghostscript-9.15-Resource-directory.patch'
+    ]
     def configure (self):
         Ghostscript.configure (self)
         if 'linux' in self.settings.build_architecture:
