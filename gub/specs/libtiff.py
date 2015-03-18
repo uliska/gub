@@ -2,14 +2,14 @@ from gub import target
 from gub import tools
 
 class Libtiff (target.AutoBuild):
-    source = 'http://dl.maptools.org/dl/libtiff/tiff-3.8.2.tar.gz'
-    dependencies = ['tools::libtool', 'libjpeg-devel', 'zlib']
+    source = 'http://download.osgeo.org/libtiff/tiff-4.0.3.tar.gz'
+    dependencies = ['tools::libtool', 'libjpeg-devel', 'zlib-devel']
 
 class Libtiff__tools (tools.AutoBuild, Libtiff):
     dependencies = [
             'libtool',
             'libjpeg-devel',
-            'zlib',
+            'zlib-devel',
 #            'system::g++',
             ]
     configure_flags = (tools.AutoBuild.configure_flags
