@@ -87,7 +87,6 @@ models.'''
         return '0.0'
     dependencies = [
         'freetype-devel',
-        'lcms-devel',
         'libjpeg-devel',
         'libpng-devel',
         'libtiff-devel',
@@ -328,7 +327,6 @@ class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
     dependencies = [
         'freetype-devel',
-        'lcms-devel',
         'libjpeg-devel',
         'libpng-devel',
         'libtiff-devel',
