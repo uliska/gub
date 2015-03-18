@@ -2,8 +2,7 @@ from gub import target
 from gub import tools 
 
 class Libpng (target.AutoBuild):
-    source = 'http://sourceforge.net/projects/libpng/files/libpng12/older-releases/1.2.8/libpng-1.2.8-config.tar.gz'
-    patches = ['libpng-pngconf.h-setjmp.patch']
+    source = 'http://sourceforge.net/projects/libpng/files/libpng12/1.2.53/libpng-1.2.53.tar.gz'
     dependencies = ['zlib-devel', 'tools::autoconf', 'tools::automake', 'tools::libtool']
     def name (self):
         return 'libpng'
