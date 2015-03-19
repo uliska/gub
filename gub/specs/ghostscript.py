@@ -90,6 +90,7 @@ models.'''
         'libjpeg-devel',
         'libpng-devel',
         'libtiff-devel',
+        'tools::pkg-config',
         ]
     subpackage_names = ['doc', '']
     def srcdir (self):
