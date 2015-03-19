@@ -170,7 +170,9 @@ models.'''
     def configure (self):
         target.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
-        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype ')],
+        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype '),
+                        ('^(AUXEXTRALIBS *=.*)(-ltiff )', r'\1'),
+                        ('^(AUXEXTRALIBS *=.*)(-L%(system_prefix)s/lib )', r'\1')],
                        '%(builddir)s/Makefile')
     def makefile_fixup (self, file):
         self.file_sub ([
