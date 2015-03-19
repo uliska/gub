@@ -1,5 +1,5 @@
 --- a/psi/dxmainc.c	2014-09-22 19:17:33.000000000 +0900
-+++ b/psi/dxmainc.c	2015-03-14 23:03:03.633481800 +0900
++++ b/psi/dxmainc.c	2015-03-19 22:41:31.286769200 +0900
 @@ -28,10 +28,12 @@
   *  gcc -shared -Wl,-soname,libgs.so.7 -o libgs.so.7.00 file.o -lc
   */
@@ -13,15 +13,44 @@
  #include <fcntl.h>
  #include <errno.h>
  #define __PROTOTYPES__
-@@ -52,7 +54,7 @@
- static int
+@@ -40,22 +42,22 @@
+ 
+ const char start_string[] = "systemdict /start get exec\n";
+ 
+-static int gsdll_stdin(void *instance, char *buf, int len);
+-static int gsdll_stdout(void *instance, const char *str, int len);
+-static int gsdll_stdout(void *instance, const char *str, int len);
++static int GSDLLCALL gsdll_stdin(void *instance, char *buf, int len);
++static int GSDLLCALL gsdll_stdout(void *instance, const char *str, int len);
++static int GSDLLCALL gsdll_stdout(void *instance, const char *str, int len);
+ 
+ /*********************************************************************/
+ /* stdio functions */
+ 
+ /* callback for reading stdin */
+ /* Use async input */
+-static int
++static int GSDLLCALL
  gsdll_stdin(void *instance, char *buf, int len)
  {
 -    return read(fileno(stdin), buf, len);
 +    return _read(fileno(stdin), buf, len);
  }
  
- static int
+-static int
++static int GSDLLCALL
+ gsdll_stdout(void *instance, const char *str, int len)
+ {
+     fwrite(str, 1, len, stdout);
+@@ -63,7 +65,7 @@
+     return len;
+ }
+ 
+-static int
++static int GSDLLCALL
+ gsdll_stderr(void *instance, const char *str, int len)
+ {
+     fwrite(str, 1, len, stderr);
 @@ -71,18 +73,196 @@
      return len;
  }
@@ -29,7 +58,7 @@
 +/* porting from dwmainc.c */
 +#ifndef GS_NO_UTF8
 +/* stdio functions - versions that translate to/from utf-8 */
-+static int
++static int GSDLLCALL
 +gsdll_stdin_utf8(void *instance, char *buf, int len)
 +{
 +    static WCHAR thiswchar = 0; /* wide character to convert to multiple bytes */
@@ -165,7 +194,7 @@
 +    fflush(stdwr);
 +}
 +
-+static int
++static int GSDLLCALL
 +gsdll_stdout_utf8(void *instance, const char *utf8str, int bytelen)
 +{
 +    static WCHAR thiswchar = 0; /* accumulates the bits from multiple encoding bytes */
@@ -175,7 +204,7 @@
 +    return bytelen;
 +}
 +
-+static int
++static int GSDLLCALL
 +gsdll_stderr_utf8(void *instance, const char *utf8str, int bytelen)
 +{
 +    static WCHAR thiswchar = 0; /* accumulates the bits from multiple encoding bytes */
