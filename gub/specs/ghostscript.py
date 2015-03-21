@@ -89,9 +89,11 @@ models.'''
         'freetype-devel',
         'libjpeg-devel',
         'libpng-devel',
-        'libtiff-devel',
+        'libtiff-runtime',
         'tools::pkg-config',
         ]
+    def get_build_dependencies (self):
+        return ['libtiff-devel']
     subpackage_names = ['doc', '']
     def srcdir (self):
         return re.sub ('-source', '',
