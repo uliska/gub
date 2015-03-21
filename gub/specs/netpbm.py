@@ -19,7 +19,7 @@ libpbm3.c:116: fout: incompatible type for argument 1 of __builtin_ia32_pcmpeqb
 CC=gcc
 CFLAGS='-O2 -fPIC -flax-vector-conversions'
 LDFLAGS='%(rpath)s -L%(builddir)s/pbm -L%(builddir)s/pgm -L%(builddir)s/pnm -L%(builddir)s/ppm'
-LADD=-lm
+LADD='-lm -lz'
 LINUXSVGALIB=NONE
 XML2LD=NONE
 XML2_LIBS=NONE
