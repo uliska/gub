@@ -167,6 +167,8 @@ models.'''
               '#define ARCH_LOG2_SIZEOF_LONG %(log2_sizeof_long)d' % locals ()),
              ('#define ARCH_SIZEOF_PTR [0-9]',
               '#define ARCH_SIZEOF_PTR %(sizeof_ptr)d' % locals ()),
+             ('#define ARCH_SIZEOF_GX_COLOR_INDEX [0-9]',
+              '#define ARCH_SIZEOF_GX_COLOR_INDEX 8'),
              ], '%(builddir)s/%(obj)s/arch.h')
 
     def configure (self):
