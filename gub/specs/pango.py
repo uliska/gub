@@ -12,10 +12,11 @@ pango_module_version_regexes = [
     (r'^1\.24', '1.6.0'),
     (r'^1\.26', '1.6.0'),
     (r'^1\.27', '1.6.0'),
+    (r'^1\.28', '1.6.0'),
     ]
 
 class Pango (target.AutoBuild):
-    source = 'http://ftp.gnome.org/pub/GNOME/platform/2.28/2.28.1/sources/pango-1.26.0.tar.gz'
+    source = 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.28/pango-1.28.3.tar.gz'
     patches = ['pango-1.20-substitute-env.patch']
     dependencies = [
             'tools::glib', 

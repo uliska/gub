@@ -1,0 +1,22 @@
+--- ghostscript-9.15/Resource/Init/gs_lev2.ps.org	2014-09-22 19:17:33.000000000 +0900
++++ ghostscript-9.15/Resource/Init/gs_lev2.ps	2015-03-18 19:43:48.202037700 +0900
+@@ -653,7 +653,7 @@
+     % Search for valid (iccprofiles) directory as a sibling to (Resource)
+     % and set it as a default if found.
+     LIBPATH {
+-      (Resource) search {
++      (Resource/) search {
+         exch pop exch pop (iccprofiles) concatstrings
+         .file_name_separator concatstrings
+         dup (default_gray.icc) concatstrings status {
+--- ghostscript-9.15/Resource/Init/gs_res.ps.org	2014-09-22 19:17:33.000000000 +0900
++++ ghostscript-9.15/Resource/Init/gs_res.ps	2015-03-18 19:44:06.280211600 +0900
+@@ -284,7 +284,7 @@
+     dup .file_name_current eq {
+       pop
+     } {
+-      (Resource) search {
++      (Resource/) search {
+         exch concatstrings
+         exch pop
+         .file_name_separator concatstrings exit

@@ -1,0 +1,87 @@
+--- a/base/unix-gcc.mak	2014-09-22 19:17:33.000000000 +0900
++++ b/base/unix-gcc.mak	2015-03-11 20:58:56.434601000 +0900
+@@ -57,13 +57,13 @@
+ INSTALL_PROGRAM = $(INSTALL) -m 755
+ INSTALL_DATA = $(INSTALL) -m 644
+ 
+-prefix = /usr/local
++prefix = /usr
+ exec_prefix = $(prefix)
+ bindir = $(exec_prefix)/bin
+ scriptdir = $(bindir)
+ includedir = $(prefix)/include
+ libdir = $(exec_prefix)/lib
+-mandir = $(prefix)/man
++mandir = $(prefix)/share/man
+ man1ext = 1
+ datadir = $(prefix)/share
+ gsdir = $(datadir)/ghostscript
+@@ -71,7 +71,7 @@
+ gssharedir = $(libdir)/ghostscript/$(GS_DOT_VERSION)
+ gsincludedir = $(includedir)/ghostscript/
+ 
+-docdir=$(gsdatadir)/doc
++docdir=$(gsdatadir)/doc/ghostscript-$(GS_DOT_VERSION)
+ exdir=$(gsdatadir)/examples
+ GS_DOCDIR=$(docdir)
+ 
+@@ -156,7 +156,7 @@
+ # what its name is.
+ # See gs.mak and Make.htm for more information.
+ 
+-SHARE_LIBPNG=0
++SHARE_LIBPNG=1
+ LIBPNG_NAME=png
+ 
+ # Define whether to use a shared version of libtiff and where
+@@ -180,7 +180,7 @@
+ # what its name is (usually libz, but sometimes libgz).
+ # See gs.mak and Make.htm for more information.
+ 
+-SHARE_ZLIB=0
++SHARE_ZLIB=1
+ #ZLIB_NAME=gz
+ ZLIB_NAME=z
+ 
+@@ -245,7 +245,7 @@
+ CFLAGS_STANDARD=-O2
+ CFLAGS_DEBUG=-g -O0
+ CFLAGS_PROFILE=-pg -O2
+-CFLAGS_SO=-fPIC
++#CFLAGS_SO=-fPIC
+ 
+ # Define the other compilation flags.  Add at most one of the following:
+ #	-DBSD4_2 for 4.2bsd systems.
+@@ -302,7 +302,7 @@
+ # Note that x_.h expects to find the header files in $(XINCLUDE)/X11,
+ # not in $(XINCLUDE).
+ 
+-XINCLUDE=-I/usr/X11R6/include
++#XINCLUDE=-I/usr/X11R6/include
+ 
+ # Define the directory/ies and library names for the X11 library files.
+ # XLIBDIRS is for ld and should include -L; XLIBDIR is for LD_RUN_PATH
+@@ -317,9 +317,11 @@
+ #XLIBS=Xt SM ICE Xext X11
+ 
+ #XLIBDIRS=-L/usr/local/X/lib
+-XLIBDIRS=-L/usr/X11R6/lib
++#XLIBDIRS=-L/usr/X11R6/lib
++XLIBDIRS=
+ XLIBDIR=
+-XLIBS=Xt Xext X11
++#XLIBS=Xt Xext X11
++XLIBS=
+ 
+ # Define the .dev module that implements thread and synchronization
+ # primitives for this platform.
+@@ -377,7 +379,8 @@
+ # Choose the device(s) to include.  See devs.mak for details,
+ # devs.mak and contrib.mak for the list of available devices.
+ 
+-DEVICE_DEVS=$(DISPLAY_DEV) $(DD)x11.dev $(DD)x11alpha.dev $(DD)x11cmyk.dev $(DD)x11gray2.dev $(DD)x11gray4.dev $(DD)x11mono.dev
++#DEVICE_DEVS=$(DISPLAY_DEV) $(DD)x11.dev $(DD)x11alpha.dev $(DD)x11cmyk.dev $(DD)x11gray2.dev $(DD)x11gray4.dev $(DD)x11mono.dev
++DEVICE_DEVS=
+ 
+ #DEVICE_DEVS1=
+ #DEVICE_DEVS2=

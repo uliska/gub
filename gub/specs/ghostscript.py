@@ -10,6 +10,7 @@ from gub import tools
 shared = True
 
 class Ghostscript_static (target.AutoBuild):
+    parallel_build_broken = True
     '''The GPL Ghostscript PostScript interpreter
 Ghostscript is used for PostScript preview and printing.  It can
 display PostScript documents in an X11 environment.  It can render
@@ -22,10 +23,14 @@ models.'''
     exe = ''
     revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
-    source = 'http://sourceforge.net/projects/ghostscript/files/GPL%%20Ghostscript/8.70/ghostscript-8.70.tar.gz'
+    source = 'http://downloads.ghostscript.com/public/ghostscript-9.15.tar.gz'
     patches = [
-        'ghostscript-8.70-make.patch',
-        ]
+        'ghostscript-9.15-make.patch',
+        'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.15-windows-popen.patch',
+        'ghostscript-9.15-windows-snprintf.patch',
+        'ghostscript-9.15-windows-make.patch',
+       ]
     parallel_build_broken = True
     # For --enable-compile-inits, see comment in compile()
     configure_flags = (target.AutoBuild.configure_flags
@@ -42,6 +47,8 @@ models.'''
 --without-omni
 --without-jasper
 --disable-compile-inits
+--with-system-libtiff
+--enable-little-endian
 '''))
     compile_flags = (' INCLUDE=%(system_prefix)s/include'
                      + ' PSDOCDIR=%(prefix_dir)s/share/doc'
@@ -56,13 +63,17 @@ models.'''
     make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s CFLAGS+="-DHAVE_SYS_TIME_H=1"'
     obj = 'obj'
     @staticmethod
-    def static_version ():
+    def static_version (self=False):
         return misc.version_from_url (Ghostscript.source)
     def __init__ (self, settings, source):
         target.AutoBuild.__init__ (self, settings, source)
         if (isinstance (source, repository.Repository)
             and not isinstance (source, repository.TarBall)):
             source.version = misc.bind_method (Ghostscript.version_from_VERSION, source)
+        else:
+            source.version = misc.bind_method (Ghostscript.static_version, source)
+        if 'powerpc' in self.settings.target_architecture:
+            self.configure_flags = self.configure_flags.replace('--enable-little-endian', '--enable-big-endian')
     @staticmethod
     def version_from_VERSION (self):
         try:
@@ -74,7 +85,15 @@ models.'''
         except:
             pass
         return '0.0'
-    dependencies = ['libjpeg-devel', 'libpng-devel']
+    dependencies = [
+        'freetype-devel',
+        'libjpeg-devel',
+        'libpng-devel',
+        'libtiff-runtime',
+        'tools::pkg-config',
+        ]
+    def get_build_dependencies (self):
+        return ['libtiff-devel']
     subpackage_names = ['doc', '']
     def srcdir (self):
         return re.sub ('-source', '',
@@ -84,6 +103,12 @@ models.'''
                        target.AutoBuild.builddir (self))
     def name (self):
         return 'ghostscript'
+    def patch (self):
+        self.symlink('base', self.expand('%(srcdir)s/src'))
+        target.AutoBuild.patch (self)
+        self.file_sub ([('[([]PKGCONFIG', '(XPKGCONFIG'),
+                        ('PKGCONFIG', 'PKG_CONFIG')],
+                       '%(srcdir)s/configure.ac', must_succeed=True)
     def autoupdate (self):
         # generate Makefile.in
         self.system ('cd %(srcdir)s && sh ./autogen.sh --help')
@@ -142,11 +167,17 @@ models.'''
               '#define ARCH_LOG2_SIZEOF_LONG %(log2_sizeof_long)d' % locals ()),
              ('#define ARCH_SIZEOF_PTR [0-9]',
               '#define ARCH_SIZEOF_PTR %(sizeof_ptr)d' % locals ()),
+             ('#define ARCH_SIZEOF_GX_COLOR_INDEX [0-9]',
+              '#define ARCH_SIZEOF_GX_COLOR_INDEX 8'),
              ], '%(builddir)s/%(obj)s/arch.h')
 
     def configure (self):
         target.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
+        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype '),
+                        ('^(AUXEXTRALIBS *=.*)(-ltiff )', r'\1'),
+                        ('^(AUXEXTRALIBS *=.*)(-L%(system_prefix)s/lib )', r'\1')],
+                       '%(builddir)s/Makefile')
     def makefile_fixup (self, file):
         self.file_sub ([
             ('-Dmalloc=rpl_malloc', ''),
@@ -176,7 +207,7 @@ models.'''
         # obj/mkromfs is needed for --enable-compile-inits but depends on native -liconv.
         self.system ('''
 cd %(builddir)s && mkdir -p %(obj)s
-cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/genconf %(obj)s/echogs %(obj)s/genarch %(obj)s/arch.h 
+cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/aux/genconf%(exe)s %(obj)s/aux/echogs%(exe)s %(obj)s/aux/genarch%(exe)s %(obj)s/arch.h 
 ''')
         self.fixup_arch ()
         target.AutoBuild.compile (self)
@@ -200,8 +231,7 @@ class Ghostscript_shared (Ghostscript_static):
                      .replace (' install', ' soinstall'))
     def install (self):
         Ghostscript_static.install (self)
-        self.system ('mv %(install_prefix)s/bin/gs%(exe)sc %(install_prefix)s/bin/gs%(exe)s')
-        self.system ('rm -f %(install_prefix)s/bin/gs%(exe)sx')
+        self.system ('mv %(install_prefix)s/bin/gsc%(exe)s %(install_prefix)s/bin/gs%(exe)s')
 
 if shared:
     Ghostscript = Ghostscript_shared
@@ -211,12 +241,8 @@ else:
 class Ghostscript__mingw (Ghostscript):
     exe = '.exe'
     patches = Ghostscript.patches + [
-        'ghostscript-8.70-cygwin.patch',
-        'ghostscript-8.70-windows-wb.patch',
-        'ghostscript-8.70-windows-make.patch',
-        'ghostscript-8.70-gs_dll.patch',
-        'ghostscript-8.70-mingw-w64-snprintf.patch',
-        ]
+        'ghostscript-9.15-windows-dxmain.patch'
+    ]
     def __init__ (self, settings, source):
         Ghostscript.__init__ (self, settings, source)
         # Configure (compile) without -mwindows for console
@@ -229,11 +255,11 @@ class Ghostscript__mingw (Ghostscript):
 ac_cv_lib_pthread_pthread_create=no
 '''
     compile_flags = Ghostscript.compile_flags.replace ("XLDFLAGS='", "XLDFLAGS='-mwindows ")
-    def patch (self):
-        self.symlink('base', self.expand('%(srcdir)s/src'))
-        Ghostscript.patch (self)
     def configure (self):
         Ghostscript.configure (self)
+        if 'linux' in self.settings.build_architecture:
+            self.file_sub ([('^(AUXEXTRALIBS *=.*)(-liconv )', r'\1')],
+                           '%(builddir)s/Makefile')
         if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1'),
@@ -248,6 +274,7 @@ $(GLOBJ)gp_stdia.$(OBJ)
 $(GLOBJ)gp_ntfs.$(OBJ)
 $(GLOBJ)gp_win32.$(OBJ)
 $(GLOBJ)gp_upapr.$(OBJ) 
+$(GLOBJ)gp_wutf8.$(OBJ)
 '''))],
                '%(srcdir)s/base/unix-aux.mak')        
         self.dump ('''
@@ -268,16 +295,26 @@ include $(GLSRCDIR)/pcwin.mak
 
 class Ghostscript__freebsd (Ghostscript):
     dependencies = Ghostscript.dependencies + ['libiconv-devel']
+    patches = Ghostscript.patches + ['ghostscript-9.15-freebsd6.patch']
     def configure (self):
         Ghostscript.configure (self)
+        if 'linux' in self.settings.build_architecture:
+            self.file_sub ([('^(AUXEXTRALIBS *=.*)(-liconv )', r'\1')],
+                           '%(builddir)s/Makefile')
         if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1')],
                            '%(builddir)s/Makefile')
 
 class Ghostscript__darwin (Ghostscript):
+    patches = Ghostscript.patches + [
+        'ghostscript-9.15-Resource-directory.patch'
+    ]
     def configure (self):
         Ghostscript.configure (self)
+        if 'linux' in self.settings.build_architecture:
+            self.file_sub ([('^(AUXEXTRALIBS *=.*)(-liconv )', r'\1')],
+                           '%(builddir)s/Makefile')
         if shared: # Shared is a configure cross-compile disaster area,
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1'),
@@ -289,26 +326,35 @@ class Ghostscript__darwin (Ghostscript):
         Ghostscript.install (self)
         if shared:
             self.system ('''
-%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -id /usr/lib/libgs.8.70.dylib %(install_prefix)s/lib/libgs.8.70.dylib
-%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -change ./bin/../sobin/libgs.8.70.dylib /usr/lib/libgs.8.70.dylib %(install_prefix)s/bin/gs
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -id /usr/lib/libgs.%(version)s.dylib %(install_prefix)s/lib/libgs.%(version)s.dylib
+%(cross_prefix)s/bin/%(target_architecture)s-install_name_tool -change ./sobin/libgs.%(version)s.dylib @executable_path/../lib/libgs.%(version)s.dylib %(install_prefix)s/bin/gs
 ''')
 
 class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     parallel_build_broken = True
-    dependencies = ['libjpeg', 'libpng']
+    dependencies = [
+        'freetype-devel',
+        'libjpeg-devel',
+        'libpng-devel',
+        'libtiff-devel',
+        ]
     configure_flags = (tools.AutoBuild.configure_flags
                        + Ghostscript_static.configure_flags)
     make_flags = Ghostscript_static.make_flags
     def configure (self):
         tools.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
+        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype ')],
+                       '%(builddir)s/Makefile')
+    def autoupdate (self):
+        self.system ('cd %(srcdir)s && sh ./autogen.sh --help')
     def compile (self):
         self.system ('''
 cd %(builddir)s && mkdir -p obj
-cd %(builddir)s && make CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= obj/genconf obj/echogs obj/genarch obj/arch.h
+cd %(builddir)s && make CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= obj/aux/genconf obj/aux/echogs obj/aux/genarch obj/arch.h
 cd %(builddir)s && make INCLUDE=/usr/include gconfig__h=gconfig_-native.h gconfig_-native.h
 cd %(builddir)s && make INCLUDE=%(system_prefix)s/include gconfig__h=gconfig_-tools.h gconfig_-tools.h
-cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h > obj/gconfig_.h
+cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h | grep "^#define" | grep -v "HAVE_SYS_TIME_H" > obj/gconfig_.h
 ''')
 #        self.fixup_arch ()
         tools.AutoBuild.compile (self)
