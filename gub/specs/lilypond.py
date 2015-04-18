@@ -61,7 +61,7 @@ sheet music from a high-level description file.'''
                        + ' --enable-relocation'
                        + ' --enable-rpath'
                        + ' --disable-documentation'
-                       + ' --with-ncsb-dir=%(system_prefix)s/share/fonts/default/Type1'
+                       + ' --with-fonts-dir=%(system_prefix)s/share/fonts/default/Type1'
                        )
     make_flags = ' TARGET_PYTHON=/usr/bin/python'
 
