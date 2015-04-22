@@ -61,7 +61,7 @@ sheet music from a high-level description file.'''
                        + ' --enable-relocation'
                        + ' --enable-rpath'
                        + ' --disable-documentation'
-                       + ' --with-ncsb-dir=%(system_prefix)s/share/fonts/default/Type1'
+                       + ' --with-fonts-dir=%(system_prefix)s/share/fonts/default/Type1'
                        )
     make_flags = ' TARGET_PYTHON=/usr/bin/python'
 
@@ -173,9 +173,6 @@ class LilyPond__mingw (LilyPond):
             'tools::icoutils',
             'mingw-w64-runtime-winpthread-dll',
             ]
-    python_lib = '%(system_prefix)s/bin/libpython*.dll'
-    make_flags = (LilyPond.make_flags
-                  + ' LDFLAGS="%(python_lib)s"'  % locals ())
     # ugh Python hack: C&P Cygwin
     def compile (self):
         self.system ('''
