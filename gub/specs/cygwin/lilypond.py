@@ -24,10 +24,9 @@ sheet music from a high-level description file.'''
                                                ]
     configure_flags = (lilypond.LilyPond.configure_flags
                        .replace ('--enable-relocation', '--disable-relocation'))
-    python_lib = '%(system_prefix)s/bin/libpython*.dll'
     LDFLAGS = '-L%(system_prefix)s/lib -L%(system_prefix)s/bin -L%(system_prefix)s/lib/w32api'
     make_flags = (lilypond.LilyPond.make_flags
-                  + ' LDFLAGS="%(LDFLAGS)s %(python_lib)s"')
+                  + ' LDFLAGS="%(LDFLAGS)s"')
 #    branch = 'stable/2.12'
     def __init__ (self, settings, source):
         lilypond.LilyPond.__init__ (self, settings, source)
