@@ -21,9 +21,9 @@ does not depend on the X Window System.  It is designed to locate
 fonts within the system and select them according to requirements
 specified by applications.'''
 
-    source = 'http://fontconfig.org/release/fontconfig-2.8.0.tar.gz'
+    source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
     #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
-    dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config']
+    dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
         # FIXME: system dir vs packaging install
         ## UGH  - this breaks  on Darwin!
         ## UGH2 - the added /cross/ breaks Cygwin; possibly need
@@ -86,7 +86,7 @@ rm -f %(srcdir)s/builds/unix/{unix-def.mk,unix-cc.mk,ftconfig.h,freetype-config,
         relax = ''
         if 'stat' in misc.librestrict ():
             relax = 'LIBRESTRICT_IGNORE=%(tools_prefix)s/bin/bash:%(tools_prefix)s/bin/make '
-        for i in ('fc-case', 'fc-lang', 'fc-glyphname', 'fc-arch'):
+        for i in ('fc-case', 'fc-lang', 'fc-glyphname'):
             self.system ('''
 cd %(builddir)s/%(i)s && %(relax)s make "CFLAGS=%(cflags)s" "LIBS=%(libs)s" CPPFLAGS= LD_LIBRARY_PATH=%(tools_prefix)s/lib LDFLAGS=-L%(tools_prefix)s/lib INCLUDES=
 ''', locals ())
@@ -140,10 +140,10 @@ class Fontconfig__freebsd (Fontconfig__linux):
 class Fontconfig__tools (tools.AutoBuild):
     # FIXME: use mi to get to source?
     #source = 'git://anongit.freedesktop.org/git/fontconfig?revision=' + version
-    source = 'http://fontconfig.org/release/fontconfig-2.8.0.tar.gz'
+    source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
     def patch (self):
         self.dump ('\nAC_SUBST(LT_AGE)', '%(srcdir)s/configure.in', mode='a', permissions=octal.o755)
         tools.AutoBuild.patch (self)
-    dependencies = ['libtool', 'freetype', 'expat', 'pkg-config']
+    dependencies = ['libtool', 'freetype', 'expat', 'pkg-config', 'bzip2']
     make_flags = ('man_MANS=' # either this, or add something like tools::docbook-utils
                 + ' DOCSRC="" ')
