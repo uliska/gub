@@ -246,17 +246,6 @@ cd ${bindir};
     done
 cd - > /dev/null;
 
-
-## fontconfig lily fonts
-mkdir -p ${prefix}/usr/etc/fonts/conf.d
-cat <<EOF > ${prefix}/usr/etc/fonts/conf.d/00-lilypond.conf
-<?xml version="1.0"?>
-<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-<fontconfig>
-        <dir>${prefix}/usr/share/lilypond/current/fonts/otf</dir>
-</fontconfig>
-EOF
-
 ###################
 ## uninstall script
 
