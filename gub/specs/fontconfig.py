@@ -97,8 +97,16 @@ cd %(builddir)s/%(i)s && %(relax)s make "CFLAGS=%(cflags)s" "LIBS=%(libs)s" CPPF
 set FONTCONFIG_PATH=$INSTALLER_PREFIX/etc/fonts
 ''', 
              '%(install_prefix)s/etc/relocate/fontconfig.reloc')
-        
-        
+        self.dump ('''<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+        <!-- GUB's internal fonts directory -->
+        <dir>%(system_prefix)s/share/fonts</dir>
+        <dir>%(tools_prefix)s/share/fonts</dir>
+</fontconfig>
+''',
+             '%(install_prefix)s/etc/fonts/conf.d/98-gub-fonts-dir.conf')
+
 class Fontconfig__mingw (Fontconfig):
     def patch (self):
         Fontconfig.patch (self)
@@ -147,3 +155,13 @@ class Fontconfig__tools (tools.AutoBuild):
     dependencies = ['libtool', 'freetype', 'expat', 'pkg-config', 'bzip2']
     make_flags = ('man_MANS=' # either this, or add something like tools::docbook-utils
                 + ' DOCSRC="" ')
+    def install (self):
+        tools.AutoBuild.install (self)
+        self.dump ('''<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+        <!-- GUB's internal fonts directory -->
+        <dir>%(tools_prefix)s/share/fonts</dir>
+</fontconfig>
+''',
+             '%(install_prefix)s/etc/fonts/conf.d/98-gub-fonts-dir.conf')
