@@ -13,6 +13,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::rsync', # ugh, we depend on *rsync* !?
                 #'tools::texlive',
                 'tools::fonts-libertine',
+                'tools::fonts-bitstream-charter',
                 'system::makeinfo',
                 'system::zip',
                 ])
