@@ -22,6 +22,12 @@ fonts within the system and select them according to requirements
 specified by applications.'''
 
     source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
+    patches = [
+        # This patch will be unnecessary from fontconfig-2.11.91.
+        'fontconfig-2.11.1-texgyre-aliases.patch',
+        # This patch will be unnecessary from fontconfig-2.11.91.
+        'fontconfig-2.11.1-new-urw-aliases.patch',
+    ]
     #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
     dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
         # FIXME: system dir vs packaging install
