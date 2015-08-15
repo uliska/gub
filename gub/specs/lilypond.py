@@ -36,6 +36,7 @@ sheet music from a high-level description file.'''
         'pango-devel',
         'python-devel',
         'urw-fonts',
+        'tools::fonts-texgyre',
 
         'tools::autoconf',
         'tools::bison',
@@ -62,6 +63,7 @@ sheet music from a high-level description file.'''
                        + ' --enable-rpath'
                        + ' --disable-documentation'
                        + ' --with-fonts-dir=%(system_prefix)s/share/fonts/default/Type1'
+                       + ' --with-texgyre-dir=%(tools_prefix)s/share/fonts/opentype/texgyre'
                        )
     make_flags = ' TARGET_PYTHON=/usr/bin/python'
 
