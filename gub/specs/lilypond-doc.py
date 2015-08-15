@@ -16,6 +16,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::fonts-bitstream-charter',
                 'tools::fonts-bitstream-vera',
                 'tools::fonts-liberation',
+                'tools::fonts-urw-core35',
                 'system::makeinfo',
                 'system::zip',
                 ])
