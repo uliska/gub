@@ -12,6 +12,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::imagemagick',
                 'tools::rsync', # ugh, we depend on *rsync* !?
                 #'tools::texlive',
+                'tools::fonts-dejavu',
                 'tools::fonts-libertine',
                 'tools::fonts-bitstream-charter',
                 'tools::fonts-bitstream-vera',
