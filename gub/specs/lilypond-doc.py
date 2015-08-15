@@ -19,6 +19,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::fonts-liberation',
                 'tools::fonts-urw-core35',
                 'tools::fonts-luximono',
+                'tools::fonts-ipafont',
                 'system::makeinfo',
                 'system::zip',
                 ])
