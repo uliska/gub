@@ -14,6 +14,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 #'tools::texlive',
                 'tools::fonts-libertine',
                 'tools::fonts-bitstream-charter',
+                'tools::fonts-bitstream-vera',
                 'system::makeinfo',
                 'system::zip',
                 ])
