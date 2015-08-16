@@ -5,6 +5,17 @@ from gub import target
 from gub.specs import lilypond
 
 class LilyPond_test (lilypond.LilyPond_base):
+    dependencies = (lilypond.LilyPond_base.dependencies
+                + [
+                'tools::fonts-dejavu',
+                'tools::fonts-libertine',
+                'tools::fonts-bitstream-charter',
+                'tools::fonts-bitstream-vera',
+                'tools::fonts-liberation',
+                'tools::fonts-urw-core35',
+                'tools::fonts-luximono',
+                'tools::fonts-ipafont',
+                ])
     @context.subst_method
     def test_ball (self):
         return '%(uploads)s/lilypond-%(version)s-%(build_number)s.test-output.tar.bz2'
