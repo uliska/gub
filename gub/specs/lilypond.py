@@ -35,7 +35,6 @@ sheet music from a high-level description file.'''
         'guile-devel',
         'pango-devel',
         'python-devel',
-        'urw-fonts',
         'tools::fonts-texgyre',
 
         'tools::autoconf',
@@ -62,7 +61,6 @@ sheet music from a high-level description file.'''
                        + ' --enable-relocation'
                        + ' --enable-rpath'
                        + ' --disable-documentation'
-                       + ' --with-fonts-dir=%(system_prefix)s/share/fonts/default/Type1'
                        + ' --with-texgyre-dir=%(tools_prefix)s/share/fonts/opentype/texgyre'
                        )
     make_flags = ' TARGET_PYTHON=/usr/bin/python'
