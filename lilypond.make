@@ -149,11 +149,11 @@ test: dist-check test-output test-export
 
 doc:
 	$(info **** doc rule)
-	$(call INVOKE_GUB,$(BUILD_PLATFORM) --offline) $(DOC_PACKAGE)
+	$(call INVOKE_GUB,$(BUILD_PLATFORM)) $(DOC_PACKAGE)
 
 test-output:
 	$(info **** test-output rule)
-	$(call INVOKE_GUB,$(BUILD_PLATFORM) --offline) $(TEST_PACKAGE)
+	$(call INVOKE_GUB,$(BUILD_PLATFORM)) $(TEST_PACKAGE)
 
 print-success:
 	$(info **** print-success rule)
