@@ -1,6 +1,5 @@
 import re
 #
-from gub import gnome
 from gub import misc
 from gub import loggedos
 from gub import target
@@ -13,23 +12,34 @@ pango_module_version_regexes = [
     (r'^1\.26', '1.6.0'),
     (r'^1\.27', '1.6.0'),
     (r'^1\.28', '1.6.0'),
+    (r'^1\.29', '1.6.0'),
+    (r'^1\.30', '1.6.0'),
+    (r'^1\.31', '1.8.0'),
+    (r'^1\.32', '1.8.0'),
+    (r'^1\.33', '1.8.0'),
+    (r'^1\.34', '1.8.0'),
+    (r'^1\.35', '1.8.0'),
+    (r'^1\.36', '1.8.0'),
     ]
 
 class Pango (target.AutoBuild):
-    source = 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.28/pango-1.28.3.tar.gz'
-    patches = ['pango-1.20-substitute-env.patch']
+    source = 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.36/pango-1.36.8.tar.xz'
+    patches = [
+        'pango-1.36.8-substitute-env.patch',
+        'pango-1.36.8-test-without-cairo.patch',
+    ]
     dependencies = [
             'tools::glib', 
             'freetype-devel',
             'fontconfig-devel',
             'glib-devel',
+            'harfbuzz-devel',
             'libtool'
             ]
     def get_conflict_dict (self):
         return {'': ['pangocairo', 'pangocairo-devel', 'pangocairo-doc'], 'devel': ['pangocairo', 'pangocairo-devel', 'pangocairo-doc'], 'doc': ['pangocairo', 'pangocairo-devel', 'pangocairo-doc'], 'runtime': ['pangocairo', 'pangocairo-devel', 'pangocairo-doc']}
     configure_flags = (target.AutoBuild.configure_flags
                 + misc.join_lines ('''
---without-x
 --without-cairo
 '''))
     def module_version (self):
@@ -66,36 +76,13 @@ set PANGO_MODULE_VERSION=%(pango_module_version)s
                                file_name)
         self.map_locate (fix_prefix, etc, '*')
 
-class Pango__linux (Pango):
-    def untar (self):
-        Pango.untar (self)
-        # FIXME: --without-cairo switch is removed in 1.10.1,
-        # pango only compiles without cairo if cairo is not
-        # installed linkably on the build system.  UGH.
-        self.file_sub ([('(have_cairo[_a-z0-9]*)=true', '\\1=false'),
-                        ('(cairo[_a-z0-9]*)=yes', '\\1=no')],
-                       '%(srcdir)s/configure')
-
-class Pango__freebsd (Pango__linux):
-    dependencies = Pango__linux.dependencies + ['libiconv-devel']
+class Pango__freebsd (Pango):
+    dependencies = Pango.dependencies + ['libiconv-devel']
 
 class Pango__darwin (Pango):
-    def configure (self):
-        Pango.configure (self)
-        self.file_sub ([('nmedit', '%(target_architecture)s-nmedit')],
-                       '%(builddir)s/libtool')
     def install (self):
         Pango.install (self)                
         # FIXME: PANGO needs .so, NOT .dylib?
         self.dump ('''
 set PANGO_SO_EXTENSION=.so
 ''', '%(install_prefix)s/etc/relocate/pango.reloc', env=locals (), mode='a')
-
-class Pango__mingw (Pango):
-    def create_config_files (self, prefix='/usr'):
-        Pango.create_config_files (self, prefix)
-        etc = self.expand ('%(install_root)s/%(prefix)s/etc/pango', locals ())
-        self.dump ('''
-${PANGO_PREFIX}/lib/pango/${PANGO_MODULE_VERSIOn}/modules/pango-basic-win32${PANGO_SO_EXTENSION} BasicScriptEngineWin32 PangoEngineShape PangoRenderWin32 common:
-''', '%(etc)s/pango.modules', env=locals (), mode='a')
-        Pango.fix_config_files (self, prefix)
