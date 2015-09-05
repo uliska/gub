@@ -23,6 +23,7 @@ specified by applications.'''
 
     source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
     patches = [
+        'fontconfig-2.11.1-conf-relative-symlink.patch',
         # This patch will be unnecessary from fontconfig-2.11.91.
         'fontconfig-2.11.1-texgyre-aliases.patch',
         # This patch will be unnecessary from fontconfig-2.11.91.
