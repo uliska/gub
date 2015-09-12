@@ -23,6 +23,7 @@ specified by applications.'''
 
     source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
     patches = [
+        'fontconfig-2.11.1-conf-relative-symlink.patch',
         # This patch will be unnecessary from fontconfig-2.11.91.
         'fontconfig-2.11.1-texgyre-aliases.patch',
         # This patch will be unnecessary from fontconfig-2.11.91.
@@ -154,7 +155,8 @@ class Fontconfig__freebsd (Fontconfig__linux):
 class Fontconfig__tools (tools.AutoBuild):
     # FIXME: use mi to get to source?
     #source = 'git://anongit.freedesktop.org/git/fontconfig?revision=' + version
-    source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
+    source = Fontconfig.source
+    patches = Fontconfig.patches
     def patch (self):
         self.dump ('\nAC_SUBST(LT_AGE)', '%(srcdir)s/configure.in', mode='a', permissions=octal.o755)
         tools.AutoBuild.patch (self)

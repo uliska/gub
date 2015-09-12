@@ -1,0 +1,41 @@
+--- glib-2.44.1/gio/Makefile.in.org	2015-05-13 11:50:40.000000000 +0900
++++ glib-2.44.1/gio/Makefile.in	2015-08-30 12:01:11.975858800 +0900
+@@ -1731,6 +1731,7 @@
+ glib_compile_resources_LDADD = libgio-2.0.la 		\
+ 	$(top_builddir)/gobject/libgobject-2.0.la	\
+ 	$(top_builddir)/glib/libglib-2.0.la 		\
++	xdgmime/libxdgmime.la				\
+ 	$(NULL)
+ 
+ glib_compile_resources_SOURCES = \
+@@ -1757,6 +1758,7 @@
+ gsettings_LDADD = libgio-2.0.la 			\
+ 	$(top_builddir)/gobject/libgobject-2.0.la	\
+ 	$(top_builddir)/glib/libglib-2.0.la		\
++	xdgmime/libxdgmime.la				\
+ 	$(NULL)
+ 
+ gsettings_SOURCES = gsettings-tool.c
+@@ -1766,12 +1768,14 @@
+ gdbus_LDADD = libgio-2.0.la 				\
+ 	$(top_builddir)/gobject/libgobject-2.0.la	\
+ 	$(top_builddir)/glib/libglib-2.0.la		\
++	xdgmime/libxdgmime.la				\
+ 	$(NULL)
+ 
+ @OS_UNIX_TRUE@gapplication_SOURCES = gapplication-tool.c
+ @OS_UNIX_TRUE@gapplication_LDADD = libgio-2.0.la 			\
+ @OS_UNIX_TRUE@	$(top_builddir)/gobject/libgobject-2.0.la	\
+ @OS_UNIX_TRUE@	$(top_builddir)/glib/libglib-2.0.la		\
++@OS_UNIX_TRUE@	xdgmime/libxdgmime.la				\
+ @OS_UNIX_TRUE@	$(NULL)
+ 
+ completiondir = $(datadir)/bash-completion/completions
+@@ -1786,6 +1790,7 @@
+ gresource_LDADD = libgio-2.0.la				\
+ 	$(top_builddir)/gobject/libgobject-2.0.la	\
+ 	$(top_builddir)/glib/libglib-2.0.la		\
++	xdgmime/libxdgmime.la				\
+ 	$(LIBELF_LIBS)
+ 
+ all: $(BUILT_SOURCES)
