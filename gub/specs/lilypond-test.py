@@ -7,6 +7,7 @@ from gub.specs import lilypond
 class LilyPond_test (lilypond.LilyPond_base):
     dependencies = (lilypond.LilyPond_base.dependencies
                 + [
+                'tools::netpbm',
                 'tools::fonts-dejavu',
                 'tools::fonts-libertine',
                 'tools::fonts-bitstream-charter',
@@ -15,6 +16,7 @@ class LilyPond_test (lilypond.LilyPond_base):
                 'tools::fonts-urw-core35',
                 'tools::fonts-luximono',
                 'tools::fonts-ipafont',
+                'tools::fonts-gnufreefont',
                 ])
     @context.subst_method
     def test_ball (self):

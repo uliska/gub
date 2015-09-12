@@ -1,7 +1,8 @@
 from gub import target
+from gub import tools
 
 class Libffi (target.AutoBuild):
-    source = 'ftp://sourceware.org/pub/libffi/libffi-3.0.9.tar.gz'
+    source = 'ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz'
     dependencies = [
         'tools::automake',
         'tools::libtool',
@@ -12,6 +13,16 @@ class Libffi (target.AutoBuild):
                      + """ includesdir='$(includedir)' """ )
     def install (self):
         target.AutoBuild.install (self)
-        self.system ('cd %(install_prefix)s && mv lib/libffi-3.0.9/include .')
-        self.system ('cd %(install_prefix)s && rm -rf lib/libffi-3.0.9')
-                
+        self.system ('cd %(install_prefix)s && mv lib/libffi-3.2.1/include .')
+        self.system ('cd %(install_prefix)s && rm -rf lib/libffi-3.2.1')
+
+class Libffi__darwin__x86 (Libffi):
+    # darwin-x86 can not compile libffi 3.1, 3.2.1.
+    source = 'ftp://sourceware.org/pub/libffi/libffi-3.0.13.tar.gz'
+    def install (self):
+        target.AutoBuild.install (self)
+        self.system ('cd %(install_prefix)s && mv lib/libffi-3.0.13/include .')
+        self.system ('cd %(install_prefix)s && rm -rf lib/libffi-3.0.13')
+
+class Libffi__tools (tools.AutoBuild, Libffi):
+    pass

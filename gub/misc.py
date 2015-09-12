@@ -164,7 +164,7 @@ def is_ball (s):
     # FIXME: do this properly, by identifying different flavours:
     # .deb, tar.gz, cygwin -[build].tar.bz2 etc and have simple
     # named rules for them.
-    return re.match ('^(.*?)[-_]([0-9].*(-[0-9]+)?)([._][a-z]+[0-9]*)?(\.tar\.(bz2|gz)|\.gu[bp]|\.deb|\.tgz|\.zip)$', s)
+    return re.match ('^(.*?)[-_]([0-9].*(-[0-9]+)?)([._][a-z]+[0-9]*)?(\.tar\.(bz2|gz|xz|lzma)|\.gu[bp]|\.deb|\.tgz|\.txz|\.tlz|\.zip)$', s)
 
 def split_ball (s):
     p = s.rfind ('/')

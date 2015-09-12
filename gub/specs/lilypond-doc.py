@@ -20,6 +20,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::fonts-urw-core35',
                 'tools::fonts-luximono',
                 'tools::fonts-ipafont',
+                'tools::fonts-gnufreefont',
                 'system::makeinfo',
                 'system::zip',
                 ])
