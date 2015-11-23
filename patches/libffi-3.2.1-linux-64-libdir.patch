@@ -1,0 +1,14 @@
+--- libffi-3.2.1/configure.org	2014-11-12 20:59:57.000000000 +0900
++++ libffi-3.2.1/configure	2015-11-23 23:52:04.472673700 +0900
+@@ -18725,11 +18725,6 @@
+     toolexecdir="${libdir}"/gcc-lib/'$(target_alias)'
+     toolexeclibdir="${libdir}"
+   fi
+-  multi_os_directory=`$CC $CFLAGS -print-multi-os-directory`
+-  case $multi_os_directory in
+-    .) ;; # Avoid trailing /.
+-    ../*) toolexeclibdir=$toolexeclibdir/$multi_os_directory ;;
+-  esac
+ 
+ else
+   toolexeclibdir="${libdir}"
