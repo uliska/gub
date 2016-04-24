@@ -40,7 +40,7 @@ to *not* look in /.
 # automagically depend on it, which is nice.
 # See cross.py:set_cross_dependencies ()
 class Glibc (target.AutoBuild, cross.AutoBuild):
-    source = 'http://lilypond.org/download/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
+    source = 'http://lilypond.org/downloads/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
     patches = [
         'glibc-2.3-powerpc-initfini.patch',
         'glibc-2.3-powerpc-socket-weakalias.patch',

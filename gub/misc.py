@@ -313,7 +313,7 @@ def download_url (original_url, dest_dir,
                   dest_name='',
                   local=[],
                   cache=[os.environ.get ('GUB_DOWNLOAD_CACHE', '')],
-                  fallback=['http://lilypond.org/download/gub-sources'],
+                  fallback=['http://lilypond.org/downloads/gub-sources'],
                   progress=sys.stderr.write):
 
     assert type (local) == list

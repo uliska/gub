@@ -1,5 +1,5 @@
 from gub import target
 
 class Regex (target.AutoBuild):
-    source = 'http://lilypond.org/download/gub-sources/regex/regex-2.3.90-1.tar.bz2'
+    source = 'http://lilypond.org/downloads/gub-sources/regex/regex-2.3.90-1.tar.bz2'
     dependencies = ['tools::libtool']
