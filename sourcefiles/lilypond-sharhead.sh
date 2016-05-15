@@ -291,7 +291,7 @@ tail -c+%(header_length)012d "$0" | tar -C "${prefix}" %(_z)s -xf -
 
 documentation="http://%(name)s.org/doc"
 
-mirror="http://lilypond.org/download"
+mirror="http://lilypond.org/downloads"
 doc_url_base="$mirror/binaries/documentation"
 if test "$doc" = yes; then
     documentation="file://${prefix}/usr/share/doc/lilypond/html/index.html

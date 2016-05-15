@@ -5,7 +5,7 @@ from gub.specs import glibc
 # Hmm? TARGET_CFLAGS=-O --> target.py
 
 class Glibc_core (glibc.Glibc):
-    source = 'http://lilypond.org/download/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
+    source = 'http://lilypond.org/downloads/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
     patches = glibc.Glibc.patches + [
         'glibc-2.3-core-install.patch',
         'glibc-2.3-core-libgcc.patch',

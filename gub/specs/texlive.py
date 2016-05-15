@@ -32,7 +32,7 @@ TeX, as well as the documentation accompanying the included software
 packages.'''
 
 #    source = texlive_svn + '&branch=trunk&branchmodule=Build/source&revision=HEAD'
-    source = 'http://lilypond.org/download/gub-sources/texlive/texlive-15644.tar.gz'
+    source = 'http://lilypond.org/downloads/gub-sources/texlive/texlive-15644.tar.gz'
     config_cache_flag_broken = True
     parallel_build_broken = True
     dependencies = [

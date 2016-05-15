@@ -27,8 +27,8 @@ freetype = 'http://download.savannah.gnu.org/releases/freetype/%(name)s-%(versio
 
 fontconfig = 'http://www.fontconfig.org/release/%(name)s-%(version)s.tar.%(format)s'
 
-lilypondorg = 'http://lilypond.org/download/gub-sources/%(name)s-%(version)s.tar.%(format)s'
-lilypondorg_deb = 'http://lilypond.org/download/gub-sources/%(name)s_%(version)s_%%(package_arch)s.%(format)s'
+lilypondorg = 'http://lilypond.org/downloads/gub-sources/%(name)s-%(version)s.tar.%(format)s'
+lilypondorg_deb = 'http://lilypond.org/downloads/gub-sources/%(name)s_%(version)s_%%(package_arch)s.%(format)s'
 
 jantien = 'http://www.xs4all.nl/~jantien/%(name)s-%(version)s.tar.%(format)s'
 

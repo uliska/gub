@@ -151,7 +151,7 @@ Inspect lilypond.org download area, and write pickle of all version numbers.
 
     p.add_option ('--url', action='store',
                   dest='url',
-                  default='http://lilypond.org/download/',
+                  default='http://lilypond.org/downloads/',
                   help='download url')
 
     p.add_option ('--download', action='store_true',

@@ -1,7 +1,7 @@
 from gub import target
 
 class Libgnugetopt (target.MakeBuild):
-    source = 'http://lilypond.org/download/gub-sources/libgnugetopt/libgnugetopt-1.3.tar.bz2'
+    source = 'http://lilypond.org/downloads/gub-sources/libgnugetopt/libgnugetopt-1.3.tar.bz2'
     def patch (self):
         self.dump ('''
 prefix = %(prefix_dir)s

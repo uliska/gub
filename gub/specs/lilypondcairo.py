@@ -6,7 +6,7 @@ from gub.specs import lilypond
 # in.  Hmm.
 
 class Lilypondcairo (lilypond.Lilypond):
-    source = 'http://lilypond.org/download/source/v2.13/lilypond-2.13.62.tar.gz'
+    source = 'http://lilypond.org/downloads/source/v2.13/lilypond-2.13.62.tar.gz'
     dependencies = [x.replace ('pango', 'pangocairo')
                     for x in lilypond.Lilypond.dependencies]
     patches = [
