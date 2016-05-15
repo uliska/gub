@@ -1,7 +1,7 @@
 from gub import target
 
 class Licoli (target.AutoBuild):
-    source = 'http://lilypond.org/download/gub-sources/licoli-0.1.2.tar.gz'
+    source = 'http://lilypond.org/downloads/gub-sources/licoli-0.1.2.tar.gz'
     dependencies = ['tools::libtool']
     subpackage_names = ['']
 

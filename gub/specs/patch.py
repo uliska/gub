@@ -6,7 +6,7 @@ class Patch__tools (tools.AutoBuild):
 # ugh, openoffice the ooo-build flavour needs the latest patch with
 # additional [SUSE] patches to not barf on all CRLF problems.
 # Taken from the Ibex: apt-get --download source patch
-    source = 'http://lilypond.org/download/gub-sources/patch/patch-2.5.9-5.tar.gz'
+    source = 'http://lilypond.org/downloads/gub-sources/patch/patch-2.5.9-5.tar.gz'
     configure_variables = ''
     destdir_install_broken = True
     def configure (self):

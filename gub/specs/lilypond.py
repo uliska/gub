@@ -11,7 +11,7 @@ from gub.specs import ghostscript
 
 VERSION='v2.14'
 def url (version=VERSION):
-    url = 'http://lilypond.org/download/source/%(version)s/' % locals ()
+    url = 'http://lilypond.org/downloads/source/%(version)s/' % locals ()
     raw_version_file = 'lilypond-%(version)s.index' % locals ()
     return misc.latest_url (url, 'lilypond', raw_version_file)
 

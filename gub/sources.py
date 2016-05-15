@@ -16,8 +16,8 @@ from gub import mirrors
 gnu = 'http://ftp.gnu.org/pub/gnu'
 nongnu = 'http://download.savannah.nongnu.org/releases'
 sf = 'http://surfnet.dl.sourceforge.net/sourceforge'
-gub = 'http://lilypond.org/download/gub-sources'
-lp = 'http://lilypond.org/download/sources'
+gub = 'http://lilypond.org/downloads/gub-sources'
+lp = 'http://lilypond.org/downloads/sources'
 freedesktop = '.freedesktop.org/releases'
 
 ltool = mirrors.gnu % { 'name': 'libtool', 'version': '1.5.22', 'format': 'gz'}

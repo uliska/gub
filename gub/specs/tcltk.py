@@ -2,7 +2,7 @@ from gub import context
 from gub import target
  
 class Tcltk (target.AutoBuild):
-    source = 'http://lilypond.org/download/gub-sources/tcltk-8.4.14.tar.gz'
+    source = 'http://lilypond.org/downloads/gub-sources/tcltk-8.4.14.tar.gz'
     parallel_build_broken = True
     license_files = ['%(srcdir)s/tcl/license.terms']
     def configure (self):
