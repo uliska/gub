@@ -46,8 +46,8 @@ build_platform = {
 }[sys.platform]
 
 host_spec = maintainer + '@lilypond.org:/var/www/lilypond'
-host_source_spec = host_spec + '/download'
-host_binaries_spec = host_spec + '/download/binaries'
+host_source_spec = host_spec + '/downloads'
+host_binaries_spec = host_spec + '/downloads/binaries'
 host_doc_spec = host_spec + '/doc'
 host_test_spec = host_spec + '/test' 
 
