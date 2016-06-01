@@ -2,7 +2,7 @@ from gub import misc
 from gub import target
 
 class Pango (target.AutoBuild):
-    source = 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.38/pango-1.38.1.tar.xz'
+    source = 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz'
     patches = [
         'pango-1.37.3-test-without-cairo.patch',
     ]
