@@ -21,13 +21,9 @@ does not depend on the X Window System.  It is designed to locate
 fonts within the system and select them according to requirements
 specified by applications.'''
 
-    source = 'http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2'
+    source = 'http://fontconfig.org/release/fontconfig-2.11.95.tar.bz2'
     patches = [
         'fontconfig-2.11.1-conf-relative-symlink.patch',
-        # This patch will be unnecessary from fontconfig-2.11.91.
-        'fontconfig-2.11.1-texgyre-aliases.patch',
-        # This patch will be unnecessary from fontconfig-2.11.91.
-        'fontconfig-2.11.1-new-urw-aliases.patch',
     ]
     #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
     dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
