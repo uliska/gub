@@ -675,7 +675,7 @@ fatal: The remote end hung up unexpectedly
                 printf ('GIT: FIXME: shallow branching broken? -- getting *whole* history...')
                 self.git ('clone --bare %(source)s %(dir)s' % locals (), dir='.')
         if self.branch and not (self.revision and self.is_downloaded ()):
-            self.git ('fetch %(source)s %(branch)s:refs/heads/%(url_host)s/%(url_dir)s%(branch)s' % self.__dict__)
+            self.git ('fetch %(source)s %(branch)s:refs/heads/%(url_host)s%(url_dir)s/%(branch)s' % self.__dict__)
         self.checksums = {}
         self.post_download_hook ()
     def get_ref (self):
