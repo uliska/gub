@@ -606,8 +606,7 @@ cd %(dir_slash_vcs)s && mv *bz2 *deb *gz *zip .. || :
         # We cannot do a shallow download if we're not tracking
         # we have to get at least enough history to include the
         # fixed committish ... :-)
-        #no shallow# self.shallow = self.is_tracking ()
-        self.shallow = False
+        self.shallow = self.is_tracking ()
         assert self.url_host
         assert self.url_dir
     def version (self):
@@ -663,19 +662,13 @@ cd %(dir_slash_vcs)s && mv *bz2 *deb *gz *zip .. || :
         if not os.path.isdir (os.path.join (self.dir, 'refs')):
             source = self.source
             dir = self.dir
-            ### AARGH, GIT forces us to download the full history? WTF?
-            '''invoking cd /home/janneke/vc/gub/downloads/ghostscript && git clone --depth 10 -l -s /home/janneke/vc/gub/downloads/ghostscript /home/janneke/vc/gub/target/mingw/src/ghostscript-0.0
-Initialized empty Git repository in /home/janneke/vc/gub/target/mingw/src/ghostscript-0.0/.git/
-fatal: attempt to fetch/clone from a shallow repository
-fatal: The remote end hung up unexpectedly
-'''
             if self.shallow:
                 self.git ('clone --depth 10 --bare %(source)s %(dir)s' % locals (), dir='.')
             else:
-                printf ('GIT: FIXME: shallow branching broken? -- getting *whole* history...')
+                printf ('getting *whole* history...')
                 self.git ('clone --bare %(source)s %(dir)s' % locals (), dir='.')
         if self.branch and not (self.revision and self.is_downloaded ()):
-            self.git ('fetch %(source)s %(branch)s:refs/heads/%(url_host)s/%(url_dir)s%(branch)s' % self.__dict__)
+            self.git ('fetch %(source)s %(branch)s:refs/heads/%(url_host)s%(url_dir)s/%(branch)s' % self.__dict__)
         self.checksums = {}
         self.post_download_hook ()
     def get_ref (self):

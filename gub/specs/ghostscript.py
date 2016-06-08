@@ -88,7 +88,6 @@ models.'''
     dependencies = [
         'freetype-devel',
         'libjpeg-devel',
-        'libpng-devel',
         'libtiff-runtime',
         'tools::pkg-config',
         ]
@@ -335,7 +334,6 @@ class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     dependencies = [
         'freetype-devel',
         'libjpeg-devel',
-        'libpng-devel',
         'libtiff-devel',
         ]
     configure_flags = (tools.AutoBuild.configure_flags
