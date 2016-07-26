@@ -72,6 +72,11 @@ PATH=/usr/bin:$PATH
 exec %(tools_prefix)s/bin/guile "$@"
 ''', "%(srcdir)s/pre-inst-guile.in")
         #self.autopatch ()
+        # Guile's texi files can not be compiled by texinfo-6.1.
+        self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
+                       '%(srcdir)s/doc/Makefile.am')
+        self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
+                       '%(srcdir)s/doc/Makefile.in')
         target.AutoBuild.patch (self)
     def autopatch (self):
         self.file_sub ([(r'AC_CONFIG_SUBDIRS\(guile-readline\)', '')],
