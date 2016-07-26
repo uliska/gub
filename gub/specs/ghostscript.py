@@ -23,7 +23,7 @@ models.'''
     exe = ''
     revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
     #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
-    source = 'http://downloads.ghostscript.com/public/ghostscript-9.15.tar.gz'
+    source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
     patches = [
         'ghostscript-9.15-make.patch',
         'ghostscript-9.15-cygwin.patch',
