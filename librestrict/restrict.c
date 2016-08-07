@@ -191,7 +191,7 @@ static void initialize (void) __attribute__ ((constructor));
 static
 void initialize (void)
 {
-  char *restrict;
+  char *restrict_string;
   char *verbosity_string = getenv ("LIBRESTRICT_VERBOSE");
   
   if (verbosity_string)
@@ -201,14 +201,14 @@ void initialize (void)
 	verbosity = 1;
     }
   executable_name = get_executable_name ();
-  restrict = get_allowed_prefix (executable_name);
-  if (restrict)
+  restrict_string = get_allowed_prefix (executable_name);
+  if (restrict_string)
     {
       char *allow = getenv ("LIBRESTRICT_ALLOW");
       if (verbosity > 1)
 	fprintf (stderr, "librestrict:warning:%s: allow: %s\n", __PRETTY_FUNCTION__, allow);
 
-      add_allowed_file (restrict);
+      add_allowed_file (restrict_string);
       if (allow)
         add_allowed_path (allow);
       add_allowed_file ("/tmp");
