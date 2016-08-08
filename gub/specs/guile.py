@@ -225,6 +225,11 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
     compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib:${LD_LIBRARY_PATH-/foe};'
                 + Guile.compile_command)
     def patch (self):
+        # Guile's texi files can not be compiled by texinfo-6.1.
+        self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
+                       '%(srcdir)s/doc/Makefile.am')
+        self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
+                       '%(srcdir)s/doc/Makefile.in')
         tools.AutoBuild.patch (self)
         #Guile.autopatch (self)
     def install (self):
