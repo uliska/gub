@@ -1,0 +1,22 @@
+--- libffi-3.2.1/libffi.pc.in.org	2014-11-08 21:47:24.000000000 +0900
++++ libffi-3.2.1/libffi.pc.in	2016-08-09 19:27:53.897837500 +0900
+@@ -2,7 +2,7 @@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ toolexeclibdir=@toolexeclibdir@
+-includedir=${libdir}/@PACKAGE_NAME@-@PACKAGE_VERSION@/include
++includedir=@includedir@
+ 
+ Name: @PACKAGE_NAME@
+ Description: Library supporting Foreign Function Interfaces
+--- libffi-3.2.1/include/Makefile.in.org	2014-11-12 20:59:58.000000000 +0900
++++ libffi-3.2.1/include/Makefile.in	2016-08-09 19:26:57.718194900 +0900
+@@ -314,7 +314,7 @@
+ AUTOMAKE_OPTIONS = foreign
+ DISTCLEANFILES = ffitarget.h
+ EXTRA_DIST = ffi.h.in ffi_common.h
+-includesdir = $(libdir)/@PACKAGE_NAME@-@PACKAGE_VERSION@/include
++includesdir = $(includedir)
+ nodist_includes_HEADERS = ffi.h ffitarget.h
+ all: all-am
+ 
