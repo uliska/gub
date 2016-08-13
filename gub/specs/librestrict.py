@@ -3,7 +3,7 @@ from gub import tools
 from gub import misc
 
 class Librestrict_make__tools (tools.MakeBuild):
-    source = 'url://host/librestrict-1.9a.tar.gz'
+    source = 'url://host/librestrict-1.9b.tar.gz'
     def librestrict_flavours (self):
         return misc.librestrict ()
     def flavours (self):
