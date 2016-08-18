@@ -1,3 +1,4 @@
+import os
 #
 from gub import context
 from gub import misc
@@ -26,6 +27,18 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'system::xelatex',
                 'system::zip',
                 ])
+    def stages (self):
+        return ['patch'] + lilypond.LilyPond_base.stages (self)
+    def patch (self):
+        # system::xetex uses system's shared libraries instead of GUB's ones.
+        if 'system::xetex' in self.dependencies:
+            self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
+                           '%(srcdir)s/scripts/build/xetex-with-options.sh')
+        # system::xelatex uses system's shared libraries instead of GUB's ones.
+        if 'system::xelatex' in self.dependencies:
+            self.file_sub ([('^exec xelatex ',
+                             'LD_LIBRARY_PATH= exec xelatex ')],
+                           '%(srcdir)s/scripts/build/xelatex-with-options.sh')
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
