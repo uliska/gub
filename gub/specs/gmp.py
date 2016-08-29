@@ -1,4 +1,5 @@
 import re
+import os
 #
 from gub import build
 from gub import misc
@@ -57,3 +58,10 @@ class Gmp__tools (tools.AutoBuild, Gmp):
     configure_variables = (tools.AutoBuild.configure_variables
                            # avoid __isoc99_fscanf@@GLIBC_2.7 etc
                            + ' CPPFLAGS=-D_GNU_SOURCE')
+    def __init__ (self, settings, source):
+        tools.AutoBuild.__init__ (self, settings, source)
+        if 'ABI' not in os.environ:
+            if settings.target_bits == "32":
+                self.configure_variables += ' ABI=32'
+            elif settings.target_bits == "64":
+                self.configure_variables += ' ABI=64'
