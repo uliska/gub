@@ -125,6 +125,9 @@ class Fontconfig__mingw (Fontconfig):
                    mode='a')
 
 class Fontconfig__darwin (Fontconfig):
+    patches = Fontconfig.patches + [
+        'fontconfig-2.12.1-mac.patch'
+    ]
     configure_flags = (Fontconfig.configure_flags
                          + ' --with-add-fonts=/Library/Fonts,/System/Library/Fonts ')
     def configure (self):
