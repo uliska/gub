@@ -13,7 +13,8 @@ tools, and many other products as well.'''
     dependencies = [
         'libtool-devel',
         'zlib-devel',
-        'tools::bzip2'
+        'tools::bzip2',
+        'tools::pkg-config',
     ]
     subpackage_names = ['devel', '']
     configure_flags = (target.AutoBuild.configure_flags
