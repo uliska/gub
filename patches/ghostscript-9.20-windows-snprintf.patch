@@ -1,0 +1,15 @@
+--- a/base/gp_mswin.c	2016-10-22 21:19:28.962063600 +0900
++++ b/base/gp_mswin.c	2016-10-22 21:22:49.843896700 +0900
+@@ -978,6 +978,7 @@
+ /* Microsoft Visual C++ 2005  doesn't properly define snprintf,
+    which is defined in the C standard ISO/IEC 9899:1999 (E) */
+ 
++#if !defined(__CYGWIN__) && !defined(__MINGW32__)
+ int snprintf(char *buffer, size_t count, const char *format, ...)
+ {
+     if (count > 0) {
+@@ -993,3 +994,4 @@
+         return 0;
+ }
+ #endif
++#endif

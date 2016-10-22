@@ -1,0 +1,47 @@
+--- a/base/unix-gcc.mak	2016-09-26 19:41:28.000000000 +0900
++++ b/base/unix-gcc.mak	2016-10-22 21:17:21.112191200 +0900
+@@ -79,7 +79,7 @@
+ INSTALL_DATA = $(INSTALL) -m 644
+ INSTALL_SHARED = 
+ 
+-prefix = /usr/local
++prefix = /usr
+ exec_prefix = ${prefix}
+ bindir = ${exec_prefix}/bin
+ scriptdir = $(bindir)
+@@ -98,7 +98,7 @@
+ gssharedir = ${exec_prefix}/lib/ghostscript/$(GS_DOT_VERSION)
+ gsincludedir = ${prefix}/include/ghostscript/
+ 
+-docdir=$(gsdatadir)/doc
++docdir=$(gsdatadir)/doc/ghostscript-$(GS_DOT_VERSION)
+ exdir=$(gsdatadir)/examples
+ GS_DOCDIR=$(docdir)
+ 
+@@ -238,7 +238,7 @@
+ # You may need to change this if the libpng version changes.
+ # See png.mak for more information.
+ 
+-SHARE_LIBPNG=0
++SHARE_LIBPNG=1
+ PNGSRCDIR=./libpng
+ LIBPNG_NAME=png
+ 
+@@ -253,7 +253,7 @@
+ # Define the directory where the zlib sources are stored.
+ # See zlib.mak for more information.
+ 
+-SHARE_ZLIB=0
++SHARE_ZLIB=1
+ ZSRCDIR=./zlib
+ #ZLIB_NAME=gz
+ ZLIB_NAME=z
+@@ -377,7 +377,7 @@
+ CFLAGS_STANDARD= -O2
+ CFLAGS_DEBUG= -g -O0
+ CFLAGS_PROFILE=-pg  -O2
+-CFLAGS_SO=-fPIC
++#CFLAGS_SO=-fPIC
+ 
+ # Define the other compilation flags.  Add at most one of the following:
+ #	-DBSD4_2 for 4.2bsd systems.

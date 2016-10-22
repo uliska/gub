@@ -19,13 +19,12 @@ Supported printers include common dot-matrix, inkjet and laser
 models.'''
 
     exe = ''
-    source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
+    source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs920/ghostscript-9.20.tar.gz'
     patches = [
-        'ghostscript-9.15-make.patch',
-        'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.20-make.patch',
+        'ghostscript-9.20-cygwin.patch',
         'ghostscript-9.15-windows-popen.patch',
-        'ghostscript-9.15-windows-snprintf.patch',
-        'ghostscript-9.15-windows-make.patch',
+        'ghostscript-9.20-windows-snprintf.patch',
        ]
     parallel_build_broken = True
     # For --enable-compile-inits, see comment in compile()
