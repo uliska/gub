@@ -1,0 +1,10 @@
+--- a/base/unistd_.h	2016-10-23 02:21:58.750329900 +0900
++++ b/base/unistd_.h	2016-10-23 02:22:38.030553400 +0900
+@@ -55,6 +55,7 @@
+ #  define _XOPEN_SOURCE 500
+ #  define __USE_UNIX98
+ #  include <unistd.h>
++#  undef __USE_UNIX98
+ #endif
+ 
+ #endif   /* unistd__INCLUDED */
