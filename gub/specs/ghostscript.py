@@ -18,11 +18,7 @@ PostScript files as graphics to be printed on non-PostScript printers.
 Supported printers include common dot-matrix, inkjet and laser
 models.'''
 
-    #source = 'svn:http://svn.ghostscript.com:8080/ghostscript&branch=trunk/gs&revision=7881'
-    # HEAD - need to load TTF fonts on fedora without crashing.
     exe = ''
-    revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
-    #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
     source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
     patches = [
         'ghostscript-9.15-make.patch',
