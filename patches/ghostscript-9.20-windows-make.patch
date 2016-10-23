@@ -206,14 +206,14 @@
 +	$(GLCCWIN) $(GLO_)gp_stdia.$(OBJ) $(C_) $(GLSRC)gp_stdia.c
 +
 +# The Metro platform
-+!ifdef METRO
-+METRO_OBJS=$(GLOBJ)winrtsup.$(OBJ) $(GLOBJ)gp_wutf8.$(OBJ)
-+
-+$(GLOBJ)winrtsup.$(OBJ): $(GLSRCDIR)/winrtsup.cpp $(WINLIB_MAK)
-+	$(GLCCWIN) /EHsc $(GLO_)winrtsup.$(OBJ) $(C_) $(GLSRCDIR)/winrtsup.cpp
-+!else
++#!ifdef METRO
++#METRO_OBJS=$(GLOBJ)winrtsup.$(OBJ) $(GLOBJ)gp_wutf8.$(OBJ)
++#
++#$(GLOBJ)winrtsup.$(OBJ): $(GLSRCDIR)/winrtsup.cpp $(WINLIB_MAK)
++#	$(GLCCWIN) /EHsc $(GLO_)winrtsup.$(OBJ) $(C_) $(GLSRCDIR)/winrtsup.cpp
++#!else
 +METRO_OBJS=
-+!endif
++#!endif
 +
 +
 +metro__=$(GLOBJ)gp_mswin.$(OBJ) $(GLOBJ)gp_wgetv.$(OBJ) $(GLOBJ)gp_wpapr.$(OBJ)\
