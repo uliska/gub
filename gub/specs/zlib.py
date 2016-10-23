@@ -8,7 +8,7 @@ class Zlib (target.AutoBuild):
     source = 'http://sourceforge.net/projects/libpng/files/zlib/1.2.3/zlib-1.2.3.tar.gz'
     patches = ['zlib-1.2.3.patch']
     srcdir_build_broken = True
-    dependencies = ['tools::autoconf']
+    dependencies = ['tools::autoconf', 'tools::pkg-config']
     make_flags = ' ARFLAGS=r'
     destdir_install_broken = True
     install_flags = ' install'
@@ -58,7 +58,7 @@ no shared lib: gcc-4.2.1 says
 
 class Zlib__tools (tools.AutoBuild, Zlib):
     srcdir_build_broken = True
-    dependencies = ['autoconf']
+    dependencies = ['autoconf', 'pkg-config']
     configure_command = Zlib.configure_command
     destdir_install_broken = True
     install_flags = ' install'

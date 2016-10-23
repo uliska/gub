@@ -28,6 +28,7 @@ class Freetype__tools (tools.AutoBuild, Freetype):
         'zlib',
         'libpng',
         'bzip2',
+        'pkg-config',
     ]
     configure_command = (
         ''' LIBPNG_CFLAGS='-I%(tools_prefix)s/include/libpng12' ''' +
