@@ -21,7 +21,9 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::fonts-luximono',
                 'tools::fonts-ipafont',
                 'tools::fonts-gnufreefont',
-                'system::makeinfo',
+                'tools::texinfo',
+                'system::xetex',
+                'system::xelatex',
                 'system::zip',
                 ])
     make_flags = misc.join_lines ('''
