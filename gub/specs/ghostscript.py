@@ -236,6 +236,7 @@ else:
 class Ghostscript__mingw (Ghostscript):
     exe = '.exe'
     patches = Ghostscript.patches + [
+        'ghostscript-9.20-mingw-unix-aux.patch',
         'ghostscript-9.15-windows-dxmain.patch'
     ]
     def __init__ (self, settings, source):
@@ -262,16 +263,6 @@ ac_cv_lib_pthread_pthread_create=no
                            '%(builddir)s/Makefile')
         self.file_sub ([('^(EXTRALIBS *=.*)', r'\1 -lwinspool -lcomdlg32 -lz')],
                        '%(builddir)s/Makefile')
-        self.file_sub ([('^unix__=.*', misc.join_lines ('''unix__=
-$(GLOBJ)gp_mswin.$(OBJ)
-$(GLOBJ)gp_wgetv.$(OBJ)
-$(GLOBJ)gp_stdia.$(OBJ)
-$(GLOBJ)gp_ntfs.$(OBJ)
-$(GLOBJ)gp_win32.$(OBJ)
-$(GLOBJ)gp_upapr.$(OBJ) 
-$(GLOBJ)gp_wutf8.$(OBJ)
-'''))],
-               '%(srcdir)s/base/unix-aux.mak')        
         self.dump ('''
 GLCCWIN=$(CC) $(CFLAGS) -I$(GLOBJDIR)
 PSCCWIN=$(CC) $(CFLAGS) -I$(GLOBJDIR)
