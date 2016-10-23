@@ -26,6 +26,7 @@ models.'''
         'ghostscript-9.15-windows-popen.patch',
         'ghostscript-9.20-windows-snprintf.patch',
         'ghostscript-9.20-windows-make.patch',
+        'ghostscript-9.20-mingw-struct-stat.patch',
         'ghostscript-9.20-linux-useunix98.patch',
        ]
     parallel_build_broken = True

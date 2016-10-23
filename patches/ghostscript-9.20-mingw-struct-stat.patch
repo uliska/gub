@@ -1,0 +1,22 @@
+--- a/base/stat_.h	2016-09-26 19:41:28.000000000 +0900
++++ b/base/stat_.h	2016-10-23 16:55:54.643168000 +0900
+@@ -53,7 +53,7 @@
+ /* Find permissions for file */
+ /* Ideally this would defined in gp.h, but the macroisms mean it has to be
+  * defined here. */
+-extern int gp_stat(const char *path, struct stat *buf);
++extern int gp_stat(const char *path, struct_stat *buf);
+ 
+ /*
+  * Some (System V?) systems test for directories in a slightly different way.
+--- a/base/gp_mswin.c	2016-10-22 21:22:49.843896700 +0900
++++ b/base/gp_mswin.c	2016-10-23 16:57:11.748323800 +0900
+@@ -788,7 +788,7 @@
+ #endif
+ }
+ 
+-int gp_stat(const char *path, struct _stat *buf)
++int gp_stat(const char *path, struct_stat *buf)
+ {
+ #ifdef GS_NO_UTF8
+     return stat(path, buf);
