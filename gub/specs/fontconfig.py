@@ -24,6 +24,10 @@ specified by applications.'''
     source = 'http://fontconfig.org/release/fontconfig-2.12.1.tar.bz2'
     patches = [
         'fontconfig-2.11.1-conf-relative-symlink.patch',
+        # This patch will not be needed from fontconfig 2.12.2.
+        'fontconfig-2.12.1-fix-psfont-alias.patch',
+        # This patch will not be needed from fontconfig 2.12.2.
+        'fontconfig-2.12.1-urw-june-2016.patch',
     ]
     #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
     dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
