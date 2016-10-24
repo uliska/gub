@@ -294,6 +294,29 @@ class Ghostscript__freebsd (Ghostscript):
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1')],
                            '%(builddir)s/Makefile')
 
+class Ghostscript__freebsd__x86 (Ghostscript__freebsd):
+    # ***FIXME*** Ghostscript 9.20 for freebsd-x86 raises seg fault.
+    # So we use Ghostscript 9.15.
+    source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
+    patches = [
+        'ghostscript-9.15-make.patch',
+        'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.15-windows-popen.patch',
+        'ghostscript-9.15-windows-snprintf.patch',
+        'ghostscript-9.15-windows-make.patch',
+        'ghostscript-9.15-freebsd6.patch'
+       ]
+    @staticmethod
+    def static_version (self=False):
+        return misc.version_from_url (Ghostscript__freebsd__x86.source)
+    def __init__ (self, settings, source):
+        target.AutoBuild.__init__ (self, settings, source)
+        if (isinstance (source, repository.Repository)
+            and not isinstance (source, repository.TarBall)):
+            source.version = misc.bind_method (Ghostscript__freebsd__x86.version_from_VERSION, source)
+        else:
+            source.version = misc.bind_method (Ghostscript__freebsd__x86.static_version, source)
+
 class Ghostscript__darwin (Ghostscript):
     patches = Ghostscript.patches + [
         'ghostscript-9.15-Resource-directory.patch'
