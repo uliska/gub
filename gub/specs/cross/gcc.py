@@ -8,7 +8,7 @@ from gub import misc
 from gub.specs import gcc
 
 class Gcc (cross.AutoBuild):
-    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.9.2/gcc-4.9.2.tar.bz2'
+    source = 'http://ftp.gnu.org/pub/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2'
     dependencies = [
         'cross/binutils',
         'system::gcc',

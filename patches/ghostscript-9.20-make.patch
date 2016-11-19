@@ -1,0 +1,112 @@
+--- a/base/unix-dll.mak	2016-10-22 19:38:55.215410700 +0900
++++ b/base/unix-dll.mak	2016-10-23 11:08:32.498513200 +0900
+@@ -30,6 +30,11 @@
+ SODIRPREFIX=so
+ SODEBUGDIRPREFIX=sodebug
+ 
++ifeq ($(TARGET),mingw)
++GS=gs
++XE=.exe
++endif
++
+ # ------------------- Ghostscript shared object --------------------------- #
+ 
+ # Shared object names
+@@ -90,14 +95,27 @@
+ # LDFLAGS_SO=-shared -Wl,$(LD_SET_DT_SONAME)$(LDFLAGS_SO_PREFIX)$(GS_SONAME_MAJOR)
+ 
+ 
++ifeq ($(TARGET),darwin)
+ # MacOS X
+-#GS_SOEXT=dylib
+-#GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
+-#GS_SONAME_MAJOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_SOEXT)
+-#GS_SONAME_MAJOR_MINOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)
++GS_SOEXT=dylib
++GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
++GS_SONAME_MAJOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_SOEXT)
++GS_SONAME_MAJOR_MINOR=$(GS_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)
+ #LDFLAGS_SO=-dynamiclib -flat_namespace
+ #LDFLAGS_SO_MAC=-dynamiclib -install_name $(GS_SONAME_MAJOR_MINOR)
+ #LDFLAGS_SO=-dynamiclib -install_name $(FRAMEWORK_NAME)
++GS_LDFLAGS_SO=-dynamiclib
++endif
++
++ifeq ($(TARGET),mingw)
++# Mingw
++GS_SONAME_BASE=gs
++GS_SOEXT=dll
++GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
++GS_SONAME_MAJOR=$(GS_SONAME_BASE)-$(GS_VERSION_MAJOR).$(GS_SOEXT)
++GS_SONAME_MAJOR_MINOR=$(GS_SONAME_BASE)-$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)
++GS_LDFLAGS_SO=-shared -Wl,-soname=$(GS_SONAME_MAJOR_MINOR)
++endif
+ 
+ GS_SO=$(BINDIR)/$(GS_SONAME)
+ GS_SO_MAJOR=$(BINDIR)/$(GS_SONAME_MAJOR)
+@@ -219,6 +237,8 @@
+ 
+ # ------------------------- Recursive make targets ------------------------- #
+ 
++# Help -rpath $ORIGIN survive the $(MAKE) command line expansion
++MAKE_LDFLAGS=$(subst $$,\$$$$,$(LDFLAGS))
+ SODEFS=\
+  GS_DOT_O= \
+  REALMAIN_OBJ= \
+@@ -278,13 +298,13 @@
+ 	$(MAKE) $(SUB_MAKE_OPTION) so-subtarget GENOPT='-DDEBUG' BUILDDIRPREFIX=$(SODEBUGDIRPREFIX)
+ 
+ so-only-subtarget:
+-	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS)'\
++	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)' prefix=$(prefix)\
+ 	 directories
+-	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS)'\
++	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)' prefix=$(prefix)\
+ 	 $(AUXDIR)/echogs$(XEAUX) $(AUXDIR)/genarch$(XEAUX)
+-	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) GENOPT='$(GENOPT)' GS_LDFLAGS='$(LDFLAGS) $(GS_LDFLAGS_SO)'\
++	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) GENOPT='$(GENOPT)' GS_LDFLAGS='$(MAKE_LDFLAGS) $(GS_LDFLAGS_SO)'\
+          PCL_LDFLAGS='$(LDFLAGS) $(PCL_LDFLAGS_SO)' XPS_LDFLAGS='$(LDFLAGS) $(XPS_LDFLAGS_SO)' \
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(CFLAGS_SO) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)'\
+ 	 prefix=$(prefix)
+@@ -293,7 +313,7 @@
+ 	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS) gs-so-strip $(PCL_TARGET)-so-strip $(XPS_TARGET)-so-strip $(GPDL_TARGET)-so-strip
+ 
+ so-subtarget: so-only-subtarget
+-	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS_FINAL) GENOPT='$(GENOPT)' LDFLAGS='$(LDFLAGS)'\
++	$(MAKE) $(SUB_MAKE_OPTION) $(SODEFS_FINAL) GENOPT='$(GENOPT)' LDFLAGS='$(MAKE_LDFLAGS)'\
+ 	 CFLAGS='$(CFLAGS_STANDARD) $(GCFLAGS) $(AC_CFLAGS) $(XCFLAGS)' prefix=$(prefix)\
+ 	 $(GSSOC_XE) $(GSSOX_XE) $(PCL_TARGET)-so-loader $(XPS_TARGET)-so-loader $(GPDL_TARGET)-so-loader
+ 
+--- a/base/unixlink.mak	2016-10-22 19:39:22.735691400 +0900
++++ b/base/unixlink.mak	2016-10-22 21:02:22.857540000 +0900
+@@ -57,6 +57,10 @@
+ 
+ GS_DOT_O=$(PSOBJ)gs.$(OBJ)
+ 
++# Help -rpath $ORIGIN survive the ECHOGS_XE sh command line expansion
++SHELL_LDFLAGS=$(subst $$,\$$,$(LDFLAGS))
++SHELL_GS_LDFLAGS=$(subst $$,\$$,$(GS_LDFLAGS))
++
+ # Here is the final link step.  The stuff with LD_RUN_PATH is for SVR4
+ # systems with dynamic library loading; I believe it's harmless elsewhere.
+ # The resetting of the environment variables to empty strings is for SCO Unix,
+@@ -65,7 +69,7 @@
+ 
+ $(GS_XE): $(ld_tr) $(gs_tr) $(ECHOGS_XE) $(XE_ALL) $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) \
+           $(UNIXLINK_MAK)
+-	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(GS_LDFLAGS) -o $(GS_XE)
++	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(SHELL_GS_LDFLAGS) -o $(GS_XE)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -n -s $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) $(GS_DOT_O) -s
+ 	cat $(gsld_tr) >> $(ldt_tr)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -s - $(EXTRALIBS) $(STDLIBS)
+@@ -158,7 +162,7 @@
+ 
+ $(APITEST_XE): $(ld_tr) $(ECHOGS_XE) $(XE_ALL) $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) $(PSOBJ)apitest.$(OBJ) \
+                $(UNIXLINK_MAK)
+-	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(LDFLAGS) -o $(APITEST_XE)
++	$(ECHOGS_XE) -w $(ldt_tr) -n - $(CCLD) $(SHELL_LDFLAGS) -o $(APITEST_XE)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -n -s $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ) $(PSOBJ)apitest.$(OBJ) -s
+ 	cat $(ld_tr) >>$(ldt_tr)
+ 	$(ECHOGS_XE) -a $(ldt_tr) -s - $(EXTRALIBS) $(STDLIBS)

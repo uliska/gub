@@ -18,18 +18,16 @@ PostScript files as graphics to be printed on non-PostScript printers.
 Supported printers include common dot-matrix, inkjet and laser
 models.'''
 
-    #source = 'svn:http://svn.ghostscript.com:8080/ghostscript&branch=trunk/gs&revision=7881'
-    # HEAD - need to load TTF fonts on fedora without crashing.
     exe = ''
-    revision = 'b35333cf3579e85725bd7d8d39eacc9640515eb8'
-    #source = 'git://git.infradead.org/ghostscript.git?branch=refs/remotes/git-svn&revision=' + revision
-    source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
+    source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs920/ghostscript-9.20.tar.gz'
     patches = [
-        'ghostscript-9.15-make.patch',
-        'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.20-make.patch',
+        'ghostscript-9.20-cygwin.patch',
         'ghostscript-9.15-windows-popen.patch',
-        'ghostscript-9.15-windows-snprintf.patch',
-        'ghostscript-9.15-windows-make.patch',
+        'ghostscript-9.20-windows-snprintf.patch',
+        'ghostscript-9.20-windows-make.patch',
+        'ghostscript-9.20-mingw-struct-stat.patch',
+        'ghostscript-9.20-linux-useunix98.patch',
        ]
     parallel_build_broken = True
     # For --enable-compile-inits, see comment in compile()
@@ -60,7 +58,7 @@ models.'''
                 + ' docdir=%(prefix_dir)s/share/doc/ghostscript/doc '
                 + ' exdir=%(prefix_dir)s/share/doc/ghostscript/examples ')
     # Ghostscript's check for sys/time.h is buggy: it only looks in /usr/include.
-    make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s CFLAGS+="-DHAVE_SYS_TIME_H=1"'
+    make_flags = target.AutoBuild.make_flags + ' TARGET=%(target_os)s CFLAGS+="-DHAVE_SYS_TIME_H=1 -DHAVE_STDINT_H=1"'
     obj = 'obj'
     @staticmethod
     def static_version (self=False):
@@ -206,7 +204,7 @@ models.'''
         # obj/mkromfs is needed for --enable-compile-inits but depends on native -liconv.
         self.system ('''
 cd %(builddir)s && mkdir -p %(obj)s
-cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/aux/genconf%(exe)s %(obj)s/aux/echogs%(exe)s %(obj)s/aux/genarch%(exe)s %(obj)s/arch.h 
+cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/aux/genconf %(obj)s/aux/echogs %(obj)s/aux/genarch %(obj)s/arch.h
 ''')
         self.fixup_arch ()
         target.AutoBuild.compile (self)
@@ -240,6 +238,7 @@ else:
 class Ghostscript__mingw (Ghostscript):
     exe = '.exe'
     patches = Ghostscript.patches + [
+        'ghostscript-9.20-mingw-unix-aux.patch',
         'ghostscript-9.15-windows-dxmain.patch'
     ]
     def __init__ (self, settings, source):
@@ -266,16 +265,6 @@ ac_cv_lib_pthread_pthread_create=no
                            '%(builddir)s/Makefile')
         self.file_sub ([('^(EXTRALIBS *=.*)', r'\1 -lwinspool -lcomdlg32 -lz')],
                        '%(builddir)s/Makefile')
-        self.file_sub ([('^unix__=.*', misc.join_lines ('''unix__=
-$(GLOBJ)gp_mswin.$(OBJ)
-$(GLOBJ)gp_wgetv.$(OBJ)
-$(GLOBJ)gp_stdia.$(OBJ)
-$(GLOBJ)gp_ntfs.$(OBJ)
-$(GLOBJ)gp_win32.$(OBJ)
-$(GLOBJ)gp_upapr.$(OBJ) 
-$(GLOBJ)gp_wutf8.$(OBJ)
-'''))],
-               '%(srcdir)s/base/unix-aux.mak')        
         self.dump ('''
 GLCCWIN=$(CC) $(CFLAGS) -I$(GLOBJDIR)
 PSCCWIN=$(CC) $(CFLAGS) -I$(GLOBJDIR)
@@ -304,6 +293,29 @@ class Ghostscript__freebsd (Ghostscript):
             # it uses BUILD's uname to determine HOST libraries.
             self.file_sub ([('^(EXTRALIBS *=.*)(-ldl )', r'\1')],
                            '%(builddir)s/Makefile')
+
+class Ghostscript__freebsd__x86 (Ghostscript__freebsd):
+    # ***FIXME*** Ghostscript 9.20 for freebsd-x86 raises seg fault.
+    # So we use Ghostscript 9.15.
+    source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
+    patches = [
+        'ghostscript-9.15-make.patch',
+        'ghostscript-9.15-cygwin.patch',
+        'ghostscript-9.15-windows-popen.patch',
+        'ghostscript-9.15-windows-snprintf.patch',
+        'ghostscript-9.15-windows-make.patch',
+        'ghostscript-9.15-freebsd6.patch'
+       ]
+    @staticmethod
+    def static_version (self=False):
+        return misc.version_from_url (Ghostscript__freebsd__x86.source)
+    def __init__ (self, settings, source):
+        target.AutoBuild.__init__ (self, settings, source)
+        if (isinstance (source, repository.Repository)
+            and not isinstance (source, repository.TarBall)):
+            source.version = misc.bind_method (Ghostscript__freebsd__x86.version_from_VERSION, source)
+        else:
+            source.version = misc.bind_method (Ghostscript__freebsd__x86.static_version, source)
 
 class Ghostscript__darwin (Ghostscript):
     patches = Ghostscript.patches + [
