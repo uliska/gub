@@ -374,6 +374,8 @@ cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h | grep "^#define" 
                 + ' docdir=%(prefix_dir)s/share/doc/ghostscript/doc '
                 + ' exdir=%(prefix_dir)s/share/doc/ghostscript/examples '
                 )
+    def packaging_suffix_dir (self):
+        return ''
 
 def test ():
     printf ('Ghostscript.static_version:', Ghostscript.static_version ())
