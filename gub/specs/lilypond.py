@@ -47,6 +47,8 @@ sheet music from a high-level description file.'''
         'tools::t1utils',
         'tools::texi2html',
         'tools::texinfo',
+        'tools::ghostscript',
+        'tools::extractpdfmark',
         #'tools::texlive',
 
         'system::mf', 
