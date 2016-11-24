@@ -376,6 +376,15 @@ cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h | grep "^#define" 
                 )
     def packaging_suffix_dir (self):
         return ''
+    def install (self):
+        tools.AutoBuild.install (self)
+        self.system ('mkdir -p %(install_root)s/usr/etc/relocate')
+        self.dump ('''
+prependdir GS_FONTPATH=$INSTALLER_PREFIX/share/ghostscript/%(version)s/fonts
+prependdir GS_FONTPATH=$INSTALLER_PREFIX/share/gs/fonts
+prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource
+prependdir GS_LIB=$INSTALLER_PREFIX/share/ghostscript/%(version)s/Resource/Init
+''', '%(install_root)s/usr/etc/relocate/gs.reloc')
 
 def test ():
     printf ('Ghostscript.static_version:', Ghostscript.static_version ())
