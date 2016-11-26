@@ -31,12 +31,12 @@ class LilyPond_doc (lilypond.LilyPond_base):
         # system::xetex uses system's shared libraries instead of GUB's ones.
         if 'system::xetex' in self.dependencies:
             self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
-                           '%(srcdir)s/scripts/build/xetex-with-options.sh')
+                           '%(builddir)s/scripts/build/out/xetex-with-options')
         # system::xelatex uses system's shared libraries instead of GUB's ones.
         if 'system::xelatex' in self.dependencies:
             self.file_sub ([('^exec xelatex ',
                              'LD_LIBRARY_PATH= exec xelatex ')],
-                           '%(srcdir)s/scripts/build/xelatex-with-options.sh')
+                           '%(builddir)s/scripts/build/out/xelatex-with-options')
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
