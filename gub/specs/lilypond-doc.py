@@ -25,9 +25,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::texinfo',
                 'system::zip',
                 ])
-    def stages (self):
-        return ['patch'] + lilypond.LilyPond_base.stages (self)
-    def patch (self):
+    def compile (self):
         # system::xetex uses system's shared libraries instead of GUB's ones.
         self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
                        '%(builddir)s/scripts/build/out/xetex-with-options')
@@ -39,6 +37,7 @@ class LilyPond_doc (lilypond.LilyPond_base):
         self.file_sub ([('^EXTRACTPDFMARK = ([^L].*)$',
                          'EXTRACTPDFMARK = LD_LIBRARY_PATH=%(tools_prefix)s/lib \\1')],
                        '%(builddir)s/config.make')
+        lilypond.LilyPond_base.compile (self)
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
