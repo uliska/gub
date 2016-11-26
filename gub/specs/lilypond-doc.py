@@ -23,8 +23,6 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::fonts-ipafont',
                 'tools::fonts-gnufreefont',
                 'tools::texinfo',
-                'system::xetex',
-                'system::xelatex',
                 'system::zip',
                 ])
     def stages (self):
