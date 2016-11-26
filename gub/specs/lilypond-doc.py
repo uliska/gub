@@ -29,14 +29,12 @@ class LilyPond_doc (lilypond.LilyPond_base):
         return ['patch'] + lilypond.LilyPond_base.stages (self)
     def patch (self):
         # system::xetex uses system's shared libraries instead of GUB's ones.
-        if 'system::xetex' in self.dependencies:
-            self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
-                           '%(builddir)s/scripts/build/out/xetex-with-options')
+        self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
+                       '%(builddir)s/scripts/build/out/xetex-with-options')
         # system::xelatex uses system's shared libraries instead of GUB's ones.
-        if 'system::xelatex' in self.dependencies:
-            self.file_sub ([('^exec xelatex ',
-                             'LD_LIBRARY_PATH= exec xelatex ')],
-                           '%(builddir)s/scripts/build/out/xelatex-with-options')
+        self.file_sub ([('^exec xelatex ',
+                         'LD_LIBRARY_PATH= exec xelatex ')],
+                       '%(builddir)s/scripts/build/out/xelatex-with-options')
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
