@@ -35,6 +35,10 @@ class LilyPond_doc (lilypond.LilyPond_base):
         self.file_sub ([('^exec xelatex ',
                          'LD_LIBRARY_PATH= exec xelatex ')],
                        '%(builddir)s/scripts/build/out/xelatex-with-options')
+        # tools::extractpdfmark uses system's libstdc++ instead of GUB's one.
+        self.file_sub ([('^EXTRACTPDFMARK = ([^L].*)$',
+                         'EXTRACTPDFMARK = LD_LIBRARY_PATH=%(tools_prefix)s/lib \\1')],
+                       '%(builddir)s/config.make')
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
