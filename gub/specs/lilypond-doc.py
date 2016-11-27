@@ -37,6 +37,11 @@ class LilyPond_doc (lilypond.LilyPond_base):
         self.file_sub ([('^EXTRACTPDFMARK = ([^L].*)$',
                          'EXTRACTPDFMARK = LD_LIBRARY_PATH=%(tools_prefix)s/lib \\1')],
                        '%(builddir)s/config.make')
+        # The timestamp of these scripts should not be older than config.make.
+        # Otherwise, they will be regenerated from the source directory
+        # and the above substitutes will be lost.
+        self.system ('touch %(builddir)s/scripts/build/out/xetex-with-options')
+        self.system ('touch %(builddir)s/scripts/build/out/xelatex-with-options')
         lilypond.LilyPond_base.compile (self)
     make_flags = misc.join_lines ('''
 CROSS=no
