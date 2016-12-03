@@ -1,7 +1,8 @@
 from gub import tools
 
 class Icoutils__tools (tools.AutoBuild):
-    dependencies = ['libpng-devel']
+    source = 'http://download.savannah.gnu.org/releases/icoutils/icoutils-0.31.0.tar.bz2'
+    dependencies = ['libpng-devel', 'tools::bzip2']
     configure_flags = (tools.AutoBuild.configure_flags
                        + ' --with-libintl-prefix=%(system_prefix)s'
                        + ' --disable-nls')
