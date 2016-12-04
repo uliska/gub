@@ -349,7 +349,22 @@ class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
         'libtiff-devel',
         ]
     configure_flags = (tools.AutoBuild.configure_flags
-                       + Ghostscript_static.configure_flags)
+                       + misc.join_lines ('''
+--enable-debug
+--with-drivers=FILES
+--without-pdftoraster
+--disable-fontconfig 
+--disable-gtk
+--disable-cairo
+--without-x
+--disable-cups
+--without-ijs
+--without-omni
+--without-jasper
+--disable-compile-inits
+--with-system-libtiff
+--enable-little-endian
+'''))
     make_flags = Ghostscript_static.make_flags
     def configure (self):
         tools.AutoBuild.configure (self)
