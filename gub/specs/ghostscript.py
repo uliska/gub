@@ -389,8 +389,6 @@ cd %(builddir)s && sort -u gconfig_-native.h gconfig_-tools.h | grep "^#define" 
                 + ' docdir=%(prefix_dir)s/share/doc/ghostscript/doc '
                 + ' exdir=%(prefix_dir)s/share/doc/ghostscript/examples '
                 )
-    def packaging_suffix_dir (self):
-        return ''
     def install (self):
         tools.AutoBuild.install (self)
         self.system ('mkdir -p %(install_root)s/usr/etc/relocate')
