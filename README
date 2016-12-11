@@ -112,8 +112,11 @@ INSTALLING
 * You need
   - about 9 GB of free space (for all platforms)
   - standard unix shell utilities: cat, cp, install, mv, rm, sed, ...
-  - a standard unix development environment with GCC and G++
   - Python 2.4 or newer (2.5, 2.6, 3.0 are known to work)
+  - a standard unix development environment with GCC and G++,
+    including:
+    - 32-bit and 64-bit libraries
+    - the file(1) utility
 
 * Try
   bin/gub --help
