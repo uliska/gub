@@ -1,3 +1,4 @@
+from gub import misc
 from gub import target
 from gub import tools
 
@@ -9,7 +10,10 @@ class Harfbuzz (target.AutoBuild):
         'glib-devel',
     ]
     configure_flags = (target.AutoBuild.configure_flags
-                       + ' --without-cairo' )
+                       + misc.join_lines ('''
+--without-cairo
+--without-icu
+'''))
 
 class Harfbuzz__tools (tools.AutoBuild, Harfbuzz):
     pass
