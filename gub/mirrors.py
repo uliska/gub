@@ -72,7 +72,7 @@ jpeg = 'ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz'
 
 freebsd_ports = 'ftp://ftp.uk.freebsd.org/pub/FreeBSD/ports/local-distfiles/lioux/%(name)s-%(version)s.tar.%(format)s'
 
-freedesktop = 'http://%(name)s.freedesktop.org/releases/%(name)s-%(version)s.tar.%(format)s'
+freedesktop = 'https://%(name)s.freedesktop.org/releases/%(name)s-%(version)s.tar.%(format)s'
 
 glibc_deb = 'http://ftp.debian.org/debian/pool/main/g/glibc/%(name)s_%(version)s_%%(package_arch)s.%(format)s'
 

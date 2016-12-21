@@ -1,7 +1,7 @@
 from gub import target
 
 class Xcb_proto (target.AutoBuild):
-    source = 'http://xcb.freedesktop.org/dist/xcb-proto-1.3.tar.gz'
+    source = 'https://xcb.freedesktop.org/dist/xcb-proto-1.3.tar.gz'
     dependencies = [
         'tools::libtool',
 #        'tools::python-2-6',
