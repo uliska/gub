@@ -7,8 +7,8 @@ from gub import target
 from gub import tools
 
 class Python (target.AutoBuild):
-    source = 'http://python.org/ftp/python/2.4.5/Python-2.4.5.tar.bz2'
-    #source = 'http://python.org/ftp/python/2.4.2/Python-2.4.2.tar.bz2'
+    source = 'https://www.python.org/ftp/python/2.4.5/Python-2.4.5.tar.bz2'
+    #source = 'https://www.python.org/ftp/python/2.4.2/Python-2.4.2.tar.bz2'
     patches_242 = [
         'python-2.4.2-1.patch',
         'python-configure.in-posix.patch&strip=0',

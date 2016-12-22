@@ -52,7 +52,7 @@ sourceforge_homepage = 'http://%(name)s.sourceforge.net/%(name)s-%(version)s.tar
 
 fondu = 'http://%(name)s.sourceforge.net/%(name)s_src-%(version)s.tgz'
 
-python = 'http://python.org/ftp/python/%(version)s/Python-%(version)s.tar.%(format)s' 
+python = 'https://www.python.org/ftp/python/%(version)s/Python-%(version)s.tar.%(format)s' 
 
 cygwin_bin = 'http://mirrors.kernel.org/sourceware/cygwin/release/%(name)s/%(name)s-%(version)s.tar.%(format)s'
 
