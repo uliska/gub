@@ -3,7 +3,7 @@ from gub import tools
 from gub.specs import python
 
 class Python_2_6 (python.Python):
-    source = 'http://www.python.org/ftp/python/2.6.4/Python-2.6.4.tar.bz2'
+    source = 'https://www.python.org/ftp/python/2.6.4/Python-2.6.4.tar.bz2'
     dependencies = [
         'db-devel',
         'expat-devel',
