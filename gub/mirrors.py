@@ -52,7 +52,7 @@ sourceforge_homepage = 'http://%(name)s.sourceforge.net/%(name)s-%(version)s.tar
 
 fondu = 'http://%(name)s.sourceforge.net/%(name)s_src-%(version)s.tgz'
 
-python = 'http://python.org/ftp/python/%(version)s/Python-%(version)s.tar.%(format)s' 
+python = 'https://www.python.org/ftp/python/%(version)s/Python-%(version)s.tar.%(format)s' 
 
 cygwin_bin = 'http://mirrors.kernel.org/sourceware/cygwin/release/%(name)s/%(name)s-%(version)s.tar.%(format)s'
 
@@ -72,7 +72,7 @@ jpeg = 'ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz'
 
 freebsd_ports = 'ftp://ftp.uk.freebsd.org/pub/FreeBSD/ports/local-distfiles/lioux/%(name)s-%(version)s.tar.%(format)s'
 
-freedesktop = 'http://%(name)s.freedesktop.org/releases/%(name)s-%(version)s.tar.%(format)s'
+freedesktop = 'https://%(name)s.freedesktop.org/releases/%(name)s-%(version)s.tar.%(format)s'
 
 glibc_deb = 'http://ftp.debian.org/debian/pool/main/g/glibc/%(name)s_%(version)s_%%(package_arch)s.%(format)s'
 

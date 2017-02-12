@@ -1,7 +1,7 @@
 from gub import target
 
 class Libpthread_stubs (target.AutoBuild):
-    source = 'http://xcb.freedesktop.org/dist/libpthread-stubs-0.1.tar.gz'
+    source = 'https://xcb.freedesktop.org/dist/libpthread-stubs-0.1.tar.gz'
     dependencies = ['tools::libtool']
 
 class Libpthread_stubs__freebsd__x86 (Libpthread_stubs):

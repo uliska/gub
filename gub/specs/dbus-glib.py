@@ -2,7 +2,7 @@ from gub import build
 from gub import target
 
 class Dbus_glib (target.AutoBuild):
-    source = 'http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-0.82.tar.gz'
+    source = 'https://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-0.82.tar.gz'
     dependencies = [
         'dbus',
         'glib',

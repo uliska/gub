@@ -1,7 +1,7 @@
 from gub import target
 
 class Pysqlite (target.PythonBuild):
-    source = 'http://pypi.python.org/packages/source/p/pysqlite/pysqlite-2.6.0.tar.gz'
+    source = 'https://pypi.python.org/packages/source/p/pysqlite/pysqlite-2.6.0.tar.gz'
     subpackage_names = ['']
     def patch (self):
         def defer (logger):
