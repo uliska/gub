@@ -109,6 +109,8 @@ sheet music from a high-level description file.'''
         return v
     def install (self):
         target.AutoBuild.install (self)
+        self.system ('cp %(tools_prefix)s/share/doc/texgyre/GUST-FONT-LICENSE.txt %(install_root)s/license/fonts-texgyre')
+        self.system ('cp %(tools_prefix)s/share/doc/urw-core35/LICENSE %(install_root)s/license/fonts-urw-core35')
         # FIXME: This should not be in generic package, for installers only.
         self.installer_install_stuff ()
     def installer_install_stuff (self):
