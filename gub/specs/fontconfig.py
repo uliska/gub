@@ -28,6 +28,8 @@ specified by applications.'''
         'fontconfig-2.12.1-fix-psfont-alias.patch',
         # This patch will not be needed from fontconfig 2.12.2.
         'fontconfig-2.12.1-urw-june-2016.patch',
+        # This patch will not be needed from fontconfig 2.12.2.
+        'fontconfig-2.12.1-fix-FcCacheOffsetValid.patch',
     ]
     #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
     dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
@@ -129,9 +131,6 @@ class Fontconfig__mingw (Fontconfig):
                    mode='a')
 
 class Fontconfig__darwin (Fontconfig):
-    patches = Fontconfig.patches + [
-        'fontconfig-2.12.1-mac.patch'
-    ]
     configure_flags = (Fontconfig.configure_flags
                          + ' --with-add-fonts=/Library/Fonts,/System/Library/Fonts ')
     def configure (self):
