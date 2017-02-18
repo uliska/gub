@@ -117,6 +117,9 @@ set FONTCONFIG_PATH=$INSTALLER_PREFIX/etc/fonts
              '%(install_prefix)s/etc/fonts/conf.d/98-gub-fonts-dir.conf')
 
 class Fontconfig__mingw (Fontconfig):
+    patches = Fontconfig.patches + [
+        'fontconfig-2.12.1-fix-cache-mingw.patch'
+    ]
     def patch (self):
         Fontconfig.patch (self)
         self.file_sub ([('<cachedir>@FC_CACHEDIR@</cachedir>', '')],
