@@ -13,6 +13,8 @@ class Fonts_urw_core35 (build.BinaryBuild):
         self.system ('cp %(srcdir)s/*.t1 %(install_prefix)s/share/fonts/type1/urw-core35/')
         self.system ('cp %(srcdir)s/*.ttf %(install_prefix)s/share/fonts/truetype/urw-core35/')
         self.system ('cp %(srcdir)s/*.otf %(install_prefix)s/share/fonts/opentype/urw-core35/')
+        self.system ('mkdir -p %(install_prefix)s/share/doc/urw-core35')
+        self.system ('cp %(srcdir)s/COPYING %(srcdir)s/LICENSE %(install_prefix)s/share/doc/urw-core35')
     def package (self):
         build.AutoBuild.package (self)
 
