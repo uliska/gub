@@ -172,7 +172,7 @@ def upload_binaries (repo, version, version_db):
   %(lilybuild)s/out-www/online-root/''' % d
         cmds.append (test_cmd)
 
-    cmds += ['rsync --delay-updates --progress %s %s'
+    cmds += ['rsync --delay-updates --delete --progress %s %s'
              % tup for tup in src_dests]
 
     ## don't do cygwin .
